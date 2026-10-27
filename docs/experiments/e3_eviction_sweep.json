@@ -1,1030 +1,1031 @@
 {
-  "answer": "the brief predicted eviction would move cost and leave correctness alone. It moves both. A smaller cache returns fewer wrong answers, because a wrong answer needs a wrong neighbour to still be resident: dropping capacity from unbounded to 20 entries cuts the false hit rate while costing hit rate. Within a fixed capacity the policies then trade against each other, with FIFO cutting staleness several fold and paying for it in both hit rate and wrong answers.",
-  "capacity_20_false_hit_rate_lru": 0.2442234571512138,
-  "embedder": "synthetic@2.6",
-  "false_hit_spread_across_policies_pp": 11.22006725895921,
-  "highest_hit_policy": "ttl_only",
-  "highest_hit_rate": 0.953,
-  "hit_rate_paid_for_lowest_stale_pp": 15.549999999999997,
+  "answer": "there are two levers here and they do different jobs. Choosing between LRU, LFU and FIFO at a fixed capacity barely moves correctness and moves staleness several fold, so policy is a staleness lever. Whether the cache is bounded at all is a correctness lever: letting it grow without limit roughly doubles the false hit rate, because a wrong answer needs a wrong neighbour to still be resident. Reporting one eviction number would hide both.",
+  "bounded_false_hit_rate_lru": 0.029038112522686024,
+  "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+  "false_hit_ratio_unbounded_over_bounded": 1.9662208980044347,
+  "false_hit_spread_across_policies_pp": 0.12942419728097404,
+  "highest_hit_policy": "lfu",
+  "highest_hit_rate": 0.724,
+  "hit_rate_paid_for_lowest_stale_pp": 9.075,
   "lowest_false_hit_policy": "lfu",
-  "lowest_false_hit_rate": 0.21885913853317812,
+  "lowest_false_hit_rate": 0.028314917127071824,
   "lowest_stale_policy": "fifo",
-  "lowest_stale_rate": 0.016300940438871474,
-  "prediction_that_was_wrong": "eviction policy changes cost and not correctness",
+  "lowest_stale_rate": 0.00986971969996052,
+  "nuance_the_brief_missed": "the brief framed eviction as a single question. Capacity and policy pull on different failure modes and have to be priced separately.",
   "question": "Does eviction policy change correctness or only cost?",
   "records": [
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 65,
-          "hits": 347,
+          "false_hits": 3,
+          "hits": 275,
           "requests": 392,
           "stale_hits": 0
         },
         "entity_swap": {
-          "false_hits": 161,
-          "hits": 305,
-          "requests": 402,
-          "stale_hits": 6
-        },
-        "negation": {
-          "false_hits": 121,
+          "false_hits": 29,
           "hits": 177,
-          "requests": 272,
-          "stale_hits": 0
-        },
-        "numeric_change": {
-          "false_hits": 55,
-          "hits": 89,
-          "requests": 169,
-          "stale_hits": 1
-        },
-        "scope_change": {
-          "false_hits": 176,
-          "hits": 217,
-          "requests": 295,
-          "stale_hits": 0
-        },
-        "true_paraphrase": {
-          "false_hits": 257,
-          "hits": 2284,
-          "requests": 2470,
-          "stale_hits": 373
-        }
-      },
-      "capacity": 20,
-      "evictions": 561,
-      "false_hit_rate": 0.2442234571512138,
-      "false_hits": 835,
-      "hit_rate": 0.85475,
-      "hits": 3419,
-      "misses": 581,
-      "policy": "lru",
-      "requests": 4000,
-      "stale_hit_rate": 0.11114360924246856,
-      "stale_hits": 380,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.3553670663936824
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 72,
-          "hits": 345,
-          "requests": 392,
-          "stale_hits": 0
-        },
-        "entity_swap": {
-          "false_hits": 182,
-          "hits": 324,
-          "requests": 402,
-          "stale_hits": 22
-        },
-        "negation": {
-          "false_hits": 112,
-          "hits": 179,
-          "requests": 272,
-          "stale_hits": 29
-        },
-        "numeric_change": {
-          "false_hits": 53,
-          "hits": 73,
-          "requests": 169,
-          "stale_hits": 1
-        },
-        "scope_change": {
-          "false_hits": 138,
-          "hits": 227,
-          "requests": 295,
-          "stale_hits": 1
-        },
-        "true_paraphrase": {
-          "false_hits": 195,
-          "hits": 2288,
-          "requests": 2470,
-          "stale_hits": 381
-        }
-      },
-      "capacity": 20,
-      "evictions": 544,
-      "false_hit_rate": 0.21885913853317812,
-      "false_hits": 752,
-      "hit_rate": 0.859,
-      "hits": 3436,
-      "misses": 564,
-      "policy": "lfu",
-      "requests": 4000,
-      "stale_hit_rate": 0.12630966239813737,
-      "stale_hits": 434,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.34516880093131547
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 109,
-          "hits": 319,
-          "requests": 392,
-          "stale_hits": 1
-        },
-        "entity_swap": {
-          "false_hits": 145,
-          "hits": 268,
           "requests": 402,
           "stale_hits": 3
         },
         "negation": {
-          "false_hits": 120,
-          "hits": 159,
+          "false_hits": 13,
+          "hits": 72,
           "requests": 272,
           "stale_hits": 0
         },
         "numeric_change": {
-          "false_hits": 47,
-          "hits": 73,
+          "false_hits": 29,
+          "hits": 47,
           "requests": 169,
           "stale_hits": 0
         },
         "scope_change": {
-          "false_hits": 132,
-          "hits": 196,
+          "false_hits": 3,
+          "hits": 111,
           "requests": 295,
-          "stale_hits": 0
+          "stale_hits": 5
         },
         "true_paraphrase": {
-          "false_hits": 345,
-          "hits": 2175,
+          "false_hits": 3,
+          "hits": 2073,
           "requests": 2470,
-          "stale_hits": 48
+          "stale_hits": 347
         }
       },
       "capacity": 20,
-      "evictions": 790,
-      "false_hit_rate": 0.28150470219435736,
-      "false_hits": 898,
-      "hit_rate": 0.7975,
-      "hits": 3190,
-      "misses": 810,
-      "policy": "fifo",
+      "evictions": 1225,
+      "false_hit_rate": 0.029038112522686024,
+      "false_hits": 80,
+      "hit_rate": 0.68875,
+      "hits": 2755,
+      "misses": 1245,
+      "policy": "lru",
       "requests": 4000,
-      "stale_hit_rate": 0.016300940438871474,
-      "stale_hits": 52,
+      "stale_hit_rate": 0.12885662431941924,
+      "stale_hits": 355,
       "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.29780564263322884
+      "wrong_or_stale_rate": 0.15789473684210525
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
+          "false_hits": 1,
+          "hits": 280,
           "requests": 392,
-          "stale_hits": 114
+          "stale_hits": 4
         },
         "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
+          "false_hits": 20,
+          "hits": 221,
           "requests": 402,
-          "stale_hits": 26
+          "stale_hits": 40
         },
         "negation": {
-          "false_hits": 172,
-          "hits": 248,
+          "false_hits": 11,
+          "hits": 97,
           "requests": 272,
-          "stale_hits": 11
+          "stale_hits": 40
         },
         "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
+          "false_hits": 32,
+          "hits": 59,
           "requests": 169,
-          "stale_hits": 26
+          "stale_hits": 0
         },
         "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
+          "false_hits": 10,
+          "hits": 169,
           "requests": 295,
-          "stale_hits": 12
+          "stale_hits": 55
         },
         "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
+          "false_hits": 8,
+          "hits": 2070,
           "requests": 2470,
-          "stale_hits": 237
+          "stale_hits": 375
         }
       },
       "capacity": 20,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "ttl_only",
+      "evictions": 1084,
+      "false_hit_rate": 0.028314917127071824,
+      "false_hits": 82,
+      "hit_rate": 0.724,
+      "hits": 2896,
+      "misses": 1104,
+      "policy": "lfu",
       "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
+      "stale_hit_rate": 0.17748618784530387,
+      "stale_hits": 514,
       "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
+      "wrong_or_stale_rate": 0.2058011049723757
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 120,
-          "hits": 369,
+          "false_hits": 2,
+          "hits": 234,
+          "requests": 392,
+          "stale_hits": 0
+        },
+        "entity_swap": {
+          "false_hits": 26,
+          "hits": 149,
+          "requests": 402,
+          "stale_hits": 0
+        },
+        "negation": {
+          "false_hits": 11,
+          "hits": 66,
+          "requests": 272,
+          "stale_hits": 0
+        },
+        "numeric_change": {
+          "false_hits": 28,
+          "hits": 49,
+          "requests": 169,
+          "stale_hits": 0
+        },
+        "scope_change": {
+          "false_hits": 5,
+          "hits": 103,
+          "requests": 295,
+          "stale_hits": 1
+        },
+        "true_paraphrase": {
+          "false_hits": 3,
+          "hits": 1932,
+          "requests": 2470,
+          "stale_hits": 24
+        }
+      },
+      "capacity": 20,
+      "evictions": 1447,
+      "false_hit_rate": 0.029609159099881564,
+      "false_hits": 75,
+      "hit_rate": 0.63325,
+      "hits": 2533,
+      "misses": 1467,
+      "policy": "fifo",
+      "requests": 4000,
+      "stale_hit_rate": 0.00986971969996052,
+      "stale_hits": 25,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.03947887879984208
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": 20,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "ttl_only",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 8,
+          "hits": 300,
           "requests": 392,
           "stale_hits": 109
         },
         "entity_swap": {
-          "false_hits": 193,
-          "hits": 362,
+          "false_hits": 21,
+          "hits": 285,
           "requests": 402,
-          "stale_hits": 31
+          "stale_hits": 23
         },
         "negation": {
-          "false_hits": 144,
-          "hits": 240,
+          "false_hits": 18,
+          "hits": 146,
           "requests": 272,
-          "stale_hits": 11
+          "stale_hits": 0
         },
         "numeric_change": {
-          "false_hits": 78,
-          "hits": 141,
+          "false_hits": 58,
+          "hits": 109,
           "requests": 169,
-          "stale_hits": 11
+          "stale_hits": 2
         },
         "scope_change": {
-          "false_hits": 129,
-          "hits": 255,
+          "false_hits": 7,
+          "hits": 177,
           "requests": 295,
-          "stale_hits": 43
+          "stale_hits": 25
         },
         "true_paraphrase": {
-          "false_hits": 393,
-          "hits": 2377,
+          "false_hits": 5,
+          "hits": 2168,
           "requests": 2470,
-          "stale_hits": 256
+          "stale_hits": 372
         }
       },
       "capacity": 50,
-      "evictions": 206,
-      "false_hit_rate": 0.28231837606837606,
-      "false_hits": 1057,
-      "hit_rate": 0.936,
-      "hits": 3744,
-      "misses": 256,
+      "evictions": 765,
+      "false_hit_rate": 0.036734693877551024,
+      "false_hits": 117,
+      "hit_rate": 0.79625,
+      "hits": 3185,
+      "misses": 815,
       "policy": "lru",
       "requests": 4000,
-      "stale_hit_rate": 0.12313034188034189,
-      "stale_hits": 461,
+      "stale_hit_rate": 0.16671899529042386,
+      "stale_hits": 531,
       "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.40544871794871795
+      "wrong_or_stale_rate": 0.20345368916797488
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 107,
-          "hits": 367,
+          "false_hits": 8,
+          "hits": 300,
           "requests": 392,
-          "stale_hits": 113
+          "stale_hits": 112
         },
         "entity_swap": {
-          "false_hits": 167,
-          "hits": 354,
+          "false_hits": 22,
+          "hits": 282,
           "requests": 402,
-          "stale_hits": 22
+          "stale_hits": 57
         },
         "negation": {
-          "false_hits": 170,
-          "hits": 240,
+          "false_hits": 22,
+          "hits": 157,
           "requests": 272,
-          "stale_hits": 6
+          "stale_hits": 37
         },
         "numeric_change": {
-          "false_hits": 81,
-          "hits": 140,
+          "false_hits": 54,
+          "hits": 122,
           "requests": 169,
           "stale_hits": 10
         },
         "scope_change": {
-          "false_hits": 173,
-          "hits": 257,
+          "false_hits": 5,
+          "hits": 187,
           "requests": 295,
-          "stale_hits": 13
+          "stale_hits": 55
         },
         "true_paraphrase": {
-          "false_hits": 330,
-          "hits": 2374,
+          "false_hits": 12,
+          "hits": 2158,
           "requests": 2470,
-          "stale_hits": 364
+          "stale_hits": 396
         }
       },
       "capacity": 50,
-      "evictions": 219,
-      "false_hit_rate": 0.2754555198285102,
-      "false_hits": 1028,
-      "hit_rate": 0.933,
-      "hits": 3732,
-      "misses": 268,
+      "evictions": 744,
+      "false_hit_rate": 0.03836556456643793,
+      "false_hits": 123,
+      "hit_rate": 0.8015,
+      "hits": 3206,
+      "misses": 794,
       "policy": "lfu",
       "requests": 4000,
-      "stale_hit_rate": 0.1414790996784566,
-      "stale_hits": 528,
+      "stale_hit_rate": 0.20804741110417965,
+      "stale_hits": 667,
       "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.41693461950696675
+      "wrong_or_stale_rate": 0.2464129756706176
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 81,
-          "hits": 361,
+          "false_hits": 8,
+          "hits": 283,
           "requests": 392,
-          "stale_hits": 29
-        },
-        "entity_swap": {
-          "false_hits": 148,
-          "hits": 343,
-          "requests": 402,
-          "stale_hits": 22
-        },
-        "negation": {
-          "false_hits": 145,
-          "hits": 226,
-          "requests": 272,
           "stale_hits": 9
         },
-        "numeric_change": {
-          "false_hits": 58,
-          "hits": 125,
-          "requests": 169,
-          "stale_hits": 12
-        },
-        "scope_change": {
-          "false_hits": 135,
-          "hits": 250,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 294,
-          "hits": 2358,
-          "requests": 2470,
-          "stale_hits": 126
-        }
-      },
-      "capacity": 50,
-      "evictions": 287,
-      "false_hit_rate": 0.23505323505323505,
-      "false_hits": 861,
-      "hit_rate": 0.91575,
-      "hits": 3663,
-      "misses": 337,
-      "policy": "fifo",
-      "requests": 4000,
-      "stale_hit_rate": 0.05733005733005733,
-      "stale_hits": 210,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.29238329238329236
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
         "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
+          "false_hits": 37,
+          "hits": 251,
           "requests": 402,
-          "stale_hits": 26
+          "stale_hits": 3
         },
         "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": 50,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "ttl_only",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 13
-        },
-        "true_paraphrase": {
-          "false_hits": 534,
-          "hits": 2405,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": 100,
-      "evictions": 94,
-      "false_hit_rate": 0.33088428234059303,
-      "false_hits": 1261,
-      "hit_rate": 0.95275,
-      "hits": 3811,
-      "misses": 189,
-      "policy": "lru",
-      "requests": 4000,
-      "stale_hit_rate": 0.11204408291786933,
-      "stale_hits": 427,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.44292836525846235
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": 100,
-      "evictions": 95,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "lfu",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 104,
-          "hits": 365,
-          "requests": 392,
-          "stale_hits": 115
-        },
-        "entity_swap": {
-          "false_hits": 183,
-          "hits": 372,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 167,
-          "hits": 247,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 86,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 176,
-          "hits": 266,
-          "requests": 295,
-          "stale_hits": 13
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2403,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": 100,
-      "evictions": 97,
-      "false_hit_rate": 0.32886435331230285,
-      "false_hits": 1251,
-      "hit_rate": 0.951,
-      "hits": 3804,
-      "misses": 196,
-      "policy": "fifo",
-      "requests": 4000,
-      "stale_hit_rate": 0.11251314405888538,
-      "stale_hits": 428,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4413774973711882
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": 100,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "ttl_only",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": null,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "lru",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": null,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "lfu",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": null,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "fifo",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 106,
-          "hits": 366,
-          "requests": 392,
-          "stale_hits": 114
-        },
-        "entity_swap": {
-          "false_hits": 185,
-          "hits": 374,
-          "requests": 402,
-          "stale_hits": 26
-        },
-        "negation": {
-          "false_hits": 172,
-          "hits": 248,
-          "requests": 272,
-          "stale_hits": 11
-        },
-        "numeric_change": {
-          "false_hits": 87,
-          "hits": 151,
-          "requests": 169,
-          "stale_hits": 26
-        },
-        "scope_change": {
-          "false_hits": 177,
-          "hits": 267,
-          "requests": 295,
-          "stale_hits": 12
-        },
-        "true_paraphrase": {
-          "false_hits": 535,
-          "hits": 2406,
-          "requests": 2470,
-          "stale_hits": 237
-        }
-      },
-      "capacity": null,
-      "evictions": 87,
-      "false_hit_rate": 0.3310598111227702,
-      "false_hits": 1262,
-      "hit_rate": 0.953,
-      "hits": 3812,
-      "misses": 188,
-      "policy": "ttl_only",
-      "requests": 4000,
-      "stale_hit_rate": 0.11175236096537251,
-      "stale_hits": 426,
-      "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.4428121720881427
-    },
-    {
-      "by_class": {
-        "direction_reversal": {
-          "false_hits": 116,
-          "hits": 343,
-          "requests": 392,
-          "stale_hits": 17
-        },
-        "entity_swap": {
-          "false_hits": 156,
-          "hits": 326,
-          "requests": 402,
-          "stale_hits": 8
-        },
-        "negation": {
-          "false_hits": 142,
-          "hits": 202,
+          "false_hits": 18,
+          "hits": 124,
           "requests": 272,
           "stale_hits": 0
         },
         "numeric_change": {
-          "false_hits": 65,
-          "hits": 113,
+          "false_hits": 52,
+          "hits": 94,
           "requests": 169,
-          "stale_hits": 6
+          "stale_hits": 3
         },
         "scope_change": {
-          "false_hits": 129,
-          "hits": 228,
+          "false_hits": 7,
+          "hits": 157,
           "requests": 295,
-          "stale_hits": 4
+          "stale_hits": 12
         },
         "true_paraphrase": {
-          "false_hits": 440,
-          "hits": 2304,
+          "false_hits": 8,
+          "hits": 2118,
           "requests": 2470,
-          "stale_hits": 162
+          "stale_hits": 152
         }
       },
       "capacity": 50,
-      "evictions": 434,
-      "false_hit_rate": 0.29806598407281,
-      "false_hits": 1048,
-      "hit_rate": 0.879,
-      "hits": 3516,
-      "misses": 484,
-      "policy": "lru",
+      "evictions": 923,
+      "false_hit_rate": 0.04294681202510737,
+      "false_hits": 130,
+      "hit_rate": 0.75675,
+      "hits": 3027,
+      "misses": 973,
+      "policy": "fifo",
       "requests": 4000,
-      "stale_hit_rate": 0.05602957906712173,
-      "stale_hits": 197,
-      "ttl_seconds": 600.0,
-      "wrong_or_stale_rate": 0.35409556313993173
+      "stale_hit_rate": 0.05913445655764784,
+      "stale_hits": 179,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.10208126858275521
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 120,
-          "hits": 369,
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": 50,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "ttl_only",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 13,
+          "hits": 322,
+          "requests": 392,
+          "stale_hits": 114
+        },
+        "entity_swap": {
+          "false_hits": 28,
+          "hits": 328,
+          "requests": 402,
+          "stale_hits": 63
+        },
+        "negation": {
+          "false_hits": 33,
+          "hits": 201,
+          "requests": 272,
+          "stale_hits": 37
+        },
+        "numeric_change": {
+          "false_hits": 62,
+          "hits": 143,
+          "requests": 169,
+          "stale_hits": 34
+        },
+        "scope_change": {
+          "false_hits": 12,
+          "hits": 220,
+          "requests": 295,
+          "stale_hits": 57
+        },
+        "true_paraphrase": {
+          "false_hits": 11,
+          "hits": 2253,
+          "requests": 2470,
+          "stale_hits": 404
+        }
+      },
+      "capacity": 100,
+      "evictions": 433,
+      "false_hit_rate": 0.04586097490625901,
+      "false_hits": 159,
+      "hit_rate": 0.86675,
+      "hits": 3467,
+      "misses": 533,
+      "policy": "lru",
+      "requests": 4000,
+      "stale_hit_rate": 0.20449956734929334,
+      "stale_hits": 709,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2503605422555524
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 14,
+          "hits": 320,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 25,
+          "hits": 329,
+          "requests": 402,
+          "stale_hits": 67
+        },
+        "negation": {
+          "false_hits": 32,
+          "hits": 199,
+          "requests": 272,
+          "stale_hits": 36
+        },
+        "numeric_change": {
+          "false_hits": 66,
+          "hits": 140,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 14,
+          "hits": 205,
+          "requests": 295,
+          "stale_hits": 55
+        },
+        "true_paraphrase": {
+          "false_hits": 15,
+          "hits": 2259,
+          "requests": 2470,
+          "stale_hits": 423
+        }
+      },
+      "capacity": 100,
+      "evictions": 448,
+      "false_hit_rate": 0.04808806488991889,
+      "false_hits": 166,
+      "hit_rate": 0.863,
+      "hits": 3452,
+      "misses": 548,
+      "policy": "lfu",
+      "requests": 4000,
+      "stale_hit_rate": 0.21349942062572422,
+      "stale_hits": 737,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2615874855156431
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 20,
+          "hits": 320,
+          "requests": 392,
+          "stale_hits": 31
+        },
+        "entity_swap": {
+          "false_hits": 26,
+          "hits": 307,
+          "requests": 402,
+          "stale_hits": 48
+        },
+        "negation": {
+          "false_hits": 34,
+          "hits": 184,
+          "requests": 272,
+          "stale_hits": 8
+        },
+        "numeric_change": {
+          "false_hits": 76,
+          "hits": 127,
+          "requests": 169,
+          "stale_hits": 12
+        },
+        "scope_change": {
+          "false_hits": 11,
+          "hits": 205,
+          "requests": 295,
+          "stale_hits": 44
+        },
+        "true_paraphrase": {
+          "false_hits": 12,
+          "hits": 2238,
+          "requests": 2470,
+          "stale_hits": 280
+        }
+      },
+      "capacity": 100,
+      "evictions": 519,
+      "false_hit_rate": 0.052942916296953565,
+      "false_hits": 179,
+      "hit_rate": 0.84525,
+      "hits": 3381,
+      "misses": 619,
+      "policy": "fifo",
+      "requests": 4000,
+      "stale_hit_rate": 0.1251109139307897,
+      "stale_hits": 423,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.17805383022774326
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": 100,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "ttl_only",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": null,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "lru",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": null,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "lfu",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": null,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "fifo",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 29,
+          "hits": 344,
+          "requests": 392,
+          "stale_hits": 119
+        },
+        "entity_swap": {
+          "false_hits": 31,
+          "hits": 344,
+          "requests": 402,
+          "stale_hits": 73
+        },
+        "negation": {
+          "false_hits": 37,
+          "hits": 218,
+          "requests": 272,
+          "stale_hits": 43
+        },
+        "numeric_change": {
+          "false_hits": 65,
+          "hits": 149,
+          "requests": 169,
+          "stale_hits": 37
+        },
+        "scope_change": {
+          "false_hits": 26,
+          "hits": 239,
+          "requests": 295,
+          "stale_hits": 60
+        },
+        "true_paraphrase": {
+          "false_hits": 18,
+          "hits": 2314,
+          "requests": 2470,
+          "stale_hits": 430
+        }
+      },
+      "capacity": null,
+      "evictions": 139,
+      "false_hit_rate": 0.05709534368070954,
+      "false_hits": 206,
+      "hit_rate": 0.902,
+      "hits": 3608,
+      "misses": 392,
+      "policy": "ttl_only",
+      "requests": 4000,
+      "stale_hit_rate": 0.21119733924611975,
+      "stale_hits": 762,
+      "ttl_seconds": 3600.0,
+      "wrong_or_stale_rate": 0.2682926829268293
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 8,
+          "hits": 289,
+          "requests": 392,
+          "stale_hits": 16
+        },
+        "entity_swap": {
+          "false_hits": 36,
+          "hits": 261,
+          "requests": 402,
+          "stale_hits": 8
+        },
+        "negation": {
+          "false_hits": 17,
+          "hits": 131,
+          "requests": 272,
+          "stale_hits": 0
+        },
+        "numeric_change": {
+          "false_hits": 53,
+          "hits": 99,
+          "requests": 169,
+          "stale_hits": 1
+        },
+        "scope_change": {
+          "false_hits": 7,
+          "hits": 162,
+          "requests": 295,
+          "stale_hits": 18
+        },
+        "true_paraphrase": {
+          "false_hits": 5,
+          "hits": 2132,
+          "requests": 2470,
+          "stale_hits": 173
+        }
+      },
+      "capacity": 50,
+      "evictions": 876,
+      "false_hit_rate": 0.04098893949251789,
+      "false_hits": 126,
+      "hit_rate": 0.7685,
+      "hits": 3074,
+      "misses": 926,
+      "policy": "lru",
+      "requests": 4000,
+      "stale_hit_rate": 0.07026675341574495,
+      "stale_hits": 216,
+      "ttl_seconds": 600.0,
+      "wrong_or_stale_rate": 0.11125569290826284
+    },
+    {
+      "by_class": {
+        "direction_reversal": {
+          "false_hits": 8,
+          "hits": 300,
           "requests": 392,
           "stale_hits": 109
         },
         "entity_swap": {
-          "false_hits": 193,
-          "hits": 362,
+          "false_hits": 21,
+          "hits": 285,
           "requests": 402,
-          "stale_hits": 31
+          "stale_hits": 23
         },
         "negation": {
-          "false_hits": 144,
-          "hits": 240,
+          "false_hits": 18,
+          "hits": 146,
           "requests": 272,
-          "stale_hits": 11
+          "stale_hits": 0
         },
         "numeric_change": {
-          "false_hits": 78,
-          "hits": 141,
+          "false_hits": 58,
+          "hits": 109,
           "requests": 169,
-          "stale_hits": 11
+          "stale_hits": 2
         },
         "scope_change": {
-          "false_hits": 129,
-          "hits": 255,
+          "false_hits": 7,
+          "hits": 177,
           "requests": 295,
-          "stale_hits": 43
+          "stale_hits": 25
         },
         "true_paraphrase": {
-          "false_hits": 393,
-          "hits": 2377,
+          "false_hits": 5,
+          "hits": 2168,
           "requests": 2470,
-          "stale_hits": 256
+          "stale_hits": 372
         }
       },
       "capacity": 50,
-      "evictions": 206,
-      "false_hit_rate": 0.28231837606837606,
-      "false_hits": 1057,
-      "hit_rate": 0.936,
-      "hits": 3744,
-      "misses": 256,
+      "evictions": 765,
+      "false_hit_rate": 0.036734693877551024,
+      "false_hits": 117,
+      "hit_rate": 0.79625,
+      "hits": 3185,
+      "misses": 815,
       "policy": "lru",
       "requests": 4000,
-      "stale_hit_rate": 0.12313034188034189,
-      "stale_hits": 461,
+      "stale_hit_rate": 0.16671899529042386,
+      "stale_hits": 531,
       "ttl_seconds": 3600.0,
-      "wrong_or_stale_rate": 0.40544871794871795
+      "wrong_or_stale_rate": 0.20345368916797488
     },
     {
       "by_class": {
         "direction_reversal": {
-          "false_hits": 87,
-          "hits": 372,
+          "false_hits": 8,
+          "hits": 302,
           "requests": 392,
           "stale_hits": 277
         },
         "entity_swap": {
-          "false_hits": 213,
-          "hits": 373,
+          "false_hits": 21,
+          "hits": 286,
           "requests": 402,
-          "stale_hits": 100
+          "stale_hits": 45
         },
         "negation": {
-          "false_hits": 110,
-          "hits": 245,
+          "false_hits": 18,
+          "hits": 146,
           "requests": 272,
-          "stale_hits": 44
+          "stale_hits": 0
         },
         "numeric_change": {
-          "false_hits": 77,
-          "hits": 148,
+          "false_hits": 58,
+          "hits": 109,
           "requests": 169,
-          "stale_hits": 28
+          "stale_hits": 2
         },
         "scope_change": {
-          "false_hits": 148,
-          "hits": 268,
+          "false_hits": 7,
+          "hits": 179,
           "requests": 295,
-          "stale_hits": 67
+          "stale_hits": 77
         },
         "true_paraphrase": {
-          "false_hits": 267,
-          "hits": 2395,
+          "false_hits": 5,
+          "hits": 2174,
           "requests": 2470,
-          "stale_hits": 732
+          "stale_hits": 718
         }
       },
       "capacity": 50,
-      "evictions": 149,
-      "false_hit_rate": 0.23730597211260196,
-      "false_hits": 902,
-      "hit_rate": 0.95025,
-      "hits": 3801,
-      "misses": 199,
+      "evictions": 754,
+      "false_hit_rate": 0.03660826032540676,
+      "false_hits": 117,
+      "hit_rate": 0.799,
+      "hits": 3196,
+      "misses": 804,
       "policy": "lru",
       "requests": 4000,
-      "stale_hit_rate": 0.3283346487766377,
-      "stale_hits": 1248,
+      "stale_hit_rate": 0.350125156445557,
+      "stale_hits": 1119,
       "ttl_seconds": null,
-      "wrong_or_stale_rate": 0.5656406208892397
+      "wrong_or_stale_rate": 0.3867334167709637
     }
   ],
   "requests": 4000,
-  "stale_hit_spread_across_policies_pp": 11.00087219592659,
-  "stale_reduction_ratio_fifo_over_lru": 6.818232951605283,
-  "stale_spread_over_false_spread": 0.9804640152350608,
-  "threshold": 0.4176,
-  "unbounded_false_hit_rate": 0.3310598111227702
+  "stale_hit_spread_across_policies_pp": 16.761646814534334,
+  "stale_reduction_ratio_fifo_over_lru": 13.055753176043558,
+  "stale_spread_over_false_spread": 129.50937434168944,
+  "threshold": 0.8118228912353516,
+  "unbounded_false_hit_rate": 0.05709534368070954
 }

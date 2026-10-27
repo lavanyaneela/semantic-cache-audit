@@ -146,6 +146,32 @@ class Sweep:
         return run
 
     @property
+    def clean_ceiling_hits(self) -> int:
+        """How many true paraphrases can be served without admitting a single wrong answer.
+
+        Scan the threshold down from one. The moment it passes the highest scoring
+        near miss, every further hit risks a wrong answer, so the count of positive
+        controls scoring strictly above that point is the most traffic any threshold
+        can serve at a false hit rate of exactly zero.
+
+        This is the figure that cannot be read off the corpus composition, and on a
+        real encoder it is often zero: the best near miss outscores every true
+        paraphrase, so there is no safe setting at all, only a choice of how many
+        wrong answers to accept.
+        """
+        near = [s for s, p in zip(self.scores, self.pairs, strict=True) if p.is_near_miss]
+        positives = [s for s, p in zip(self.scores, self.pairs, strict=True) if p.same_answer]
+        if not near:
+            return len(positives)
+        ceiling = max(near)
+        return sum(1 for s in positives if s > ceiling)
+
+    @property
+    def clean_ceiling_hit_rate(self) -> float:
+        """The same figure as a share of all probes."""
+        return self.clean_ceiling_hits / len(self.pairs) if self.pairs else 0.0
+
+    @property
     def max_hits(self) -> int:
         """The most hits any threshold produces. The ceiling on what the corpus resolves."""
         return max((p.hits for p in self.points), default=0)

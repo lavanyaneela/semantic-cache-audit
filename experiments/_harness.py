@@ -12,21 +12,32 @@ from pathlib import Path
 
 from semantic_cache_audit.corpus.loader import load_pairs
 from semantic_cache_audit.embed.fixtures import load_fixture
+from semantic_cache_audit.embed.registry import PRETRAINED_NAME
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs" / "experiments"
 
-#: The real embedder the README quotes. Lexical, implemented in this repository, and
-#: the most defensible of the three because character n-grams are the only one of them
-#: that is order sensitive across word boundaries.
-HEADLINE_EMBEDDER = "charngram"
+#: The embedder every headline figure is a fact about: a real, widely deployed
+#: pretrained sentence encoder, read from its committed matrix.
+HEADLINE_EMBEDDER = PRETRAINED_NAME
 
 #: A member of the separation family used wherever a curve with shape is needed. Every
 #: number taken from it is labelled with its name, which carries its noise level.
 SHAPED_EMBEDDER = "synthetic@2.6"
 
-#: The three real embedders, measured and published together.
-REAL_EMBEDDERS = ("bow", "lsa", "charngram")
+#: The lexical embedders implemented in this repository, measured alongside the
+#: pretrained one so E5 can show a threshold transferring between real families.
+LEXICAL = ("bow", "lsa", "charngram")
+
+#: Everything that is a genuine function of the text rather than an instrument.
+REAL_EMBEDDERS = (PRETRAINED_NAME, *LEXICAL)
+
+
+def reference_threshold(pairs, scores) -> float:
+    """The threshold a team would pick: serve half the true paraphrases."""
+    import numpy as np
+
+    return float(np.median([s for p, s in zip(pairs, scores, strict=True) if p.same_answer]))
 
 
 def corpus():

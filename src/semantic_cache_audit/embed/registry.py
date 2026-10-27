@@ -14,12 +14,22 @@ from .synthetic import NOISE_GRID, SeparationFamily
 #: Embedders that are real functions of the text alone.
 LEXICAL_NAMES: tuple[str, ...] = ("bow", "lsa", "charngram")
 
+#: The pretrained encoder every headline figure is a fact about. Its fixture is
+#: committed, so the default path reads a matrix and never loads the weights.
+PRETRAINED_NAME = "st:sentence-transformers/all-MiniLM-L6-v2"
+
 #: Noise levels of the separation family, re-exported so callers have one import site.
 SYNTHETIC_GRID: tuple[float, ...] = NOISE_GRID
 
-#: Every embedder name `make embeddings` writes a fixture for.
-def fixture_names() -> list[str]:
+#: Every embedder name that can be regenerated with no network at all.
+def offline_fixture_names() -> list[str]:
     return [*LEXICAL_NAMES, *(f"synthetic@{n:g}" for n in SYNTHETIC_GRID)]
+
+
+#: Every embedder the audit knows about, pretrained encoder first because it is the
+#: one the README quotes.
+def fixture_names() -> list[str]:
+    return [PRETRAINED_NAME, *offline_fixture_names()]
 
 
 class UnknownEmbedder(ValueError):
@@ -137,9 +147,9 @@ def build(name: str, pairs: list[Pair]) -> Embedder:
     if name.startswith("synthetic"):
         return SeparationFamily(intent_labels(pairs), noise=parse_noise(name))
     if name.startswith("st:"):
-        from .live import SentenceTransformerEmbedder
+        from .sentence_encoder import OnnxSentenceEncoder
 
-        return SentenceTransformerEmbedder(name[3:])
+        return OnnxSentenceEncoder(name[3:])
     raise UnknownEmbedder(
         f"unknown embedder {name!r}. Known: {', '.join(LEXICAL_NAMES)}, "
         "synthetic@<noise>, st:<model-name>"

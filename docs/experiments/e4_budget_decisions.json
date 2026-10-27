@@ -12,9 +12,9 @@
   "every_embedder_refused_at_or_below": 0.01,
   "exit_code_counts": {
     "ERROR": 0,
-    "NO_THRESHOLD": 34,
+    "NO_THRESHOLD": 38,
     "OK": 14,
-    "REFUSED": 36
+    "REFUSED": 39
   },
   "hits_required_at_one_percent": 299,
   "positive_controls": 120,
@@ -24,6 +24,19 @@
     {
       "budget": 0.001,
       "corpus_pairs_required": 7987,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 2,
+      "exit_name": "REFUSED",
+      "false_hit_rate": null,
+      "false_hit_rate_upper": null,
+      "hit_rate": null,
+      "hits_required": 2995,
+      "separation_auc": 0.23804166666666668,
+      "threshold": null
+    },
+    {
+      "budget": 0.001,
+      "corpus_pairs_required": 7987,
       "embedder": "bow",
       "exit_code": 2,
       "exit_name": "REFUSED",
@@ -180,6 +193,19 @@
     {
       "budget": 0.005,
       "corpus_pairs_required": 1595,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 2,
+      "exit_name": "REFUSED",
+      "false_hit_rate": null,
+      "false_hit_rate_upper": null,
+      "hit_rate": null,
+      "hits_required": 598,
+      "separation_auc": 0.23804166666666668,
+      "threshold": null
+    },
+    {
+      "budget": 0.005,
+      "corpus_pairs_required": 1595,
       "embedder": "bow",
       "exit_code": 2,
       "exit_name": "REFUSED",
@@ -336,6 +362,19 @@
     {
       "budget": 0.01,
       "corpus_pairs_required": 798,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 2,
+      "exit_name": "REFUSED",
+      "false_hit_rate": null,
+      "false_hit_rate_upper": null,
+      "hit_rate": null,
+      "hits_required": 299,
+      "separation_auc": 0.23804166666666668,
+      "threshold": null
+    },
+    {
+      "budget": 0.01,
+      "corpus_pairs_required": 798,
       "embedder": "bow",
       "exit_code": 2,
       "exit_name": "REFUSED",
@@ -488,6 +527,19 @@
       "hits_required": 299,
       "separation_auc": 0.48033333333333333,
       "threshold": null
+    },
+    {
+      "budget": 0.025,
+      "corpus_pairs_required": null,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 1,
+      "exit_name": "NO_THRESHOLD",
+      "false_hit_rate": 0.625,
+      "false_hit_rate_upper": 0.6700749785691008,
+      "hit_rate": 1.0,
+      "hits_required": 119,
+      "separation_auc": 0.23804166666666668,
+      "threshold": 0.4525969821553528
     },
     {
       "budget": 0.025,
@@ -648,6 +700,19 @@
     {
       "budget": 0.05,
       "corpus_pairs_required": null,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 1,
+      "exit_name": "NO_THRESHOLD",
+      "false_hit_rate": 0.625,
+      "false_hit_rate_upper": 0.6700749785691008,
+      "hit_rate": 1.0,
+      "hits_required": 59,
+      "separation_auc": 0.23804166666666668,
+      "threshold": 0.4525969821553528
+    },
+    {
+      "budget": 0.05,
+      "corpus_pairs_required": null,
       "embedder": "bow",
       "exit_code": 1,
       "exit_name": "NO_THRESHOLD",
@@ -804,6 +869,19 @@
     {
       "budget": 0.1,
       "corpus_pairs_required": null,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 1,
+      "exit_name": "NO_THRESHOLD",
+      "false_hit_rate": 0.625,
+      "false_hit_rate_upper": 0.6700749785691008,
+      "hit_rate": 1.0,
+      "hits_required": 29,
+      "separation_auc": 0.23804166666666668,
+      "threshold": 0.4525969821553528
+    },
+    {
+      "budget": 0.1,
+      "corpus_pairs_required": null,
       "embedder": "bow",
       "exit_code": 1,
       "exit_name": "NO_THRESHOLD",
@@ -956,6 +1034,19 @@
       "hits_required": 29,
       "separation_auc": 0.48033333333333333,
       "threshold": -0.04955175219282568
+    },
+    {
+      "budget": 0.2,
+      "corpus_pairs_required": null,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "exit_code": 1,
+      "exit_name": "NO_THRESHOLD",
+      "false_hit_rate": 0.625,
+      "false_hit_rate_upper": 0.6700749785691008,
+      "hit_rate": 1.0,
+      "hits_required": 14,
+      "separation_auc": 0.23804166666666668,
+      "threshold": 0.4525969821553528
     },
     {
       "budget": 0.2,

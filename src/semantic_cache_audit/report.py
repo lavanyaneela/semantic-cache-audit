@@ -46,6 +46,8 @@ def decision_text(decision: Decision, sweep: Sweep) -> str:
         "0.5 means near misses outrank true paraphrases)",
         f"most confident wrong run  {sweep.wrong_prefix_hits} hits before the first "
         "correct one",
+        f"servable with no wrong hit {decision.clean_ceiling_hits} of "
+        f"{decision.positive_controls} true paraphrases",
         f"corpus                    {len(sweep.pairs)} pairs, "
         f"{decision.positive_controls} positive controls",
         f"tightest budget provable  {pct(decision.tightest_certifiable_budget)} "
@@ -206,6 +208,8 @@ def html_report(sweep: Sweep, decision: Decision, metrics: dict | None = None) -
         "<dl class='kv'>",
         f"<dt>separation</dt><dd>{sweep.separation_auc:.3f}</dd>",
         f"<dt>most confident wrong run</dt><dd>{sweep.wrong_prefix_hits} hits</dd>",
+        f"<dt>servable with no wrong hit</dt><dd>{decision.clean_ceiling_hits} of "
+        f"{decision.positive_controls} true paraphrases</dd>",
         f"<dt>tightest budget provable</dt>"
         f"<dd>{pct(decision.tightest_certifiable_budget)}</dd>",
         f"<dt>requested budget</dt><dd>{pct(decision.budget)}</dd>",

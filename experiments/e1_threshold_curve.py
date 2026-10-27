@@ -29,6 +29,7 @@ def main() -> int:
         curves[name] = {
             "separation_auc": sweep.separation_auc,
             "wrong_prefix_hits": sweep.wrong_prefix_hits,
+            "clean_ceiling_hits": sweep.clean_ceiling_hits,
             "exit_code": int(decision.exit_code),
             "exit_name": decision.exit_code.name,
             "operating_point": point.to_dict() if point else None,
@@ -60,6 +61,8 @@ def main() -> int:
         "curves": curves,
         "headline_separation_auc": headline["separation_auc"],
         "headline_wrong_prefix_hits": headline["wrong_prefix_hits"],
+        "headline_clean_ceiling_hits": headline["clean_ceiling_hits"],
+        "positive_controls": sum(1 for p in pairs if p.same_answer),
         "shaped_operating_point": shaped["operating_point"],
     }
     path = write("e1_threshold_curve", payload)
@@ -71,6 +74,7 @@ def main() -> int:
             name,
             f"{data['separation_auc']:.3f}",
             str(data["wrong_prefix_hits"]),
+            str(data["clean_ceiling_hits"]),
             data["exit_name"],
             f"{point['threshold']:.4f}" if point else "-",
             report.pct(point["hit_rate"], 1) if point else "-",
@@ -78,8 +82,8 @@ def main() -> int:
             report.pct(point["weighted_false_hit_rate"], 1) if point else "-",
         ])
     print(report.table(
-        ["embedder", "separation", "wrong run", "verdict", "threshold", "hit rate",
-         "wrong share", "at prevalence"],
+        ["embedder", "separation", "wrong run", "safe hits", "verdict", "threshold",
+         "hit rate", "wrong share", "at prevalence"],
         rows,
     ))
     print(f"\nwrote {path}")

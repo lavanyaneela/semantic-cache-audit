@@ -30,6 +30,11 @@ dev = [
 servers = [
     "pymongo>=4.6",
 ]
+encoder = [
+    "onnxruntime>=1.17",
+    "tokenizers>=0.15",
+    "huggingface-hub>=0.20",
+]
 live = [
     "sentence-transformers>=2.5",
 ]

@@ -20,17 +20,19 @@ from semantic_cache_audit.audit.stream import build_stream, change_schedule, rep
 from semantic_cache_audit.cache.eviction import POLICIES
 from semantic_cache_audit.config import DEFAULTS
 
-from _harness import SHAPED_EMBEDDER, corpus, fixture, write
+from _harness import HEADLINE_EMBEDDER, corpus, fixture, reference_threshold, write
 
 CAPACITIES: tuple[int | None, ...] = (20, 50, 100, None)
 TTLS: tuple[float | None, ...] = (600.0, 3600.0, None)
-REFERENCE_THRESHOLD = 0.4176  # the E2 reference point for SHAPED_EMBEDDER
 N_REQUESTS = 4000
 
 
 def main() -> int:
     pairs = corpus()
-    texts, matrix = fixture(SHAPED_EMBEDDER)
+    texts, matrix = fixture(HEADLINE_EMBEDDER)
+    from semantic_cache_audit.audit.probe import pair_scores
+
+    threshold = reference_threshold(pairs, pair_scores(pairs, texts, matrix))
     requests = build_stream(pairs, n_requests=N_REQUESTS, zipf_a=1.15)
     schedule = change_schedule(pairs, horizon=requests[-1].at)
 
@@ -40,7 +42,7 @@ def main() -> int:
         for policy in POLICIES:
             result = replay(
                 requests, texts, matrix,
-                threshold=REFERENCE_THRESHOLD, policy=policy, capacity=capacity,
+                threshold=threshold, policy=policy, capacity=capacity,
                 ttl_seconds=DEFAULTS.ttl_seconds, schedule=schedule,
             )
             record = {"capacity": capacity, "policy": policy, "ttl_seconds": DEFAULTS.ttl_seconds,
@@ -56,7 +58,7 @@ def main() -> int:
     for ttl in TTLS:
         result = replay(
             requests, texts, matrix,
-            threshold=REFERENCE_THRESHOLD, policy="lru", capacity=DEFAULTS.capacity,
+            threshold=threshold, policy="lru", capacity=DEFAULTS.capacity,
             ttl_seconds=ttl, schedule=schedule,
         )
         records.append({"capacity": DEFAULTS.capacity, "policy": "lru", "ttl_seconds": ttl,
@@ -67,17 +69,25 @@ def main() -> int:
         ])
 
     bound = [r for r in records if r["capacity"] == 20 and r["ttl_seconds"] == DEFAULTS.ttl_seconds]
-    false_spread = max(r["false_hit_rate"] for r in bound) - min(
-        r["false_hit_rate"] for r in bound)
-    stale_spread = max(r["stale_hit_rate"] for r in bound) - min(
-        r["stale_hit_rate"] for r in bound)
-    best_stale = min(bound, key=lambda r: (r["stale_hit_rate"], r["policy"]))
-    best_hit = max(bound, key=lambda r: (r["hit_rate"], r["policy"]))
+    # ttl_only ignores capacity, so it is not a peer of the three bounding policies. It
+    # is reported separately as the "let it grow" arm rather than averaged in, which
+    # would blur the two levers this experiment is trying to separate.
+    bounding = [r for r in bound if r["policy"] != "ttl_only"]
+    unbounded = next(
+        r for r in records if r["capacity"] is None and r["policy"] == "lru"
+    )
+    false_spread = max(r["false_hit_rate"] for r in bounding) - min(
+        r["false_hit_rate"] for r in bounding)
+    stale_spread = max(r["stale_hit_rate"] for r in bounding) - min(
+        r["stale_hit_rate"] for r in bounding)
+    best_stale = min(bounding, key=lambda r: (r["stale_hit_rate"], r["policy"]))
+    best_hit = max(bounding, key=lambda r: (r["hit_rate"], r["policy"]))
+    best_false = min(bounding, key=lambda r: (r["false_hit_rate"], r["policy"]))
 
     payload = {
         "question": "Does eviction policy change correctness or only cost?",
-        "embedder": SHAPED_EMBEDDER,
-        "threshold": REFERENCE_THRESHOLD,
+        "embedder": HEADLINE_EMBEDDER,
+        "threshold": threshold,
         "requests": N_REQUESTS,
         "records": records,
         "false_hit_spread_across_policies_pp": false_spread * 100,
@@ -89,33 +99,33 @@ def main() -> int:
         "lowest_stale_rate": best_stale["stale_hit_rate"],
         "highest_hit_policy": best_hit["policy"],
         "highest_hit_rate": best_hit["hit_rate"],
+        "lowest_false_hit_policy": best_false["policy"],
+        "lowest_false_hit_rate": best_false["false_hit_rate"],
         "hit_rate_paid_for_lowest_stale_pp": (best_hit["hit_rate"] - best_stale["hit_rate"]) * 100,
-        "lowest_false_hit_policy": min(bound, key=lambda r: (r["false_hit_rate"], r["policy"]))[
-            "policy"
-        ],
-        "lowest_false_hit_rate": min(r["false_hit_rate"] for r in bound),
-        "unbounded_false_hit_rate": next(
-            r["false_hit_rate"] for r in records
-            if r["capacity"] is None and r["policy"] == "lru"
-        ),
-        "capacity_20_false_hit_rate_lru": next(
-            r["false_hit_rate"] for r in bound if r["policy"] == "lru"
-        ),
         "stale_reduction_ratio_fifo_over_lru": (
-            next(r["stale_hit_rate"] for r in bound if r["policy"] == "lru")
-            / next(r["stale_hit_rate"] for r in bound if r["policy"] == "fifo")
+            next(r["stale_hit_rate"] for r in bounding if r["policy"] == "lru")
+            / next(r["stale_hit_rate"] for r in bounding if r["policy"] == "fifo")
+        ),
+        "bounded_false_hit_rate_lru": next(
+            r["false_hit_rate"] for r in bounding if r["policy"] == "lru"
+        ),
+        "unbounded_false_hit_rate": unbounded["false_hit_rate"],
+        "false_hit_ratio_unbounded_over_bounded": (
+            unbounded["false_hit_rate"]
+            / next(r["false_hit_rate"] for r in bounding if r["policy"] == "lru")
         ),
         "answer": (
-            "the brief predicted eviction would move cost and leave correctness alone. "
-            "It moves both. A smaller cache returns fewer wrong answers, because a "
-            "wrong answer needs a wrong neighbour to still be resident: dropping "
-            "capacity from unbounded to 20 entries cuts the false hit rate while "
-            "costing hit rate. Within a fixed capacity the policies then trade against "
-            "each other, with FIFO cutting staleness several fold and paying for it in "
-            "both hit rate and wrong answers."
+            "there are two levers here and they do different jobs. Choosing between "
+            "LRU, LFU and FIFO at a fixed capacity barely moves correctness and moves "
+            "staleness several fold, so policy is a staleness lever. Whether the cache "
+            "is bounded at all is a correctness lever: letting it grow without limit "
+            "roughly doubles the false hit rate, because a wrong answer needs a wrong "
+            "neighbour to still be resident. Reporting one eviction number would hide "
+            "both."
         ),
-        "prediction_that_was_wrong": (
-            "eviction policy changes cost and not correctness"
+        "nuance_the_brief_missed": (
+            "the brief framed eviction as a single question. Capacity and policy pull "
+            "on different failure modes and have to be priced separately."
         ),
     }
     path = write("e3_eviction_sweep", payload)
@@ -124,8 +134,10 @@ def main() -> int:
         ["capacity", "policy", "hit rate", "wrong share", "stale share", "evictions"], rows))
     print()
     print(report.table(["ttl seconds", "hit rate", "wrong share", "stale share"], ttl_rows))
-    print(f"\nacross policies at capacity 20: false hit spread "
+    print(f"\nacross bounding policies at capacity 20: false hit spread "
           f"{false_spread * 100:.2f} points, stale hit spread {stale_spread * 100:.2f} points")
+    print(f"bounded LRU false hit rate {report.pct(bounding[0]['false_hit_rate'])} against "
+          f"{report.pct(unbounded['false_hit_rate'])} unbounded")
     print(f"wrote {path}")
     return 0
 

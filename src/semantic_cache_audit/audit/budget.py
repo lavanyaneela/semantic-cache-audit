@@ -50,6 +50,8 @@ class Decision:
     worst_class: str = ""
     worst_class_false_hit_rate: float = 0.0
     wrong_prefix_hits: int = 0
+    clean_ceiling_hits: int = 0
+    clean_ceiling_hit_rate: float = 0.0
     tightest_certifiable_budget: float = 1.0
     positive_controls: int = 0
     separation_auc: float = float("nan")
@@ -70,6 +72,8 @@ class Decision:
             "worst_class": self.worst_class,
             "worst_class_false_hit_rate": self.worst_class_false_hit_rate,
             "wrong_prefix_hits": self.wrong_prefix_hits,
+            "clean_ceiling_hits": self.clean_ceiling_hits,
+            "clean_ceiling_hit_rate": self.clean_ceiling_hit_rate,
             "tightest_certifiable_budget": self.tightest_certifiable_budget,
             "positive_controls": self.positive_controls,
             "separation_auc": self.separation_auc,
@@ -93,6 +97,8 @@ def decide(sweep: Sweep, *, budget: float, min_hit_rate: float = 0.10) -> Decisi
     positive_controls = sum(1 for p in sweep.pairs if p.same_answer)
     common = {
         "wrong_prefix_hits": sweep.wrong_prefix_hits,
+        "clean_ceiling_hits": sweep.clean_ceiling_hits,
+        "clean_ceiling_hit_rate": sweep.clean_ceiling_hit_rate,
         "tightest_certifiable_budget": upper_bound(0, positive_controls),
         "positive_controls": positive_controls,
         "separation_auc": sweep.separation_auc,

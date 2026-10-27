@@ -2,6 +2,7 @@
   "budget": 0.05,
   "curves": {
     "bow": {
+      "clean_ceiling_hits": 0,
       "curve": [
         {
           "false_hit_rate": 0.625,
@@ -1184,6 +1185,7 @@
       "wrong_prefix_hits": 193
     },
     "charngram": {
+      "clean_ceiling_hits": 0,
       "curve": [
         {
           "false_hit_rate": 0.625,
@@ -2366,6 +2368,7 @@
       "wrong_prefix_hits": 196
     },
     "lsa": {
+      "clean_ceiling_hits": 0,
       "curve": [
         {
           "false_hit_rate": 0.625,
@@ -3547,7 +3550,1191 @@
       "separation_auc": 0.00025,
       "wrong_prefix_hits": 197
     },
+    "st:sentence-transformers/all-MiniLM-L6-v2": {
+      "clean_ceiling_hits": 0,
+      "curve": [
+        {
+          "false_hit_rate": 0.625,
+          "false_hit_rate_upper": 0.6700749785691008,
+          "false_hits": 200,
+          "hit_rate": 1.0,
+          "hits": 320,
+          "missed_opportunities": 0,
+          "threshold": 0.4525969821553528,
+          "weighted_false_hit_rate": 0.05000000000000001,
+          "weighted_hit_rate": 0.9999999999999999
+        },
+        {
+          "false_hit_rate": 0.6269592476489029,
+          "false_hit_rate_upper": 0.6720450485513478,
+          "false_hits": 200,
+          "hit_rate": 0.996875,
+          "hits": 319,
+          "missed_opportunities": 1,
+          "threshold": 0.45806240015966476,
+          "weighted_false_hit_rate": 0.05039899202015961,
+          "weighted_hit_rate": 0.9920833333333332
+        },
+        {
+          "false_hit_rate": 0.6269592476489029,
+          "false_hit_rate_upper": 0.6720450485513478,
+          "false_hits": 200,
+          "hit_rate": 0.996875,
+          "hits": 319,
+          "missed_opportunities": 1,
+          "threshold": 0.46352781816397665,
+          "weighted_false_hit_rate": 0.05039899202015961,
+          "weighted_hit_rate": 0.9920833333333332
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.4689932361682886,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.4744586541726005,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.4799240721769124,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.48538949018122435,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.49085490818553623,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.49632032618984817,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5017857441941601,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.507251162198472,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.512716580202784,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5181819982070959,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5236474162114078,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5291128342157196,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5345782522200316,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6289308176100629,
+          "false_hit_rate_upper": 0.6740263775743096,
+          "false_hits": 200,
+          "hit_rate": 0.99375,
+          "hits": 318,
+          "missed_opportunities": 2,
+          "threshold": 0.5400436702243435,
+          "weighted_false_hit_rate": 0.050804403048264196,
+          "weighted_hit_rate": 0.9841666666666665
+        },
+        {
+          "false_hit_rate": 0.6277602523659306,
+          "false_hit_rate_upper": 0.6729642273266185,
+          "false_hits": 199,
+          "hit_rate": 0.990625,
+          "hits": 317,
+          "missed_opportunities": 2,
+          "threshold": 0.5455090882286555,
+          "weighted_false_hit_rate": 0.05056322520538664,
+          "weighted_hit_rate": 0.9839166666666666
+        },
+        {
+          "false_hit_rate": 0.6277602523659306,
+          "false_hit_rate_upper": 0.6729642273266185,
+          "false_hits": 199,
+          "hit_rate": 0.990625,
+          "hits": 317,
+          "missed_opportunities": 2,
+          "threshold": 0.5509745062329674,
+          "weighted_false_hit_rate": 0.05056322520538664,
+          "weighted_hit_rate": 0.9839166666666666
+        },
+        {
+          "false_hit_rate": 0.6277602523659306,
+          "false_hit_rate_upper": 0.6729642273266185,
+          "false_hits": 199,
+          "hit_rate": 0.990625,
+          "hits": 317,
+          "missed_opportunities": 2,
+          "threshold": 0.5564399242372793,
+          "weighted_false_hit_rate": 0.05056322520538664,
+          "weighted_hit_rate": 0.9839166666666666
+        },
+        {
+          "false_hit_rate": 0.629746835443038,
+          "false_hit_rate_upper": 0.6749601633641005,
+          "false_hits": 199,
+          "hit_rate": 0.9875,
+          "hits": 316,
+          "missed_opportunities": 3,
+          "threshold": 0.5619053422415912,
+          "weighted_false_hit_rate": 0.050973360655737716,
+          "weighted_hit_rate": 0.9759999999999999
+        },
+        {
+          "false_hit_rate": 0.6305732484076433,
+          "false_hit_rate_upper": 0.6759050470047447,
+          "false_hits": 198,
+          "hit_rate": 0.98125,
+          "hits": 314,
+          "missed_opportunities": 4,
+          "threshold": 0.5673707602459032,
+          "weighted_false_hit_rate": 0.05114516962286896,
+          "weighted_hit_rate": 0.9678333333333332
+        },
+        {
+          "false_hit_rate": 0.6305732484076433,
+          "false_hit_rate_upper": 0.6759050470047447,
+          "false_hits": 198,
+          "hit_rate": 0.98125,
+          "hits": 314,
+          "missed_opportunities": 4,
+          "threshold": 0.572836178250215,
+          "weighted_false_hit_rate": 0.05114516962286896,
+          "weighted_hit_rate": 0.9678333333333332
+        },
+        {
+          "false_hit_rate": 0.6302250803858521,
+          "false_hit_rate_upper": 0.6757878989062027,
+          "false_hits": 196,
+          "hit_rate": 0.971875,
+          "hits": 311,
+          "missed_opportunities": 5,
+          "threshold": 0.5783015962545269,
+          "weighted_false_hit_rate": 0.05107270042560584,
+          "weighted_hit_rate": 0.9594166666666666
+        },
+        {
+          "false_hit_rate": 0.6302250803858521,
+          "false_hit_rate_upper": 0.6757878989062027,
+          "false_hits": 196,
+          "hit_rate": 0.971875,
+          "hits": 311,
+          "missed_opportunities": 5,
+          "threshold": 0.5837670142588389,
+          "weighted_false_hit_rate": 0.05107270042560584,
+          "weighted_hit_rate": 0.9594166666666666
+        },
+        {
+          "false_hit_rate": 0.6302250803858521,
+          "false_hit_rate_upper": 0.6757878989062027,
+          "false_hits": 196,
+          "hit_rate": 0.971875,
+          "hits": 311,
+          "missed_opportunities": 5,
+          "threshold": 0.5892324322631508,
+          "weighted_false_hit_rate": 0.05107270042560584,
+          "weighted_hit_rate": 0.9594166666666666
+        },
+        {
+          "false_hit_rate": 0.6290322580645161,
+          "false_hit_rate_upper": 0.6747073828768309,
+          "false_hits": 195,
+          "hit_rate": 0.96875,
+          "hits": 310,
+          "missed_opportunities": 5,
+          "threshold": 0.5946978502674627,
+          "weighted_false_hit_rate": 0.05082536924413555,
+          "weighted_hit_rate": 0.9591666666666665
+        },
+        {
+          "false_hit_rate": 0.6310679611650486,
+          "false_hit_rate_upper": 0.6767518411416316,
+          "false_hits": 195,
+          "hit_rate": 0.965625,
+          "hits": 309,
+          "missed_opportunities": 6,
+          "threshold": 0.6001632682717747,
+          "weighted_false_hit_rate": 0.05124835742444153,
+          "weighted_hit_rate": 0.9512499999999999
+        },
+        {
+          "false_hit_rate": 0.6331168831168831,
+          "false_hit_rate_upper": 0.6788083242980489,
+          "false_hits": 195,
+          "hit_rate": 0.9625,
+          "hits": 308,
+          "missed_opportunities": 7,
+          "threshold": 0.6056286862760866,
+          "weighted_false_hit_rate": 0.051678445229681985,
+          "weighted_hit_rate": 0.9433333333333332
+        },
+        {
+          "false_hit_rate": 0.631578947368421,
+          "false_hit_rate_upper": 0.6776230672332667,
+          "false_hits": 192,
+          "hit_rate": 0.95,
+          "hits": 304,
+          "missed_opportunities": 8,
+          "threshold": 0.6110941042803985,
+          "weighted_false_hit_rate": 0.05135520684736092,
+          "weighted_hit_rate": 0.9346666666666665
+        },
+        {
+          "false_hit_rate": 0.6345514950166113,
+          "false_hit_rate_upper": 0.6807268916840792,
+          "false_hits": 191,
+          "hit_rate": 0.940625,
+          "hits": 301,
+          "missed_opportunities": 10,
+          "threshold": 0.6165595222847104,
+          "weighted_false_hit_rate": 0.05198221899664339,
+          "weighted_hit_rate": 0.9185833333333332
+        },
+        {
+          "false_hit_rate": 0.6354515050167224,
+          "false_hit_rate_upper": 0.6817516019901578,
+          "false_hits": 190,
+          "hit_rate": 0.934375,
+          "hits": 299,
+          "missed_opportunities": 11,
+          "threshold": 0.6220249402890223,
+          "weighted_false_hit_rate": 0.05217391304347827,
+          "weighted_hit_rate": 0.9104166666666665
+        },
+        {
+          "false_hit_rate": 0.6363636363636364,
+          "false_hit_rate_upper": 0.6827891622620315,
+          "false_hits": 189,
+          "hit_rate": 0.928125,
+          "hits": 297,
+          "missed_opportunities": 12,
+          "threshold": 0.6274903582933342,
+          "weighted_false_hit_rate": 0.052369077306733174,
+          "weighted_hit_rate": 0.9022499999999999
+        },
+        {
+          "false_hit_rate": 0.6428571428571429,
+          "false_hit_rate_upper": 0.6892912647722464,
+          "false_hits": 189,
+          "hit_rate": 0.91875,
+          "hits": 294,
+          "missed_opportunities": 15,
+          "threshold": 0.6329557762976461,
+          "weighted_false_hit_rate": 0.05378486055776893,
+          "weighted_hit_rate": 0.8784999999999998
+        },
+        {
+          "false_hit_rate": 0.6472602739726028,
+          "false_hit_rate_upper": 0.6936927287759604,
+          "false_hits": 189,
+          "hit_rate": 0.9125,
+          "hits": 292,
+          "missed_opportunities": 17,
+          "threshold": 0.6384211943019581,
+          "weighted_false_hit_rate": 0.05477202472952087,
+          "weighted_hit_rate": 0.8626666666666666
+        },
+        {
+          "false_hit_rate": 0.6493055555555556,
+          "false_hit_rate_upper": 0.6959839513971475,
+          "false_hits": 187,
+          "hit_rate": 0.9,
+          "hits": 288,
+          "missed_opportunities": 19,
+          "threshold": 0.64388661230627,
+          "weighted_false_hit_rate": 0.05523828278849941,
+          "weighted_hit_rate": 0.8463333333333333
+        },
+        {
+          "false_hit_rate": 0.6493055555555556,
+          "false_hit_rate_upper": 0.6959839513971475,
+          "false_hits": 187,
+          "hit_rate": 0.9,
+          "hits": 288,
+          "missed_opportunities": 19,
+          "threshold": 0.649352030310582,
+          "weighted_false_hit_rate": 0.05523828278849941,
+          "weighted_hit_rate": 0.8463333333333333
+        },
+        {
+          "false_hit_rate": 0.6480836236933798,
+          "false_hit_rate_upper": 0.6948898778823298,
+          "false_hits": 186,
+          "hit_rate": 0.896875,
+          "hits": 287,
+          "missed_opportunities": 19,
+          "threshold": 0.6548174483148939,
+          "weighted_false_hit_rate": 0.0549591253816606,
+          "weighted_hit_rate": 0.8460833333333332
+        },
+        {
+          "false_hit_rate": 0.6549295774647887,
+          "false_hit_rate_upper": 0.70171866620377,
+          "false_hits": 186,
+          "hit_rate": 0.8875,
+          "hits": 284,
+          "missed_opportunities": 22,
+          "threshold": 0.6602828663192057,
+          "weighted_false_hit_rate": 0.05654641264693961,
+          "weighted_hit_rate": 0.8223333333333332
+        },
+        {
+          "false_hit_rate": 0.6560283687943262,
+          "false_hit_rate_upper": 0.7029400150754227,
+          "false_hits": 185,
+          "hit_rate": 0.88125,
+          "hits": 282,
+          "missed_opportunities": 23,
+          "threshold": 0.6657482843235176,
+          "weighted_false_hit_rate": 0.05680655066530195,
+          "weighted_hit_rate": 0.8141666666666666
+        },
+        {
+          "false_hit_rate": 0.6560283687943262,
+          "false_hit_rate_upper": 0.7029400150754227,
+          "false_hits": 185,
+          "hit_rate": 0.88125,
+          "hits": 282,
+          "missed_opportunities": 23,
+          "threshold": 0.6712137023278296,
+          "weighted_false_hit_rate": 0.05680655066530195,
+          "weighted_hit_rate": 0.8141666666666666
+        },
+        {
+          "false_hit_rate": 0.6559139784946236,
+          "false_hit_rate_upper": 0.703082649817772,
+          "false_hits": 183,
+          "hit_rate": 0.871875,
+          "hits": 279,
+          "missed_opportunities": 24,
+          "threshold": 0.6766791203321415,
+          "weighted_false_hit_rate": 0.05677939807632641,
+          "weighted_hit_rate": 0.8057499999999999
+        },
+        {
+          "false_hit_rate": 0.658273381294964,
+          "false_hit_rate_upper": 0.7054316166509003,
+          "false_hits": 183,
+          "hit_rate": 0.86875,
+          "hits": 278,
+          "missed_opportunities": 25,
+          "threshold": 0.6821445383364535,
+          "weighted_false_hit_rate": 0.05734280342594527,
+          "weighted_hit_rate": 0.7978333333333333
+        },
+        {
+          "false_hit_rate": 0.6581818181818182,
+          "false_hit_rate_upper": 0.7056011433870746,
+          "false_hits": 181,
+          "hit_rate": 0.859375,
+          "hits": 275,
+          "missed_opportunities": 26,
+          "threshold": 0.6876099563407654,
+          "weighted_false_hit_rate": 0.05732080650269187,
+          "weighted_hit_rate": 0.7894166666666665
+        },
+        {
+          "false_hit_rate": 0.6581818181818182,
+          "false_hit_rate_upper": 0.7056011433870746,
+          "false_hits": 181,
+          "hit_rate": 0.859375,
+          "hits": 275,
+          "missed_opportunities": 26,
+          "threshold": 0.6930753743450773,
+          "weighted_false_hit_rate": 0.05732080650269187,
+          "weighted_hit_rate": 0.7894166666666665
+        },
+        {
+          "false_hit_rate": 0.6605839416058394,
+          "false_hit_rate_upper": 0.70799064279681,
+          "false_hits": 181,
+          "hit_rate": 0.85625,
+          "hits": 274,
+          "missed_opportunities": 27,
+          "threshold": 0.6985407923493892,
+          "weighted_false_hit_rate": 0.057901471529110696,
+          "weighted_hit_rate": 0.7814999999999999
+        },
+        {
+          "false_hit_rate": 0.662962962962963,
+          "false_hit_rate_upper": 0.7106198845979094,
+          "false_hits": 179,
+          "hit_rate": 0.84375,
+          "hits": 270,
+          "missed_opportunities": 29,
+          "threshold": 0.704006210353701,
+          "weighted_false_hit_rate": 0.05848399041603137,
+          "weighted_hit_rate": 0.7651666666666666
+        },
+        {
+          "false_hit_rate": 0.6654275092936803,
+          "false_hit_rate_upper": 0.7130672765800089,
+          "false_hits": 179,
+          "hit_rate": 0.840625,
+          "hits": 269,
+          "missed_opportunities": 30,
+          "threshold": 0.709471628358013,
+          "weighted_false_hit_rate": 0.059095411026741505,
+          "weighted_hit_rate": 0.7572499999999999
+        },
+        {
+          "false_hit_rate": 0.6691729323308271,
+          "false_hit_rate_upper": 0.7169163491029826,
+          "false_hits": 178,
+          "hit_rate": 0.83125,
+          "hits": 266,
+          "missed_opportunities": 32,
+          "threshold": 0.714937046362325,
+          "weighted_false_hit_rate": 0.06004047672588263,
+          "weighted_hit_rate": 0.7411666666666665
+        },
+        {
+          "false_hit_rate": 0.6691729323308271,
+          "false_hit_rate_upper": 0.7169163491029826,
+          "false_hits": 178,
+          "hit_rate": 0.83125,
+          "hits": 266,
+          "missed_opportunities": 32,
+          "threshold": 0.7204024643666369,
+          "weighted_false_hit_rate": 0.06004047672588263,
+          "weighted_hit_rate": 0.7411666666666665
+        },
+        {
+          "false_hit_rate": 0.6704545454545454,
+          "false_hit_rate_upper": 0.7183212726863177,
+          "false_hits": 177,
+          "hit_rate": 0.825,
+          "hits": 264,
+          "missed_opportunities": 33,
+          "threshold": 0.7258678823709488,
+          "weighted_false_hit_rate": 0.06036834924965894,
+          "weighted_hit_rate": 0.7329999999999999
+        },
+        {
+          "false_hit_rate": 0.6730038022813688,
+          "false_hit_rate_upper": 0.720845907173592,
+          "false_hits": 177,
+          "hit_rate": 0.821875,
+          "hits": 263,
+          "missed_opportunities": 34,
+          "threshold": 0.7313333003752607,
+          "weighted_false_hit_rate": 0.06102746810711413,
+          "weighted_hit_rate": 0.7250833333333332
+        },
+        {
+          "false_hit_rate": 0.6743295019157088,
+          "false_hit_rate_upper": 0.7222936075517228,
+          "false_hits": 176,
+          "hit_rate": 0.815625,
+          "hits": 261,
+          "missed_opportunities": 35,
+          "threshold": 0.7367987183795726,
+          "weighted_false_hit_rate": 0.06137393932349181,
+          "weighted_hit_rate": 0.7169166666666665
+        },
+        {
+          "false_hit_rate": 0.6718146718146718,
+          "false_hit_rate_upper": 0.7200795642993248,
+          "false_hits": 174,
+          "hit_rate": 0.809375,
+          "hits": 259,
+          "missed_opportunities": 35,
+          "threshold": 0.7422641363838846,
+          "weighted_false_hit_rate": 0.06071885541467955,
+          "weighted_hit_rate": 0.7164166666666666
+        },
+        {
+          "false_hit_rate": 0.6784313725490196,
+          "false_hit_rate_upper": 0.726762312227512,
+          "false_hits": 173,
+          "hit_rate": 0.796875,
+          "hits": 255,
+          "missed_opportunities": 38,
+          "threshold": 0.7477295543881965,
+          "weighted_false_hit_rate": 0.06246239017932364,
+          "weighted_hit_rate": 0.6924166666666666
+        },
+        {
+          "false_hit_rate": 0.6867469879518072,
+          "false_hit_rate_upper": 0.735243791524905,
+          "false_hits": 171,
+          "hit_rate": 0.778125,
+          "hits": 249,
+          "missed_opportunities": 42,
+          "threshold": 0.7531949723925084,
+          "weighted_false_hit_rate": 0.06474820143884893,
+          "weighted_hit_rate": 0.6602499999999999
+        },
+        {
+          "false_hit_rate": 0.6867469879518072,
+          "false_hit_rate_upper": 0.735243791524905,
+          "false_hits": 171,
+          "hit_rate": 0.778125,
+          "hits": 249,
+          "missed_opportunities": 42,
+          "threshold": 0.7586603903968203,
+          "weighted_false_hit_rate": 0.06474820143884893,
+          "weighted_hit_rate": 0.6602499999999999
+        },
+        {
+          "false_hit_rate": 0.6885245901639344,
+          "false_hit_rate_upper": 0.7374229772299665,
+          "false_hits": 168,
+          "hit_rate": 0.7625,
+          "hits": 244,
+          "missed_opportunities": 44,
+          "threshold": 0.7641258084011322,
+          "weighted_false_hit_rate": 0.06525116519937857,
+          "weighted_hit_rate": 0.6436666666666666
+        },
+        {
+          "false_hit_rate": 0.6846473029045643,
+          "false_hit_rate_upper": 0.7340483779042767,
+          "false_hits": 165,
+          "hit_rate": 0.753125,
+          "hits": 241,
+          "missed_opportunities": 44,
+          "threshold": 0.7695912264054441,
+          "weighted_false_hit_rate": 0.0641607258587168,
+          "weighted_hit_rate": 0.6429166666666666
+        },
+        {
+          "false_hit_rate": 0.6875,
+          "false_hit_rate_upper": 0.7368564257045351,
+          "false_hits": 165,
+          "hit_rate": 0.75,
+          "hits": 240,
+          "missed_opportunities": 45,
+          "threshold": 0.7750566444097561,
+          "weighted_false_hit_rate": 0.06496062992125985,
+          "weighted_hit_rate": 0.6349999999999999
+        },
+        {
+          "false_hit_rate": 0.6995708154506438,
+          "false_hit_rate_upper": 0.7490026130878312,
+          "false_hits": 163,
+          "hit_rate": 0.728125,
+          "hits": 233,
+          "missed_opportunities": 50,
+          "threshold": 0.780522062414068,
+          "weighted_false_hit_rate": 0.06849698837372183,
+          "weighted_hit_rate": 0.5949166666666665
+        },
+        {
+          "false_hit_rate": 0.7012987012987013,
+          "false_hit_rate_upper": 0.7508448557221961,
+          "false_hits": 162,
+          "hit_rate": 0.721875,
+          "hits": 231,
+          "missed_opportunities": 51,
+          "threshold": 0.78598748041838,
+          "weighted_false_hit_rate": 0.0690242863229655,
+          "weighted_hit_rate": 0.5867499999999999
+        },
+        {
+          "false_hit_rate": 0.7017543859649122,
+          "false_hit_rate_upper": 0.7515973652391763,
+          "false_hits": 160,
+          "hit_rate": 0.7125,
+          "hits": 228,
+          "missed_opportunities": 52,
+          "threshold": 0.7914528984226918,
+          "weighted_false_hit_rate": 0.069164265129683,
+          "weighted_hit_rate": 0.5783333333333333
+        },
+        {
+          "false_hit_rate": 0.7035398230088495,
+          "false_hit_rate_upper": 0.7534978241469219,
+          "false_hits": 159,
+          "hit_rate": 0.70625,
+          "hits": 226,
+          "missed_opportunities": 53,
+          "threshold": 0.7969183164270037,
+          "weighted_false_hit_rate": 0.06971645717626426,
+          "weighted_hit_rate": 0.5701666666666666
+        },
+        {
+          "false_hit_rate": 0.7031963470319634,
+          "false_hit_rate_upper": 0.7539616855393538,
+          "false_hits": 154,
+          "hit_rate": 0.684375,
+          "hits": 219,
+          "missed_opportunities": 55,
+          "threshold": 0.8023837344313156,
+          "weighted_false_hit_rate": 0.06960976344734067,
+          "weighted_hit_rate": 0.5530833333333333
+        },
+        {
+          "false_hit_rate": 0.7122641509433962,
+          "false_hit_rate_upper": 0.7632945921444633,
+          "false_hits": 151,
+          "hit_rate": 0.6625,
+          "hits": 212,
+          "missed_opportunities": 59,
+          "threshold": 0.8078491524356276,
+          "weighted_false_hit_rate": 0.07250320102432779,
+          "weighted_hit_rate": 0.5206666666666666
+        },
+        {
+          "false_hit_rate": 0.719047619047619,
+          "false_hit_rate_upper": 0.7698803304761284,
+          "false_hits": 151,
+          "hit_rate": 0.65625,
+          "hits": 210,
+          "missed_opportunities": 61,
+          "threshold": 0.8133145704399395,
+          "weighted_false_hit_rate": 0.07477715417629582,
+          "weighted_hit_rate": 0.5048333333333332
+        },
+        {
+          "false_hit_rate": 0.7268292682926829,
+          "false_hit_rate_upper": 0.7777442173095,
+          "false_hits": 149,
+          "hit_rate": 0.640625,
+          "hits": 205,
+          "missed_opportunities": 64,
+          "threshold": 0.8187799884442515,
+          "weighted_false_hit_rate": 0.07750997052193516,
+          "weighted_hit_rate": 0.48058333333333325
+        },
+        {
+          "false_hit_rate": 0.7339901477832512,
+          "false_hit_rate_upper": 0.7846466848551684,
+          "false_hits": 149,
+          "hit_rate": 0.634375,
+          "hits": 203,
+          "missed_opportunities": 66,
+          "threshold": 0.8242454064485634,
+          "weighted_false_hit_rate": 0.08015061861215708,
+          "weighted_hit_rate": 0.46474999999999994
+        },
+        {
+          "false_hit_rate": 0.7461928934010152,
+          "false_hit_rate_upper": 0.796687317041065,
+          "false_hits": 147,
+          "hit_rate": 0.615625,
+          "hits": 197,
+          "missed_opportunities": 70,
+          "threshold": 0.8297108244528753,
+          "weighted_false_hit_rate": 0.084954729339241,
+          "weighted_hit_rate": 0.43258333333333326
+        },
+        {
+          "false_hit_rate": 0.7604166666666666,
+          "false_hit_rate_upper": 0.8104006588407984,
+          "false_hits": 146,
+          "hit_rate": 0.6,
+          "hits": 192,
+          "missed_opportunities": 74,
+          "threshold": 0.8351762424571871,
+          "weighted_false_hit_rate": 0.0910981697171381,
+          "weighted_hit_rate": 0.4006666666666666
+        },
+        {
+          "false_hit_rate": 0.7619047619047619,
+          "false_hit_rate_upper": 0.812149256354524,
+          "false_hits": 144,
+          "hit_rate": 0.590625,
+          "hits": 189,
+          "missed_opportunities": 75,
+          "threshold": 0.840641660461499,
+          "weighted_false_hit_rate": 0.09177820267686428,
+          "weighted_hit_rate": 0.39224999999999993
+        },
+        {
+          "false_hit_rate": 0.7771739130434783,
+          "false_hit_rate_upper": 0.8267171339091735,
+          "false_hits": 143,
+          "hit_rate": 0.575,
+          "hits": 184,
+          "missed_opportunities": 79,
+          "threshold": 0.846107078465811,
+          "weighted_false_hit_rate": 0.09921369102682703,
+          "weighted_hit_rate": 0.3603333333333333
+        },
+        {
+          "false_hit_rate": 0.7966101694915254,
+          "false_hit_rate_upper": 0.8451763328583122,
+          "false_hits": 141,
+          "hit_rate": 0.553125,
+          "hits": 177,
+          "missed_opportunities": 84,
+          "threshold": 0.851572496470123,
+          "weighted_false_hit_rate": 0.11007025761124124,
+          "weighted_hit_rate": 0.32025
+        },
+        {
+          "false_hit_rate": 0.8253012048192772,
+          "false_hit_rate_upper": 0.8721113885844535,
+          "false_hits": 137,
+          "hit_rate": 0.51875,
+          "hits": 166,
+          "missed_opportunities": 91,
+          "threshold": 0.8570379144744349,
+          "weighted_false_hit_rate": 0.12981680353758687,
+          "weighted_hit_rate": 0.2638333333333333
+        },
+        {
+          "false_hit_rate": 0.8354430379746836,
+          "false_hit_rate_upper": 0.8820618153607771,
+          "false_hits": 132,
+          "hit_rate": 0.49375,
+          "hits": 158,
+          "missed_opportunities": 94,
+          "threshold": 0.8625033324787468,
+          "weighted_false_hit_rate": 0.13817166782972787,
+          "weighted_hit_rate": 0.23883333333333331
+        },
+        {
+          "false_hit_rate": 0.8441558441558441,
+          "false_hit_rate_upper": 0.8901527783693048,
+          "false_hits": 130,
+          "hit_rate": 0.48125,
+          "hits": 154,
+          "missed_opportunities": 96,
+          "threshold": 0.8679687504830587,
+          "weighted_false_hit_rate": 0.1460674157303371,
+          "weighted_hit_rate": 0.22249999999999998
+        },
+        {
+          "false_hit_rate": 0.8571428571428571,
+          "false_hit_rate_upper": 0.9022347713028873,
+          "false_hits": 126,
+          "hit_rate": 0.459375,
+          "hits": 147,
+          "missed_opportunities": 99,
+          "threshold": 0.8734341684873705,
+          "weighted_false_hit_rate": 0.15929203539823011,
+          "weighted_hit_rate": 0.19774999999999998
+        },
+        {
+          "false_hit_rate": 0.8776978417266187,
+          "false_hit_rate_upper": 0.9205528116039606,
+          "false_hits": 122,
+          "hit_rate": 0.434375,
+          "hits": 139,
+          "missed_opportunities": 103,
+          "threshold": 0.8788995864916825,
+          "weighted_false_hit_rate": 0.18475517415446746,
+          "weighted_hit_rate": 0.1650833333333333
+        },
+        {
+          "false_hit_rate": 0.8888888888888888,
+          "false_hit_rate_upper": 0.9302499184713541,
+          "false_hits": 120,
+          "hit_rate": 0.421875,
+          "hits": 135,
+          "missed_opportunities": 105,
+          "threshold": 0.8843650044959945,
+          "weighted_false_hit_rate": 0.20168067226890757,
+          "weighted_hit_rate": 0.14875
+        },
+        {
+          "false_hit_rate": 0.8914728682170543,
+          "false_hit_rate_upper": 0.9331848428978369,
+          "false_hits": 115,
+          "hit_rate": 0.403125,
+          "hits": 129,
+          "missed_opportunities": 106,
+          "threshold": 0.8898304225003064,
+          "weighted_false_hit_rate": 0.2059701492537314,
+          "weighted_hit_rate": 0.1395833333333333
+        },
+        {
+          "false_hit_rate": 0.8870967741935484,
+          "false_hit_rate_upper": 0.9304379039792312,
+          "false_hits": 110,
+          "hit_rate": 0.3875,
+          "hits": 124,
+          "missed_opportunities": 106,
+          "threshold": 0.8952958405046183,
+          "weighted_false_hit_rate": 0.1987951807228916,
+          "weighted_hit_rate": 0.1383333333333333
+        },
+        {
+          "false_hit_rate": 0.8888888888888888,
+          "false_hit_rate_upper": 0.9330126143586045,
+          "false_hits": 104,
+          "hit_rate": 0.365625,
+          "hits": 117,
+          "missed_opportunities": 107,
+          "threshold": 0.9007612585089302,
+          "weighted_false_hit_rate": 0.2016806722689076,
+          "weighted_hit_rate": 0.12891666666666665
+        },
+        {
+          "false_hit_rate": 0.8859649122807017,
+          "false_hit_rate_upper": 0.9312140484676179,
+          "false_hits": 101,
+          "hit_rate": 0.35625,
+          "hits": 114,
+          "missed_opportunities": 107,
+          "threshold": 0.9062266765132421,
+          "weighted_false_hit_rate": 0.19700910273081929,
+          "weighted_hit_rate": 0.12816666666666665
+        },
+        {
+          "false_hit_rate": 0.8899082568807339,
+          "false_hit_rate_upper": 0.9352347345920554,
+          "false_hits": 97,
+          "hit_rate": 0.340625,
+          "hits": 109,
+          "missed_opportunities": 108,
+          "threshold": 0.9116920945175541,
+          "weighted_false_hit_rate": 0.20335429769392038,
+          "weighted_hit_rate": 0.11924999999999998
+        },
+        {
+          "false_hit_rate": 0.8888888888888888,
+          "false_hit_rate_upper": 0.9346229368240019,
+          "false_hits": 96,
+          "hit_rate": 0.3375,
+          "hits": 108,
+          "missed_opportunities": 108,
+          "threshold": 0.917157512521866,
+          "weighted_false_hit_rate": 0.20168067226890757,
+          "weighted_hit_rate": 0.119
+        },
+        {
+          "false_hit_rate": 0.9029126213592233,
+          "false_hit_rate_upper": 0.9463760514284616,
+          "false_hits": 93,
+          "hit_rate": 0.321875,
+          "hits": 103,
+          "missed_opportunities": 110,
+          "threshold": 0.9226229305261779,
+          "weighted_false_hit_rate": 0.2270138323840521,
+          "weighted_hit_rate": 0.10241666666666666
+        },
+        {
+          "false_hit_rate": 0.9191919191919192,
+          "false_hit_rate_upper": 0.959156212521104,
+          "false_hits": 91,
+          "hit_rate": 0.309375,
+          "hits": 99,
+          "missed_opportunities": 112,
+          "threshold": 0.9280883485304898,
+          "weighted_false_hit_rate": 0.26427879961277834,
+          "weighted_hit_rate": 0.08608333333333333
+        },
+        {
+          "false_hit_rate": 0.925531914893617,
+          "false_hit_rate_upper": 0.9645296764276463,
+          "false_hits": 87,
+          "hit_rate": 0.29375,
+          "hits": 94,
+          "missed_opportunities": 113,
+          "threshold": 0.9335537665348017,
+          "weighted_false_hit_rate": 0.28185745140388774,
+          "weighted_hit_rate": 0.07716666666666666
+        },
+        {
+          "false_hit_rate": 0.975609756097561,
+          "false_hit_rate_upper": 0.995649136835987,
+          "false_hits": 80,
+          "hit_rate": 0.25625,
+          "hits": 82,
+          "missed_opportunities": 118,
+          "threshold": 0.9390191845391136,
+          "weighted_false_hit_rate": 0.558139534883721,
+          "weighted_hit_rate": 0.03583333333333333
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 76,
+          "hit_rate": 0.2375,
+          "hits": 76,
+          "missed_opportunities": 120,
+          "threshold": 0.9444846025434256,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.019
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 73,
+          "hit_rate": 0.228125,
+          "hits": 73,
+          "missed_opportunities": 120,
+          "threshold": 0.9499500205477375,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.01825
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 71,
+          "hit_rate": 0.221875,
+          "hits": 71,
+          "missed_opportunities": 120,
+          "threshold": 0.9554154385520494,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.017750000000000002
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 69,
+          "hit_rate": 0.215625,
+          "hits": 69,
+          "missed_opportunities": 120,
+          "threshold": 0.9608808565563614,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.01725
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 62,
+          "hit_rate": 0.19375,
+          "hits": 62,
+          "missed_opportunities": 120,
+          "threshold": 0.9663462745606732,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.0155
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 56,
+          "hit_rate": 0.175,
+          "hits": 56,
+          "missed_opportunities": 120,
+          "threshold": 0.9718116925649851,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.014
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 55,
+          "hit_rate": 0.171875,
+          "hits": 55,
+          "missed_opportunities": 120,
+          "threshold": 0.9772771105692971,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.01375
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 51,
+          "hit_rate": 0.159375,
+          "hits": 51,
+          "missed_opportunities": 120,
+          "threshold": 0.982742528573609,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.012750000000000001
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 44,
+          "hit_rate": 0.1375,
+          "hits": 44,
+          "missed_opportunities": 120,
+          "threshold": 0.9882079465779209,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.011
+        },
+        {
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 31,
+          "hit_rate": 0.096875,
+          "hits": 31,
+          "missed_opportunities": 120,
+          "threshold": 0.9936733645822329,
+          "weighted_false_hit_rate": 1.0,
+          "weighted_hit_rate": 0.00775
+        },
+        {
+          "false_hit_rate": 0.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 0,
+          "hit_rate": 0.0,
+          "hits": 0,
+          "missed_opportunities": 120,
+          "threshold": 0.9991387825865448,
+          "weighted_false_hit_rate": 0.0,
+          "weighted_hit_rate": 0
+        }
+      ],
+      "exit_code": 1,
+      "exit_name": "NO_THRESHOLD",
+      "operating_point": {
+        "by_class": {
+          "direction_reversal": {
+            "false_hit_rate": 1.0,
+            "false_hit_rate_upper": 1.0,
+            "false_hits": 40,
+            "hit_rate": 1.0,
+            "hits": 40,
+            "probes": 40
+          },
+          "entity_swap": {
+            "false_hit_rate": 1.0,
+            "false_hit_rate_upper": 1.0,
+            "false_hits": 40,
+            "hit_rate": 1.0,
+            "hits": 40,
+            "probes": 40
+          },
+          "negation": {
+            "false_hit_rate": 1.0,
+            "false_hit_rate_upper": 1.0,
+            "false_hits": 40,
+            "hit_rate": 1.0,
+            "hits": 40,
+            "probes": 40
+          },
+          "numeric_change": {
+            "false_hit_rate": 1.0,
+            "false_hit_rate_upper": 1.0,
+            "false_hits": 40,
+            "hit_rate": 1.0,
+            "hits": 40,
+            "probes": 40
+          },
+          "scope_change": {
+            "false_hit_rate": 1.0,
+            "false_hit_rate_upper": 1.0,
+            "false_hits": 40,
+            "hit_rate": 1.0,
+            "hits": 40,
+            "probes": 40
+          },
+          "true_paraphrase": {
+            "false_hit_rate": 0.0,
+            "false_hit_rate_upper": 0.024655401055656376,
+            "false_hits": 0,
+            "hit_rate": 1.0,
+            "hits": 120,
+            "probes": 120
+          }
+        },
+        "false_hit_rate": 0.625,
+        "false_hit_rate_upper": 0.6700749785691008,
+        "false_hits": 200,
+        "hit_rate": 1.0,
+        "hits": 320,
+        "missed_opportunities": 0,
+        "probes": 320,
+        "resolution_floor": 0.003125,
+        "threshold": 0.4525969821553528,
+        "weighted_false_hit_rate": 0.05000000000000001,
+        "weighted_hit_rate": 0.9999999999999999
+      },
+      "separation_auc": 0.23804166666666668,
+      "wrong_prefix_hits": 77
+    },
     "synthetic@2.6": {
+      "clean_ceiling_hits": 14,
       "curve": [
         {
           "false_hit_rate": 0.625,
@@ -4730,11 +5917,13 @@
       "wrong_prefix_hits": 0
     }
   },
-  "headline_embedder": "charngram",
-  "headline_separation_auc": 0.000375,
-  "headline_wrong_prefix_hits": 196,
+  "headline_clean_ceiling_hits": 0,
+  "headline_embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+  "headline_separation_auc": 0.23804166666666668,
+  "headline_wrong_prefix_hits": 77,
   "min_hit_rate": 0.1,
   "near_miss_prevalence": 0.05,
+  "positive_controls": 120,
   "question": "What does the hit rate buy and what does it cost?",
   "shaped_embedder": "synthetic@2.6",
   "shaped_operating_point": {

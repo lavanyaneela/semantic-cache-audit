@@ -44,6 +44,24 @@
       "rows": 626,
       "zero_rows_before_normalisation": 0
     },
+    "st:sentence-transformers/all-MiniLM-L6-v2": {
+      "captured_utc": "2026-10-27",
+      "corpus_sha256": "4551791fd56d578f719a131ff794f568d1df93800ea1014dd04709f9048e2a69",
+      "describes": {
+        "dim": 384,
+        "kind": "OnnxSentenceEncoder",
+        "max_tokens": 256,
+        "model": "sentence-transformers/all-MiniLM-L6-v2",
+        "name": "st:sentence-transformers/all-MiniLM-L6-v2",
+        "pooling": "mean over attention mask, then L2 normalise",
+        "pretrained": true
+      },
+      "dim": 384,
+      "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+      "file": "st__sentence-transformers__all-MiniLM-L6-v2.npz",
+      "rows": 626,
+      "zero_rows_before_normalisation": 0
+    },
     "synthetic@0": {
       "captured_utc": "2026-10-27",
       "corpus_sha256": "4551791fd56d578f719a131ff794f568d1df93800ea1014dd04709f9048e2a69",
