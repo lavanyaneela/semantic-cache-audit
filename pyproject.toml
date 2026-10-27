@@ -26,6 +26,8 @@ dev = [
     "pytest>=8.0",
     "pytest-cov>=4.1",
     "ruff>=0.4",
+    "cmarkgfm>=2024.1",
+    "playwright>=1.40",
 ]
 servers = [
     "pymongo>=4.6",

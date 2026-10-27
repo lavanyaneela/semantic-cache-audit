@@ -52,6 +52,7 @@ receipts: experiments
 	$(PY) tools/collect_metrics.py --skip-tests
 	$(PY) tools/check_numbers.py
 	$(PY) tools/check_durations.py
+	$(PY) tools/check_readme_render.py
 
 prove:
 	$(PY) tools/check_numbers.py --prove
@@ -77,9 +78,10 @@ report:
 diagrams:
 	$(PY) tools/render_diagrams.py
 
-evidence: diagrams report
+evidence: diagrams
 	$(PY) tools/capture_screenshots.py
 	$(PY) tools/record_demo.py
+	$(PY) tools/check_readme_render.py
 
 clean:
 	rm -rf reports .pytest_cache .ruff_cache .coverage coverage.json

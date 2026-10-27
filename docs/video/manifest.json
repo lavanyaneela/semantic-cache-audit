@@ -1,0 +1,89 @@
+{
+  "note": "every line of terminal text in the recording is real captured output. The video is a replay of that output paced by each command's measured wall time, not a screen recording. Durations appear here for pacing and are published nowhere.",
+  "commands": [
+    {
+      "label": "semantic-cache-audit corpus",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "semantic_cache_audit.cli",
+        "corpus"
+      ],
+      "exit_code": 0,
+      "seconds": 0.72
+    },
+    {
+      "label": "semantic-cache-audit classes --budget 0.05",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "semantic_cache_audit.cli",
+        "classes",
+        "--embedder",
+        "st:sentence-transformers/all-MiniLM-L6-v2",
+        "--budget",
+        "0.05"
+      ],
+      "exit_code": 1,
+      "seconds": 0.789
+    },
+    {
+      "label": "semantic-cache-audit audit --budget 0.05",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "semantic_cache_audit.cli",
+        "audit",
+        "--embedder",
+        "st:sentence-transformers/all-MiniLM-L6-v2",
+        "--budget",
+        "0.05"
+      ],
+      "exit_code": 1,
+      "seconds": 0.663
+    },
+    {
+      "label": "semantic-cache-audit audit --budget 0.001",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "semantic_cache_audit.cli",
+        "audit",
+        "--embedder",
+        "st:sentence-transformers/all-MiniLM-L6-v2",
+        "--budget",
+        "0.001"
+      ],
+      "exit_code": 2,
+      "seconds": 0.697
+    },
+    {
+      "label": "semantic-cache-audit compare",
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "semantic_cache_audit.cli",
+        "compare",
+        "--embedders",
+        "st:sentence-transformers/all-MiniLM-L6-v2",
+        "bow",
+        "lsa",
+        "charngram"
+      ],
+      "exit_code": 0,
+      "seconds": 0.948
+    },
+    {
+      "label": "python tools/check_numbers.py --prove",
+      "argv": [
+        "/usr/local/bin/python3",
+        "tools/check_numbers.py",
+        "--prove"
+      ],
+      "exit_code": 0,
+      "seconds": 0.088
+    }
+  ],
+  "mp4_bytes": 229220,
+  "gif_bytes": 1045519
+}

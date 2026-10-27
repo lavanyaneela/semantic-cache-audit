@@ -1,0 +1,11 @@
+{
+  "file": "architecture.svg",
+  "source": "the ```mermaid-source fence in README.md",
+  "renderer": "/opt/npm-tools/node_modules/mermaid/dist/mermaid.min.js",
+  "html_labels": false,
+  "background": "#fbfcfd",
+  "natural_size": {
+    "w": 2875,
+    "h": 400
+  }
+}

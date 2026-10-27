@@ -1,0 +1,49 @@
+{
+  "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+  "shots": [
+    {
+      "file": "verdict.png",
+      "report": "report-budget-0001.html",
+      "budget": "0.001",
+      "framed_by": [
+        "verdict",
+        "curve"
+      ],
+      "height": 350
+    },
+    {
+      "file": "by-class.png",
+      "report": "report-budget-005.html",
+      "budget": "0.05",
+      "framed_by": [
+        "by-class",
+        "curve"
+      ],
+      "height": 345
+    },
+    {
+      "file": "curve.png",
+      "report": "report-budget-005.html",
+      "budget": "0.05",
+      "framed_by": [
+        "curve",
+        "notes"
+      ],
+      "height": 529
+    }
+  ],
+  "badges": {
+    "0.001": {
+      "text": "REFUSED, THE CORPUS CANNOT RESOLVE THIS BUDGET",
+      "colour": "rgb(255, 255, 255)",
+      "background": "rgb(122, 79, 1)",
+      "visible": true
+    },
+    "0.05": {
+      "text": "NO THRESHOLD MEETS THE BUDGET",
+      "colour": "rgb(255, 255, 255)",
+      "background": "rgb(154, 52, 18)",
+      "visible": true
+    }
+  }
+}
