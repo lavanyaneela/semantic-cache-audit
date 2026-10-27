@@ -43,7 +43,7 @@ pairs:
   rate. That would take 299 clean hits, and about 798 pairs would be needed to get
   them.
 
-426 tests, 98.1% line coverage, every figure above re-measured by CI and checked
+458 tests, 98.1% line coverage, every figure above re-measured by CI and checked
 against this document by `tools/check_numbers.py`.
 
 ## Quickstart
@@ -74,7 +74,7 @@ this repository exists to argue against.
 | --- | --- |
 | Raising the threshold rejects true paraphrases, so the latency saving shrinks | Fewer wrong answers reach the caller |
 | Lowering it serves more traffic from cache | On this encoder, almost every new hit is wrong |
-| Bounding the cache size cuts the wrong answer rate to 2.9% when bounded, from 5.7% when it is not | Unbounded growth buys hit rate and pays 2.0 times the wrong answers |
+| Bounding the cache size cuts the wrong answer rate to 2.9% when bounded, from 5.7% when unbounded | Unbounded growth buys hit rate and pays 2.0 times the wrong answers |
 | Evicting by insertion order drops the stale share several fold | It costs hit rate, and barely touches correctness |
 
 ## Where it goes wrong, by class

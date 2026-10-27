@@ -111,8 +111,8 @@ function add(cls, text){const d=document.createElement('div');d.className=cls;d.
   term.appendChild(d);term.scrollTop=term.scrollHeight;return d;}
 async function typeCmd(text){const d=add('cmd','$ ');
   for(const ch of text){d.textContent += ch; await sleep(14);} await sleep(160);}
-async function reveal(text, ms){const lines=text.split('\\n');
-  const per=Math.max(18, Math.min(110, ms*1000/Math.max(lines.length,1)));
+async function reveal(text, pace){const lines=text.split('\\n');
+  const per=Math.max(18, Math.min(110, (pace*1000)/Math.max(lines.length,1)));
   for(const line of lines){add('out', line); await sleep(per);}}
 (async () => {
   for(const s of SEGMENTS){

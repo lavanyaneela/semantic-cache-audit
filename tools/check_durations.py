@@ -21,11 +21,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-#: A number immediately followed by a time unit. Deliberately broad; the allow list
-#: below carries the reasons rather than the pattern carrying the exceptions.
+#: A number immediately followed by a time unit. Thousands separators must be real
+#: groups of three: the first version allowed any run of digits and commas, so the
+#: expression `Math.min(110, ms * 1000)` in a pacing script read as "110 ms" and
+#: failed the build. Broad otherwise, because the allow list below should carry the
+#: exceptions with their reasons rather than the pattern carrying them silently.
 DURATION = re.compile(
-    r"\b\d[\d,]*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|us|seconds?|secs?|"
-    r"minutes?|mins?|hours?|hrs?)\b",
+    r"\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|us|seconds?|"
+    r"secs?|minutes?|mins?|hours?|hrs?)\b",
     re.IGNORECASE,
 )
 

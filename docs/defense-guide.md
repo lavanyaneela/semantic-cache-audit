@@ -86,7 +86,7 @@ post. The contribution is the size of the failure, not the direction.
 **The numbers:** choosing between LRU, LFU and FIFO at a fixed capacity moves the
 wrong answer rate by 0.13 points of wrong answers while moving staleness by 16.8
 points of staleness. Bounding the cache at all cuts the false hit rate to 2.9% when
-bounded from 5.7% when it is not, which is 2.0 times the wrong answers for an
+bounded from 5.7% when unbounded, which is 2.0 times the wrong answers for an
 unbounded cache.
 
 **If pushed, "why would size change correctness":** a wrong answer needs a wrong

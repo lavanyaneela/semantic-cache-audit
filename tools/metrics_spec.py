@@ -124,7 +124,7 @@ METRICS: tuple[Metric, ...] = (
     Metric("bounded_false_hit_pct", "e3_eviction_sweep", ("bounded_false_hit_rate_lru",), as_pct1,
            ("{}% when bounded",)),
     Metric("unbounded_false_hit_pct", "e3_eviction_sweep", ("unbounded_false_hit_rate",), as_pct1,
-           ("{}% when it is not",)),
+           ("{}% when unbounded",)),
     Metric("unbounded_false_hit_ratio", "e3_eviction_sweep",
            ("false_hit_ratio_unbounded_over_bounded",), as_ratio1,
            ("{} times the wrong",)),
