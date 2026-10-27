@@ -43,7 +43,7 @@ pairs:
   flattering rate. A 1% budget, the kind a team would actually ask for, would take
   299 clean hits, and about 798 pairs would be needed to get them.
 
-494 tests, 97.2% line coverage over the offline path, which excludes the ONNX encoder
+499 tests, 97.6% line coverage over the offline path, which excludes the ONNX encoder
 that is only run to regenerate the fixture. Every figure above is re-measured by CI
 and checked against this document by `tools/check_numbers.py`.
 

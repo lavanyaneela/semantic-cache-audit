@@ -158,6 +158,31 @@ def test_the_report_names_every_heading_the_screenshot_tool_frames_by(tmp_path, 
         assert heading in text
 
 
+def test_an_unexpected_failure_exits_three_rather_than_crashing(capsys):
+    assert main(["audit", *HEADLINE, "--steps", "0"]) == int(Exit.ERROR)
+
+
+def test_an_unexpected_failure_suggests_the_debug_switch(capsys):
+    main(["audit", *HEADLINE, "--steps", "0"])
+    assert "SCA_DEBUG" in capsys.readouterr().err
+
+
+def test_the_debug_switch_re_raises_so_a_real_bug_is_debuggable(monkeypatch):
+    """Catching broadly makes a genuine bug look like a user error, so there has to
+    be a way back to the traceback."""
+    monkeypatch.setenv("SCA_DEBUG", "1")
+    with pytest.raises(ValueError, match="--steps"):
+        main(["audit", *HEADLINE, "--steps", "0"])
+
+
+def test_an_out_of_range_prevalence_is_refused(capsys):
+    assert main(["audit", *HEADLINE, "--prevalence", "5"]) == int(Exit.ERROR)
+
+
+def test_an_out_of_range_minimum_hit_rate_is_refused(capsys):
+    assert main(["audit", *HEADLINE, "--min-hit-rate", "7"]) == int(Exit.ERROR)
+
+
 def test_the_parser_requires_a_subcommand():
     with pytest.raises(SystemExit):
         main([])
