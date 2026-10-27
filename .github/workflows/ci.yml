@@ -1,0 +1,137 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  PYTHONUNBUFFERED: "1"
+  # Nothing on the default path reaches a model host. Setting this makes a regression
+  # fail loudly in CI rather than quietly downloading weights and passing.
+  HF_HUB_OFFLINE: "1"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - name: Ruff
+        run: ruff check src tests tools experiments
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install --upgrade pip
+      # Installed without the encoder extra on purpose. A heavy optional dependency
+      # present on the build machine masks a broken import in the job that installs
+      # without it, so the default path is tested in a job that genuinely lacks it.
+      - run: pip install -e ".[dev]"
+      - name: Tests
+        run: |
+          mkdir -p reports
+          python -m pytest -q \
+            --junitxml=reports/junit.xml \
+            --cov=semantic_cache_audit \
+            --cov-report=json:reports/coverage.json \
+            --cov-report=xml:reports/coverage.xml \
+            --cov-report=term
+      - name: Coverage floor
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          floor = 92.0
+          rate = float(ET.parse("reports/coverage.xml").getroot().get("line-rate")) * 100
+          print(f"line coverage {rate:.2f}% against a floor of {floor}%")
+          raise SystemExit(0 if rate >= floor else 1)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-${{ matrix.python-version }}
+          path: reports/
+
+  receipts:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: pip install -e ".[dev]"
+      - name: Regenerate the corpus and check it is unchanged
+        run: |
+          python -m semantic_cache_audit.corpus.builder > /dev/null
+          git diff --exit-code fixtures/corpus/pairs.jsonl
+      - name: Regenerate the offline embedding fixtures
+        run: python tools/build_fixtures.py
+      - name: Tests, as their own step so a red test reads as a red test
+        run: |
+          mkdir -p reports
+          python -m pytest -q --junitxml=reports/junit.xml \
+            --cov=semantic_cache_audit --cov-report=json:reports/coverage.json
+      - name: Re-measure every published figure
+        run: |
+          make experiments
+          python tools/collect_metrics.py --skip-tests
+      - name: Check the documents against the code
+        run: python tools/check_numbers.py
+      - name: Check that no duration is published as a result
+        run: python tools/check_durations.py
+      - name: Prove the checker catches a stale figure
+        run: python tools/check_numbers.py --prove
+      - name: Publish the uncomfortable table to the job summary
+        if: always()
+        run: python tools/job_summary.py >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: experiments
+          path: docs/experiments/
+
+  # Optional. Proves the Redis and MongoDB code paths run against real servers rather
+  # than only against the in-process doubles. Non blocking: `make verify` must stay
+  # offline, so a service container can never be on the critical path.
+  real-backends:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s
+          --health-timeout 5s --health-retries 10
+      mongo:
+        image: mongo:7
+        ports: ["27017:27017"]
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand(\"ping\")'"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      REDIS_URL: redis://localhost:6379/0
+      MONGO_URL: mongodb://localhost:27017
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev,servers]"
+      - name: The cache suite against real Redis and MongoDB
+        run: python -m pytest -q tests/test_cache.py tests/test_api.py tests/test_stream.py

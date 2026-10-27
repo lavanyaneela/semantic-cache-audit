@@ -1,0 +1,202 @@
+{
+  "anchors": {
+    "bounded_false_hit_pct": [
+      "{}% when bounded"
+    ],
+    "classes_below_chance": [
+      "{} of the five classes",
+      "{} classes separate below"
+    ],
+    "clean_ceiling_hits": [
+      "{} of the 120 true",
+      "exactly {} paraphrases",
+      "serves {} paraphrases"
+    ],
+    "corpus_domains": [
+      "{} domains"
+    ],
+    "corpus_pairs_total": [
+      "{} labelled pairs",
+      "{} pairs in"
+    ],
+    "coverage_line_pct": [
+      "{}% line coverage"
+    ],
+    "embedders_compared": [
+      "{} embedders"
+    ],
+    "hits_required_one_pct": [
+      "{} clean hits"
+    ],
+    "lowest_stale_policy": [
+      "{} cuts staleness"
+    ],
+    "near_miss_classes": [
+      "{} near miss classes"
+    ],
+    "near_miss_pairs": [
+      "{} near miss pairs"
+    ],
+    "pairs_required_one_pct": [
+      "{} pairs would be"
+    ],
+    "policy_false_hit_spread_pp": [
+      "{} points of wrong",
+      "by {} points of false"
+    ],
+    "policy_stale_spread_pp": [
+      "{} points of staleness"
+    ],
+    "positive_controls": [
+      "{} positive controls",
+      "{} true paraphrases",
+      "{} of them share"
+    ],
+    "real_embedders_ever_ok": [
+      "{} of the four real"
+    ],
+    "safest_class_false_hit_pct": [
+      "{}% on the safest"
+    ],
+    "safest_class_name": [
+      "only {} stays",
+      "safest is {}"
+    ],
+    "separation_auc": [
+      "separation of {}",
+      "separation is {}",
+      "scores {} where"
+    ],
+    "stale_reduction_ratio": [
+      "{} fold reduction",
+      "{} times less stale"
+    ],
+    "templates_total": [
+      "{} template families"
+    ],
+    "tests_total": [
+      "{} tests"
+    ],
+    "threshold_shift_median_points": [
+      "shifts by {} cosine",
+      "median shift of {}"
+    ],
+    "tightest_budget_pct": [
+      "tighter than {}%",
+      "budget of {}%"
+    ],
+    "transfers_collapsed": [
+      "{} stop serving"
+    ],
+    "transfers_measured": [
+      "{} transfers measured",
+      "across {} transfers"
+    ],
+    "transfers_saturated": [
+      "{} stop rejecting"
+    ],
+    "unbounded_false_hit_pct": [
+      "{}% when it is not"
+    ],
+    "unbounded_false_hit_ratio": [
+      "{} times the wrong"
+    ],
+    "worst_class_false_hit_pct": [
+      "{}% of that class",
+      "{}% on that class"
+    ],
+    "worst_class_name": [
+      "worst class is {}",
+      "worst is {}"
+    ],
+    "wrong_prefix_hits": [
+      "{} most confident",
+      "first {} matches",
+      "{} consecutive wrong"
+    ]
+  },
+  "checked_documents": [
+    "README.md",
+    "docs/defense-guide.md",
+    "docs/adr/ADR-001-hand-built-adversarial-corpus.md",
+    "docs/adr/ADR-002-pretrained-encoder-and-the-embedder-panel.md",
+    "docs/adr/ADR-003-exact-index-and-offline-backends.md",
+    "docs/adr/ADR-004-what-counts-as-a-wrong-hit.md",
+    "docs/adr/ADR-005-what-this-repository-cannot-measure.md"
+  ],
+  "generated_utc": "2026-10-27T14:22:17Z",
+  "metrics": {
+    "bounded_false_hit_pct": 0.029038112522686024,
+    "classes_below_chance": 4,
+    "clean_ceiling_hits": 0,
+    "corpus_domains": 6,
+    "corpus_pairs_total": 320,
+    "coverage_line_pct": 98.05825242718447,
+    "embedders_compared": 5,
+    "hits_required_one_pct": 299,
+    "lowest_stale_policy": "fifo",
+    "near_miss_classes": 5,
+    "near_miss_pairs": 200,
+    "pairs_required_one_pct": 798,
+    "policy_false_hit_spread_pp": 0.12942419728097404,
+    "policy_stale_spread_pp": 16.761646814534334,
+    "positive_controls": 120,
+    "real_embedders_ever_ok": 0,
+    "safest_class_false_hit_pct": 0.15,
+    "safest_class_name": "entity_swap",
+    "separation_auc": 0.23804166666666668,
+    "stale_reduction_ratio": 13.055753176043558,
+    "templates_total": 60,
+    "tests_total": 426,
+    "threshold_shift_median_points": 35.708415508270264,
+    "tightest_budget_pct": 0.024655401055656376,
+    "transfers_collapsed": 47,
+    "transfers_measured": 156,
+    "transfers_saturated": 54,
+    "unbounded_false_hit_pct": 0.05709534368070954,
+    "unbounded_false_hit_ratio": 1.9662208980044347,
+    "worst_class_false_hit_pct": 1.0,
+    "worst_class_name": "direction_reversal",
+    "wrong_prefix_hits": 77
+  },
+  "note": "every value here was produced by running the suite and the experiments. `rendered` is the exact string a document must use; the checker compares against that rather than against the float, because a reader sees the string.",
+  "rendered": {
+    "bounded_false_hit_pct": "2.9",
+    "classes_below_chance": "4",
+    "clean_ceiling_hits": "0",
+    "corpus_domains": "6",
+    "corpus_pairs_total": "320",
+    "coverage_line_pct": "98.1",
+    "embedders_compared": "5",
+    "hits_required_one_pct": "299",
+    "lowest_stale_policy": "fifo",
+    "near_miss_classes": "5",
+    "near_miss_pairs": "200",
+    "pairs_required_one_pct": "798",
+    "policy_false_hit_spread_pp": "0.13",
+    "policy_stale_spread_pp": "16.8",
+    "positive_controls": "120",
+    "real_embedders_ever_ok": "0",
+    "safest_class_false_hit_pct": "15.0",
+    "safest_class_name": "entity_swap",
+    "separation_auc": "0.238",
+    "stale_reduction_ratio": "13.1",
+    "templates_total": "60",
+    "tests_total": "426",
+    "threshold_shift_median_points": "35.7",
+    "tightest_budget_pct": "2.47",
+    "transfers_collapsed": "47",
+    "transfers_measured": "156",
+    "transfers_saturated": "54",
+    "unbounded_false_hit_pct": "5.7",
+    "unbounded_false_hit_ratio": "2.0",
+    "worst_class_false_hit_pct": "100.0",
+    "worst_class_name": "direction_reversal",
+    "wrong_prefix_hits": "77"
+  },
+  "textual": [
+    "lowest_stale_policy",
+    "safest_class_name",
+    "worst_class_name"
+  ]
+}
