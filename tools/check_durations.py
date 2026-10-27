@@ -46,6 +46,7 @@ ALLOWED_PATHS: dict[str, str] = {
     "tools/check_durations.py": "this file, which contains the pattern itself",
     "tests/test_cache.py": "simulated ttl values in an injected clock",
     "tests/test_stream.py": "simulated ttl values in an injected clock",
+    "tests/test_receipts.py": "holds the example strings this pattern is tested against",
     "experiments/e3_eviction_sweep.py": "the ttl grid, a configured input",
     "docs/experiments/e3_eviction_sweep.json": "the ttl grid, recorded as an input",
     "docs/metrics.json": "no duration is a metric; the file is checked by the test below",
@@ -75,10 +76,23 @@ class Hit:
 
 
 def tracked_files() -> list[Path]:
+    """Every file git knows about, tracked or newly added but not yet committed.
+
+    `git ls-files` alone lists only tracked files, which means a new file is
+    invisible to this check until it is committed. That is not a theoretical gap: the
+    receipts suite was written, run green, and committed, and then failed on the next
+    fresh clone because the file holding the pattern's own test strings had become
+    visible to the pattern. `--others` closes it, so the check sees what a clone
+    would see.
+    """
     out = subprocess.run(
-        ["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
     )
-    return [ROOT / line for line in out.stdout.splitlines() if line]
+    return [ROOT / line for line in dict.fromkeys(out.stdout.splitlines()) if line]
 
 
 def scan() -> list[Hit]:

@@ -182,6 +182,20 @@ def test_every_allowed_duration_path_carries_a_reason():
     assert all(len(reason) > 10 for reason in ALLOWED_PATHS.values())
 
 
+def test_the_duration_sweep_sees_a_file_that_is_added_but_not_committed():
+    """A new file was invisible to the sweep until it was committed, and the receipts
+    suite passed locally and then failed on the next fresh clone because of it."""
+    import subprocess
+
+    out = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=ROOT, capture_output=True, text=True, check=True,
+    )
+    from check_durations import tracked_files
+
+    assert len(tracked_files()) == len([line for line in out.stdout.splitlines() if line])
+
+
 def test_every_allowed_duration_path_still_exists():
     from check_durations import ALLOWED_PATHS
 
