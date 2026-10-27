@@ -39,7 +39,10 @@ class AuditConfig:
     embedder: str = "charngram"
 
     #: Entries a cache holds before eviction starts, used by E3.
-    capacity: int = 150
+    #: Low enough that eviction actually binds on the E3 stream. At 150 the policies
+    #: are indistinguishable because nothing is ever evicted, which would make E3 a
+    #: tautology rather than a measurement.
+    capacity: int = 50
 
     #: Seconds before a cached answer is treated as stale, used by E3.
     ttl_seconds: float = 3600.0

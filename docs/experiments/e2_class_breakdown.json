@@ -1,0 +1,136 @@
+{
+  "by_embedder": {
+    "charngram": {
+      "positive_controls": 120,
+      "ranked": [
+        {
+          "class": "direction_reversal",
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 40,
+          "hits": 40,
+          "median_score": 0.9116992354393005,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.0
+        },
+        {
+          "class": "negation",
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 40,
+          "hits": 40,
+          "median_score": 0.8580003380775452,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.0
+        },
+        {
+          "class": "numeric_change",
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 40,
+          "hits": 40,
+          "median_score": 0.9101409912109375,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.0
+        },
+        {
+          "class": "scope_change",
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 40,
+          "hits": 40,
+          "median_score": 0.8277751803398132,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.0
+        },
+        {
+          "class": "entity_swap",
+          "false_hit_rate": 1.0,
+          "false_hit_rate_upper": 1.0,
+          "false_hits": 40,
+          "hits": 40,
+          "median_score": 0.8204048275947571,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.001875
+        }
+      ],
+      "reference_definition": "median positive control score, so half of true paraphrases hit",
+      "reference_threshold": 0.3682020902633667
+    },
+    "synthetic@2.6": {
+      "positive_controls": 120,
+      "ranked": [
+        {
+          "class": "numeric_change",
+          "false_hit_rate": 0.1,
+          "false_hit_rate_upper": 0.21439763851614463,
+          "false_hits": 4,
+          "hits": 4,
+          "median_score": 0.33912143111228943,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.8364583333333333
+        },
+        {
+          "class": "negation",
+          "false_hit_rate": 0.075,
+          "false_hit_rate_upper": 0.18258685001590122,
+          "false_hits": 3,
+          "hits": 3,
+          "median_score": 0.34090185165405273,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.864375
+        },
+        {
+          "class": "direction_reversal",
+          "false_hit_rate": 0.075,
+          "false_hit_rate_upper": 0.18258685001590122,
+          "false_hits": 3,
+          "hits": 3,
+          "median_score": 0.33888405561447144,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.90375
+        },
+        {
+          "class": "scope_change",
+          "false_hit_rate": 0.05,
+          "false_hit_rate_upper": 0.14915196127321298,
+          "false_hits": 2,
+          "hits": 2,
+          "median_score": 0.3369712829589844,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.884375
+        },
+        {
+          "class": "entity_swap",
+          "false_hit_rate": 0.05,
+          "false_hit_rate_upper": 0.14915196127321298,
+          "false_hits": 2,
+          "hits": 2,
+          "median_score": 0.3437643051147461,
+          "probes": 40,
+          "resolution_floor": 0.025,
+          "separation_auc": 0.89625
+        }
+      ],
+      "reference_definition": "median positive control score, so half of true paraphrases hit",
+      "reference_threshold": 0.4175761938095093
+    }
+  },
+  "classes_at_total_failure": 5,
+  "classes_below_chance_separation": 5,
+  "headline_embedder": "charngram",
+  "question": "Which near miss class is most dangerous?",
+  "safest_class_false_hit_pct": 1.0,
+  "safest_class_name": "entity_swap",
+  "worst_class_false_hit_pct": 1.0,
+  "worst_class_name": "direction_reversal"
+}
