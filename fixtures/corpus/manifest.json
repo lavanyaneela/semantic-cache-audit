@@ -1,0 +1,31 @@
+{
+  "corpus_pairs_total": 320,
+  "templates_total": 60,
+  "near_miss_pairs": 200,
+  "positive_control_pairs": 120,
+  "by_class": {
+    "direction_reversal": 40,
+    "negation": 40,
+    "entity_swap": 40,
+    "numeric_change": 40,
+    "scope_change": 40,
+    "true_paraphrase": 120
+  },
+  "by_domain": {
+    "airline": 33,
+    "banking": 58,
+    "healthcare_scheduling": 32,
+    "hr_policy": 68,
+    "retail_returns": 39,
+    "software_config": 90
+  },
+  "by_difficulty": {
+    "easy": 18,
+    "hard": 199,
+    "medium": 103
+  },
+  "sha256": "4551791fd56d578f719a131ff794f568d1df93800ea1014dd04709f9048e2a69",
+  "generated_by": "python -m semantic_cache_audit.corpus.builder",
+  "authored": "every family hand written to sit in the high similarity, different answer region; substitutions enumerated by hand, not sampled",
+  "captured_utc": "2026-10-27"
+}
