@@ -43,7 +43,7 @@ pairs:
   rate. That would take 299 clean hits, and about 798 pairs would be needed to get
   them.
 
-458 tests, 98.1% line coverage, every figure above re-measured by CI and checked
+459 tests, 98.1% line coverage, every figure above re-measured by CI and checked
 against this document by `tools/check_numbers.py`.
 
 ## Quickstart

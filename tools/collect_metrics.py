@@ -87,10 +87,13 @@ def read_suite() -> dict:
     skipped = int(suite.get("skipped", 0))
     data = json.loads(coverage.read_text())
     return {
-        # Skipped tests are subtracted. The encoder tests skip without local weights,
-        # and a count that moves depending on what happens to be cached is not a
-        # number anything should be anchored to.
-        "tests_total": total - skipped,
+        # The collected count, skips included. The encoder tests skip when the
+        # optional weights are not cached, so subtracting skips would make the
+        # published figure differ between a laptop with the weights and a CI runner
+        # without them, and the checker would fail on one of the two. The number of
+        # tests in the suite is a property of the suite; whether one ran today is
+        # not, so it is recorded separately and anchored nowhere.
+        "tests_total": total,
         "tests_skipped": skipped,
         "coverage_line_pct": float(data["totals"]["percent_covered"]),
     }
