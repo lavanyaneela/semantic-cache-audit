@@ -144,8 +144,23 @@
   "headline_embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
   "probes_per_class": 40,
   "question": "Which near miss class is most dangerous?",
+  "rate_by_class": {
+    "direction_reversal": 1.0,
+    "entity_swap": 0.15,
+    "negation": 0.925,
+    "numeric_change": 0.85,
+    "scope_change": 0.85
+  },
   "safest_class_false_hit_pct": 0.15,
   "safest_class_name": "entity_swap",
+  "safest_class_upper": 0.27474450501397046,
+  "upper_by_class": {
+    "direction_reversal": 1.0,
+    "entity_swap": 0.27474450501397046,
+    "negation": 0.9792463985242987,
+    "numeric_change": 0.9325990594772913,
+    "scope_change": 0.9325990594772913
+  },
   "worst_class_false_hit_pct": 1.0,
   "worst_class_min_similarity": 0.98957359790802,
   "worst_class_name": "direction_reversal"

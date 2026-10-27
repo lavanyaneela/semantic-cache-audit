@@ -37,9 +37,13 @@ another checks that padding does not leak into a pooled vector.
 
 `bow`, `lsa` and `charngram` are unigram TF-IDF, unigram plus bigram TF-IDF reduced by
 SVD, and hashed character n-grams under a seeded signed projection. They are genuine
-functions of the text and they are measured, not decorative: across 156 transfers
-the threshold shifts by 35.7 cosine points at the median, and that number only exists
-because there is more than one real embedder here.
+functions of the text and they are measured, not decorative: across the 12
+transfers between the four real embedders the threshold shifts by 32.2 cosine points
+at the median, and that figure only exists because there is more than one real
+embedder here. The separation family adds 144 further transfers to the same sweep,
+and those are kept out of the published figure on purpose: pooling them would make
+the result look thirteen times larger and would make it a statement about an
+instrument.
 
 Two traps they pin. Their vocabulary and weights are fitted on this corpus, so their
 numbers are an upper bound on what a cold vocabulary would manage rather than a lower

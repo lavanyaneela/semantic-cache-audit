@@ -62,11 +62,40 @@ def cmd_sweep(args) -> int:
 
 
 def cmd_classes(args) -> int:
+    """Per class breakdown, by default at the reference threshold rather than the
+    budget operating point.
+
+    On an inverted embedder the budget operating point is always the fully permissive
+    threshold, where every class sits at one hundred percent and the table says
+    nothing. The reference threshold, the median positive control score, is where E2
+    measures: half the true paraphrases are served, so each class has its full set of
+    probes behind its number. `--at operating-point` asks for the other one.
+    """
+    import numpy as np
+
+    from .audit.probe import pair_scores, probe_at_threshold
+    from .audit.sweep import summarise
+
     sweep, decision = _sweep_and_decide(args)
-    point = decision.operating_point
-    if point is None:
-        print("no usable threshold, so there is no per class breakdown to show")
-        return int(decision.exit_code)
+    if args.at == "operating-point":
+        point = decision.operating_point
+        if point is None:
+            print("no usable threshold, so there is no per class breakdown to show")
+            return int(decision.exit_code)
+        label = f"budget operating point, threshold {point.threshold:.4f}"
+    else:
+        pairs = sweep.pairs
+        scores = pair_scores(pairs, *_load(args.embedder)[1:])
+        threshold = float(np.median([s for p, s in zip(pairs, scores, strict=True)
+                                     if p.same_answer]))
+        point = summarise(
+            probe_at_threshold(pairs, scores, threshold), threshold, pairs, args.prevalence
+        )
+        label = (
+            f"reference threshold {threshold:.4f}, where half the true paraphrases hit"
+        )
+    print(label)
+    print()
     print(report.class_table(point))
     return int(decision.exit_code)
 
@@ -148,6 +177,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.set_defaults(func=cmd_sweep)
 
     c = shared(sub.add_parser("classes", help="false hit rate by adversarial class"))
+    c.add_argument(
+        "--at",
+        choices=("reference", "operating-point"),
+        default="reference",
+        help="reference is the median positive control score, where E2 measures",
+    )
     c.set_defaults(func=cmd_classes)
 
     m = shared(sub.add_parser("compare", help="every embedder fixture side by side"))

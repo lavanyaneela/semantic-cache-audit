@@ -71,9 +71,11 @@ them to the corpus. A tool that collapses those tells people to do the wrong wor
 
 **Prove it:** `python experiments/e5_threshold_transfer.py`
 
-**The numbers:** across 156 transfers measured, the threshold shifts by 35.7 cosine
-points at the median. 47 stop serving any traffic at all, and 54 stop rejecting
-anything.
+**The numbers:** across the 12 transfers between the four real embedders, the
+threshold shifts by 32.2 cosine points at the median. 5 stop rejecting anything, and
+in 3 of them every hit the cache serves is wrong. The same sweep covers the
+separation family, which adds 144 further transfers; those are reported separately
+and are not part of this claim.
 
 **If pushed, "that is obvious":** it is obvious once stated and it is what teams do
 anyway, because the threshold is the one number that is easy to copy out of a blog
@@ -131,9 +133,16 @@ Every prevalence weighted number in the repository rests on a figure I chose.
 Because one is enough to make the claim and more would not change it, while running
 four embedders is what lets me show a threshold failing to transfer. The three lexical
 embedders are not padding: they are what turns "a threshold is a fact about one
-embedding space" from an assertion into 156 transfers measured. Adding a second
+embedding space" from an assertion into 12 transfers between real embedders.
+Adding a second
 pretrained encoder is one flag and a regenerated fixture, and I would expect its
 separation to be better and still below one half.
+
+**If pushed, "the JSON has a bigger transfer count":** the sweep runs over every embedder
+fixture including the separation family, and the pooled count is in the JSON. The
+published figure is the real only one, because a transfer between two draws from a
+seeded family is not evidence about models. I split them after an audit pointed out
+that the pooled number was doing work it had not earned.
 
 **"What would you do differently with more time?"**
 
@@ -163,6 +172,8 @@ saving is worth it, and the second half needs their traffic.
 ## Things to say
 
 - "Separation of 0.238, where 0.5 is chance, so the ranking is inverted."
+- "Twelve transfers between real embedders, not the pooled count that includes the
+  instrument."
 - "No safe threshold, because the best near miss outscores every true paraphrase."
 - "The tool has three answers, not two: yes, no, and your evidence cannot tell."
 - "Every number in the README is re-measured by CI and fails the build if the prose

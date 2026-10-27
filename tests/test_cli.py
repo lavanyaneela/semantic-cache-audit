@@ -75,8 +75,36 @@ def test_the_classes_command_prints_a_breakdown(capsys):
 
 
 def test_the_classes_command_says_so_when_there_is_no_usable_threshold(capsys):
-    main(["classes", *HEADLINE, "--budget", "0.001"])
+    main(["classes", *HEADLINE, "--budget", "0.001", "--at", "operating-point"])
     assert "no usable threshold" in capsys.readouterr().out
+
+
+def test_the_classes_command_defaults_to_the_reference_threshold(capsys):
+    """At the budget operating point on an inverted embedder every class sits at one
+    hundred percent, so the default has to be the threshold E2 measures at."""
+    main(["classes", *HEADLINE])
+    out = capsys.readouterr().out
+    assert "reference threshold" in out and "half the true paraphrases" in out
+
+
+def test_the_classes_command_reproduces_the_per_class_figures_the_readme_quotes(capsys):
+    main(["classes", *HEADLINE])
+    out = capsys.readouterr().out
+    assert "92.50%" in out and "85.00%" in out and "15.00%" in out
+
+
+def test_the_default_embedder_is_the_one_the_documents_quote():
+    """These disagreed once, and every command in the defense guide printed figures
+    the documents did not contain."""
+    from semantic_cache_audit.config import DEFAULTS
+
+    assert DEFAULTS.embedder == PRETRAINED_NAME
+
+
+def test_the_bare_audit_command_reproduces_the_headline_separation(capsys):
+    main(["audit", "--json"])
+    payload = json.loads(capsys.readouterr().out)
+    assert round(payload["sweep"]["separation_auc"], 3) == 0.238
 
 
 def test_the_compare_command_lists_every_embedder(capsys):

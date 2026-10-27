@@ -177,7 +177,12 @@ class Sweep:
         return max((p.hits for p in self.points), default=0)
 
     def worst_class(self, point: Point) -> tuple[str, float]:
-        """The near-miss class with the highest false hit rate at this threshold."""
+        """The near-miss class with the highest false hit rate at this threshold.
+
+        A tie is reported as a tie. Breaking it alphabetically named a single worst
+        class at a threshold where all five sat at one hundred percent, which reads
+        as a finding and is an artefact of sort order.
+        """
         candidates = [
             (cls, stats["false_hit_rate"])
             for cls, stats in point.by_class.items()
@@ -185,7 +190,11 @@ class Sweep:
         ]
         if not candidates:
             return ("none", 0.0)
-        return max(candidates, key=lambda kv: (kv[1], kv[0]))
+        top = max(rate for _, rate in candidates)
+        tied = sorted(cls for cls, rate in candidates if rate == top)
+        if len(tied) > 1:
+            return (f"{len(tied)} classes tied", top)
+        return (tied[0], top)
 
     def to_dict(self) -> dict:
         return {

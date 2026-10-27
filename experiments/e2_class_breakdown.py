@@ -93,6 +93,11 @@ def main() -> int:
             1 for r in headline["ranked"] if r["separation_auc"] < 0.5
         ),
         "probes_per_class": headline["probes_per_class"],
+        "rate_by_class": {r["class"]: r["false_hit_rate"] for r in headline["ranked"]},
+        "upper_by_class": {r["class"]: r["false_hit_rate_upper"] for r in headline["ranked"]},
+        "safest_class_upper": next(
+            r["false_hit_rate_upper"] for r in headline["ranked"] if r["class"] == safest["class"]
+        ),
         # The floor of the worst class: not its average, its weakest member. A mean
         # could hide an easy pair dragging it down, and the claim being made is that
         # the whole class sits above the threshold.

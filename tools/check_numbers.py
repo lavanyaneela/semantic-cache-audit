@@ -38,7 +38,6 @@ from metrics_spec import by_name  # noqa: E402
 EXEMPT_NUMBERS: dict[str, str] = {
     "1": "an exit code, and an ordinal in ADR numbering",
     "2": "an exit code",
-    "3": "an exit code",
     "0.5": "the chance level of the separation statistic, a definition not a measurement",
     "95": "the confidence level, declared in statistics.py rather than measured",
     "100": "a percentage ceiling used in definitions",

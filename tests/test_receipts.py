@@ -212,6 +212,23 @@ def test_the_checker_catches_a_deliberately_broken_figure(payload):
     assert done.returncode == 0 and "caught:" in done.stdout
 
 
+def test_no_published_transfer_figure_pools_the_instrument_with_real_embedders():
+    """The audit's critical finding. A transfer between two draws from a seeded
+    family is not evidence about models, so no metric may be computed over the
+    pooled set."""
+    from metrics_spec import METRICS
+
+    transfer_metrics = [m for m in METRICS if m.source == "e5_threshold_transfer"]
+    assert transfer_metrics
+    for metric in transfer_metrics:
+        assert not metric.path[0].startswith("pooled_"), metric.name
+
+
+def test_the_real_only_transfer_count_is_far_smaller_than_the_pooled_one():
+    payload = json.loads((ROOT / "docs" / "experiments" / "e5_threshold_transfer.json").read_text())
+    assert payload["transfers_real_only"] < payload["pooled_transfers_measured"] / 5
+
+
 def test_the_readme_leads_with_an_unflattering_number():
     """The first screen must not read as marketing."""
     first_screen = (ROOT / "README.md").read_text(encoding="utf-8")[:3000].lower()

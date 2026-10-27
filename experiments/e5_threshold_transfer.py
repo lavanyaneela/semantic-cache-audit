@@ -21,7 +21,7 @@ from semantic_cache_audit.audit.sweep import summarise
 from semantic_cache_audit.config import DEFAULTS
 from semantic_cache_audit.embed.registry import fixture_names
 
-from _harness import corpus, fixture, write
+from _harness import REAL_EMBEDDERS, corpus, fixture, write
 
 
 def main() -> int:
@@ -49,6 +49,7 @@ def main() -> int:
             records.append({
                 "source": source,
                 "target": target,
+                "real_only": source in REAL_EMBEDDERS and target in REAL_EMBEDDERS,
                 "threshold": threshold,
                 "native_threshold_on_target": tuned[target],
                 "threshold_shift_points": abs(threshold - tuned[target]) * 100,
@@ -60,22 +61,43 @@ def main() -> int:
                 "false_hit_change_pp": (away.false_hit_rate - home.false_hit_rate) * 100,
             })
 
+    # Split the real embedders from the instrument before reporting anything.
+    # Pooling them produces a larger and more impressive set of transfers whose
+    # members are mostly draws from a seeded family, and quoting that as a result
+    # about real models is exactly the misreading ADR-005 forbids. The headline is
+    # the real only figure; the instrument sweep is reported beside it as what it is.
+    real = [r for r in records if r["real_only"]]
+    instrument = [r for r in records if not r["real_only"]]
     shifts = [r["threshold_shift_points"] for r in records]
-    worst = max(records, key=lambda r: abs(r["false_hit_change_pp"]))
+    real_shifts = [r["threshold_shift_points"] for r in real]
+    worst = max(real, key=lambda r: abs(r["false_hit_change_pp"]))
+    real_collapsed = [r for r in real if r["away_hit_rate"] < 0.01]
+    real_saturated = [r for r in real if r["away_hit_rate"] > 0.99]
     collapsed = [r for r in records if r["away_hit_rate"] < 0.01]
     saturated = [r for r in records if r["away_hit_rate"] > 0.99]
     payload = {
         "question": "Does the threshold transfer to another embedder?",
         "records": records,
         "native_thresholds": tuned,
-        "threshold_shift_median_points": float(np.median(shifts)),
-        "threshold_shift_max_points": float(np.max(shifts)),
-        "transfers_measured": len(records),
-        "transfers_that_collapse_the_cache": len(collapsed),
-        "transfers_that_saturate_the_cache": len(saturated),
-        "transfers_within_five_points_of_native": sum(1 for s in shifts if s <= 5.0),
-        "worst_false_hit_change_pp": worst["false_hit_change_pp"],
-        "worst_transfer": f"{worst['source']} to {worst['target']}",
+        "real_embedders": list(REAL_EMBEDDERS),
+        # The published figures. Real embedders only.
+        "transfers_real_only": len(real),
+        "real_threshold_shift_median_points": float(np.median(real_shifts)),
+        "real_threshold_shift_max_points": float(np.max(real_shifts)),
+        "real_transfers_that_collapse_the_cache": len(real_collapsed),
+        "real_transfers_that_saturate_the_cache": len(real_saturated),
+        "real_worst_false_hit_change_pp": worst["false_hit_change_pp"],
+        "real_worst_transfer": f"{worst['source']} to {worst['target']}",
+        "real_transfers_within_five_points": sum(1 for s in real_shifts if s <= 5.0),
+        "real_transfers_where_every_hit_is_wrong": sum(
+            1 for r in real if r["away_false_hit_rate"] >= 1.0
+        ),
+        # The instrument sweep, reported separately and never quoted as a model result.
+        "transfers_involving_instrument": len(instrument),
+        "pooled_transfers_measured": len(records),
+        "pooled_threshold_shift_median_points": float(np.median(shifts)),
+        "pooled_transfers_that_collapse_the_cache": len(collapsed),
+        "pooled_transfers_that_saturate_the_cache": len(saturated),
         "answer": (
             "a threshold is a fact about one embedding space. Carried across, it "
             "either stops serving traffic or stops rejecting anything."
@@ -83,16 +105,19 @@ def main() -> int:
     }
     path = write("e5_threshold_transfer", payload)
 
-    headline = [r for r in records if r["source"] in ("charngram", "synthetic@2.6")]
+    headline = real
     print(report.table(
         ["from", "to", "threshold", "shift pts", "hit rate there", "wrong share there"],
         [[r["source"], r["target"], f"{r['threshold']:.4f}",
           f"{r['threshold_shift_points']:.1f}", report.pct(r["away_hit_rate"], 1),
           report.pct(r["away_false_hit_rate"], 1)] for r in headline],
     ))
-    print(f"\nmedian shift {np.median(shifts):.1f} cosine points, max {np.max(shifts):.1f}")
-    print(f"{len(collapsed)} of {len(records)} transfers drop the hit rate below 1 percent, "
-          f"{len(saturated)} push it above 99 percent")
+    print(f"\nreal embedders only: {len(real)} transfers, median shift "
+          f"{np.median(real_shifts):.1f} cosine points, max {np.max(real_shifts):.1f}")
+    print(f"  {len(real_collapsed)} drop the hit rate below 1 percent, "
+          f"{len(real_saturated)} push it above 99 percent")
+    print(f"instrument sweep, reported separately: {len(instrument)} further transfers, "
+          f"median shift {np.median(shifts):.1f} pooled")
     print(f"wrote {path}")
     return 0
 

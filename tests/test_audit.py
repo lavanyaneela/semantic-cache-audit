@@ -188,9 +188,26 @@ def test_a_sweep_serialises_without_losing_its_points(headline):
     assert len(headline.to_dict()["points"]) == len(headline.points)
 
 
-def test_the_worst_class_is_a_near_miss_class(headline):
+def test_the_worst_class_is_a_near_miss_class_or_a_declared_tie(headline):
     name, _ = headline.worst_class(headline.points[0])
-    assert name in NEAR_MISS_CLASSES
+    assert name in NEAR_MISS_CLASSES or name.endswith("classes tied")
+
+
+def test_a_tie_for_worst_class_is_reported_as_a_tie_not_broken_alphabetically(headline):
+    """Naming one class out of five that all sit at the same rate reads as a finding
+    and is an artefact of sort order."""
+    name, rate = headline.worst_class(headline.points[0])
+    tied = [
+        cls for cls, stats in headline.points[0].by_class.items()
+        if cls in NEAR_MISS_CLASSES and stats["hits"] > 0 and stats["false_hit_rate"] == rate
+    ]
+    assert (len(tied) > 1) == name.endswith("classes tied")
+
+
+def test_a_single_worst_class_is_named(headline):
+    reference = max(headline.points, key=lambda p: p.by_class["entity_swap"]["hits"])
+    name, _ = headline.worst_class(reference)
+    assert name
 
 
 def test_the_worst_class_of_a_point_with_no_hits_is_reported_as_none(headline):

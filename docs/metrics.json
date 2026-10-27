@@ -22,11 +22,11 @@
     "coverage_line_pct": [
       "{}% line coverage"
     ],
-    "embedders_compared": [
-      "{} embedders"
-    ],
     "hits_required_one_pct": [
       "{} clean hits"
+    ],
+    "instrument_transfers": [
+      "{} further transfers"
     ],
     "lowest_stale_policy": [
       "{} cuts staleness"
@@ -36,6 +36,18 @@
     ],
     "near_miss_pairs": [
       "{} near miss pairs"
+    ],
+    "negation_false_hit_pct": [
+      "{}% of negation"
+    ],
+    "negation_upper_pct": [
+      "{}% on negation"
+    ],
+    "numeric_change_false_hit_pct": [
+      "{}% of numeric"
+    ],
+    "numeric_change_upper_pct": [
+      "{}% on numeric"
     ],
     "pairs_required_one_pct": [
       "{} pairs would be"
@@ -58,12 +70,31 @@
     "real_embedders_ever_ok": [
       "{} of the four real"
     ],
+    "real_threshold_shift_points": [
+      "shifts by {} cosine",
+      "median shift of {}"
+    ],
+    "real_transfers_all_wrong": [
+      "{} of them every hit"
+    ],
+    "real_transfers_saturated": [
+      "{} stop rejecting"
+    ],
     "safest_class_false_hit_pct": [
       "{}% on the safest"
     ],
     "safest_class_name": [
       "only {} stays",
       "safest is {}"
+    ],
+    "safest_class_upper_pct": [
+      "bounded at {}%"
+    ],
+    "scope_change_false_hit_pct": [
+      "{}% of scope"
+    ],
+    "scope_change_upper_pct": [
+      "{}% on scope"
     ],
     "separation_auc": [
       "separation of {}",
@@ -80,23 +111,12 @@
     "tests_total": [
       "{} tests"
     ],
-    "threshold_shift_median_points": [
-      "shifts by {} cosine",
-      "median shift of {}"
-    ],
     "tightest_budget_pct": [
       "tighter than {}%",
       "budget of {}%"
     ],
-    "transfers_collapsed": [
-      "{} stop serving"
-    ],
-    "transfers_measured": [
-      "{} transfers measured",
-      "across {} transfers"
-    ],
-    "transfers_saturated": [
-      "{} stop rejecting"
+    "transfers_real_only": [
+      "{} transfers between"
     ],
     "unbounded_false_hit_pct": [
       "{}% when unbounded"
@@ -131,36 +151,43 @@
     "docs/adr/ADR-004-what-counts-as-a-wrong-hit.md",
     "docs/adr/ADR-005-what-this-repository-cannot-measure.md"
   ],
-  "generated_utc": "2026-10-27T14:47:39Z",
+  "generated_utc": "2026-10-27T15:08:19Z",
   "metrics": {
     "bounded_false_hit_pct": 0.029038112522686024,
     "classes_below_chance": 4,
     "clean_ceiling_hits": 0,
     "corpus_domains": 6,
     "corpus_pairs_total": 320,
-    "coverage_line_pct": 98.05825242718447,
-    "embedders_compared": 5,
+    "coverage_line_pct": 98.01369863013699,
     "hits_required_one_pct": 299,
+    "instrument_transfers": 144,
     "lowest_stale_policy": "fifo",
     "near_miss_classes": 5,
     "near_miss_pairs": 200,
+    "negation_false_hit_pct": 0.925,
+    "negation_upper_pct": 0.9792463985242987,
+    "numeric_change_false_hit_pct": 0.85,
+    "numeric_change_upper_pct": 0.9325990594772913,
     "pairs_required_one_pct": 798,
     "policy_false_hit_spread_pp": 0.12942419728097404,
     "policy_stale_spread_pp": 16.761646814534334,
     "positive_controls": 120,
     "probes_per_class": 40,
     "real_embedders_ever_ok": 0,
+    "real_threshold_shift_points": 32.15385377407074,
+    "real_transfers_all_wrong": 3,
+    "real_transfers_saturated": 5,
     "safest_class_false_hit_pct": 0.15,
     "safest_class_name": "entity_swap",
+    "safest_class_upper_pct": 0.27474450501397046,
+    "scope_change_false_hit_pct": 0.85,
+    "scope_change_upper_pct": 0.9325990594772913,
     "separation_auc": 0.23804166666666668,
     "stale_reduction_ratio": 13.055753176043558,
     "templates_total": 60,
-    "tests_total": 459,
-    "threshold_shift_median_points": 35.708415508270264,
+    "tests_total": 467,
     "tightest_budget_pct": 0.024655401055656376,
-    "transfers_collapsed": 47,
-    "transfers_measured": 156,
-    "transfers_saturated": 54,
+    "transfers_real_only": 12,
     "unbounded_false_hit_pct": 0.05709534368070954,
     "unbounded_false_hit_ratio": 1.9662208980044347,
     "worst_class_false_hit_pct": 1.0,
@@ -175,29 +202,36 @@
     "clean_ceiling_hits": "0",
     "corpus_domains": "6",
     "corpus_pairs_total": "320",
-    "coverage_line_pct": "98.1",
-    "embedders_compared": "5",
+    "coverage_line_pct": "98.0",
     "hits_required_one_pct": "299",
+    "instrument_transfers": "144",
     "lowest_stale_policy": "fifo",
     "near_miss_classes": "5",
     "near_miss_pairs": "200",
+    "negation_false_hit_pct": "92.5",
+    "negation_upper_pct": "97.9",
+    "numeric_change_false_hit_pct": "85.0",
+    "numeric_change_upper_pct": "93.3",
     "pairs_required_one_pct": "798",
     "policy_false_hit_spread_pp": "0.13",
     "policy_stale_spread_pp": "16.8",
     "positive_controls": "120",
     "probes_per_class": "40",
     "real_embedders_ever_ok": "0",
+    "real_threshold_shift_points": "32.2",
+    "real_transfers_all_wrong": "3",
+    "real_transfers_saturated": "5",
     "safest_class_false_hit_pct": "15.0",
     "safest_class_name": "entity_swap",
+    "safest_class_upper_pct": "27.5",
+    "scope_change_false_hit_pct": "85.0",
+    "scope_change_upper_pct": "93.3",
     "separation_auc": "0.238",
     "stale_reduction_ratio": "13.1",
     "templates_total": "60",
-    "tests_total": "459",
-    "threshold_shift_median_points": "35.7",
+    "tests_total": "467",
     "tightest_budget_pct": "2.47",
-    "transfers_collapsed": "47",
-    "transfers_measured": "156",
-    "transfers_saturated": "54",
+    "transfers_real_only": "12",
     "unbounded_false_hit_pct": "5.7",
     "unbounded_false_hit_ratio": "2.0",
     "worst_class_false_hit_pct": "100.0",

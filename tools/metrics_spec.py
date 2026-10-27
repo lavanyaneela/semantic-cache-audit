@@ -97,8 +97,6 @@ METRICS: tuple[Metric, ...] = (
            ("{} most confident", "first {} matches", "{} consecutive wrong")),
     Metric("clean_ceiling_hits", "e1_threshold_curve", ("headline_clean_ceiling_hits",), as_int,
            ("{} of the 120 true", "exactly {} paraphrases", "serves {} paraphrases")),
-    Metric("embedders_compared", "e1_threshold_curve", ("__embedders__",), as_int,
-           ("{} embedders",)),
     # ---------------------------------------------------- E2, where it breaks
     Metric("worst_class_name", "e2_class_breakdown", ("worst_class_name",), as_text,
            ("worst class is {}", "worst is {}"), textual=True),
@@ -112,6 +110,20 @@ METRICS: tuple[Metric, ...] = (
            as_int, ("{} of the five classes", "{} classes separate below")),
     Metric("probes_per_class", "e2_class_breakdown", ("probes_per_class",), as_int,
            ("{} probes per class",)),
+    Metric("negation_false_hit_pct", "e2_class_breakdown", ("rate_by_class", "negation"),
+           as_pct1, ("{}% of negation",)),
+    Metric("numeric_change_false_hit_pct", "e2_class_breakdown",
+           ("rate_by_class", "numeric_change"), as_pct1, ("{}% of numeric",)),
+    Metric("scope_change_false_hit_pct", "e2_class_breakdown",
+           ("rate_by_class", "scope_change"), as_pct1, ("{}% of scope",)),
+    Metric("safest_class_upper_pct", "e2_class_breakdown", ("safest_class_upper",), as_pct1,
+           ("bounded at {}%",)),
+    Metric("negation_upper_pct", "e2_class_breakdown", ("upper_by_class", "negation"),
+           as_pct1, ("{}% on negation",)),
+    Metric("numeric_change_upper_pct", "e2_class_breakdown",
+           ("upper_by_class", "numeric_change"), as_pct1, ("{}% on numeric",)),
+    Metric("scope_change_upper_pct", "e2_class_breakdown", ("upper_by_class", "scope_change"),
+           as_pct1, ("{}% on scope",)),
     Metric("worst_class_min_similarity", "e2_class_breakdown", ("worst_class_min_similarity",),
            as_auc, ("above {} on this", "never below {}")),
     # ------------------------------------------------------- E3, the two levers
@@ -143,15 +155,23 @@ METRICS: tuple[Metric, ...] = (
     Metric("real_embedders_ever_ok", "e4_budget_decisions", ("real_embedders_ever_ok",), as_int,
            ("{} of the four real",)),
     # ---------------------------------------------------- E5, threshold transfer
-    Metric("threshold_shift_median_points", "e5_threshold_transfer",
-           ("threshold_shift_median_points",), as_points1,
+    #
+    # Real embedders only. The sweep also covers the separation family, which
+    # inflates every count roughly thirteen fold, and quoting a pooled figure as a
+    # result about real models is the misreading ADR-005 forbids. The instrument
+    # count is published beside them so the split is visible rather than implied.
+    Metric("transfers_real_only", "e5_threshold_transfer", ("transfers_real_only",), as_int,
+           ("{} transfers between",)),
+    Metric("real_threshold_shift_points", "e5_threshold_transfer",
+           ("real_threshold_shift_median_points",), as_points1,
            ("shifts by {} cosine", "median shift of {}")),
-    Metric("transfers_measured", "e5_threshold_transfer", ("transfers_measured",), as_int,
-           ("{} transfers measured", "across {} transfers")),
-    Metric("transfers_collapsed", "e5_threshold_transfer",
-           ("transfers_that_collapse_the_cache",), as_int, ("{} stop serving",)),
-    Metric("transfers_saturated", "e5_threshold_transfer",
-           ("transfers_that_saturate_the_cache",), as_int, ("{} stop rejecting",)),
+    Metric("real_transfers_saturated", "e5_threshold_transfer",
+           ("real_transfers_that_saturate_the_cache",), as_int, ("{} stop rejecting",)),
+    Metric("real_transfers_all_wrong", "e5_threshold_transfer",
+           ("real_transfers_where_every_hit_is_wrong",), as_int,
+           ("{} of them every hit",)),
+    Metric("instrument_transfers", "e5_threshold_transfer",
+           ("transfers_involving_instrument",), as_int, ("{} further transfers",)),
     # --------------------------------------------------------------- the suite
     Metric("tests_total", "suite", ("tests_total",), as_int, ("{} tests",)),
     Metric("coverage_line_pct", "suite", ("coverage_line_pct",), as_points1,

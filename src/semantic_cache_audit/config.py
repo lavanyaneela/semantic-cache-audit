@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass
 
 from .audit.statistics import CONFIDENCE
 from .audit.sweep import DEFAULT_NEAR_MISS_PREVALENCE
+from .embed.registry import PRETRAINED_NAME
 
 
 @dataclass(frozen=True, slots=True)
@@ -35,8 +36,11 @@ class AuditConfig:
     #: of the grid.
     threshold_steps: int = 101
 
-    #: The embedder whose numbers the README quotes.
-    embedder: str = "charngram"
+    #: The embedder whose numbers the README quotes. This default and that sentence
+    #: disagreed once, so the bare console script and every command in the defense
+    #: guide printed figures the documents did not contain. The default is the
+    #: headline embedder, and a test asserts it stays that way.
+    embedder: str = PRETRAINED_NAME
 
     #: Entries a cache holds before eviction starts, used by E3.
     #: Low enough that eviction actually binds on the E3 stream. At 150 the policies
