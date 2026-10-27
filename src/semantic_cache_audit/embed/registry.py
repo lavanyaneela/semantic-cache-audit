@@ -135,6 +135,26 @@ def parse_noise(name: str) -> float:
         raise UnknownEmbedder(f"{name!r}: noise must be a non negative number") from exc
 
 
+def validate_name(name: str) -> str:
+    """Check the shape of an embedder name without building or loading anything.
+
+    Separated from `build` so the CLI can tell a user that `nonsesne` is not an
+    embedder, rather than that there is no fixture for it. A missing fixture and a
+    name that was never valid are different problems with different fixes, and the
+    first version of the CLI reported the wrong one because it loaded before it
+    checked.
+    """
+    if name in LEXICAL_NAMES or name.startswith("st:"):
+        return name
+    if name.startswith("synthetic"):
+        parse_noise(name)
+        return name
+    raise UnknownEmbedder(
+        f"unknown embedder {name!r}. Known: {', '.join(LEXICAL_NAMES)}, "
+        "synthetic@<noise>, st:<model-name>"
+    )
+
+
 def build(name: str, pairs: list[Pair]) -> Embedder:
     """Construct the named embedder, fitting it on the corpus where it needs fitting."""
     docs = corpus_documents(pairs)

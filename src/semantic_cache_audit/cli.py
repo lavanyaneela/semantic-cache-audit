@@ -19,10 +19,11 @@ from .audit.sweep import run_sweep
 from .config import DEFAULTS
 from .corpus.loader import CorpusError, load_manifest, load_pairs
 from .embed.fixtures import FixtureError, available, load_fixture
-from .embed.registry import UnknownEmbedder, fixture_names
+from .embed.registry import UnknownEmbedder, fixture_names, validate_name
 
 
 def _load(embedder: str):
+    validate_name(embedder)
     pairs = load_pairs()
     texts, matrix = load_fixture(embedder)
     return pairs, texts, matrix
@@ -75,6 +76,7 @@ def cmd_compare(args) -> int:
     results = []
     pairs = load_pairs()
     for name in names:
+        validate_name(name)
         texts, matrix = load_fixture(name)
         sweep = run_sweep(pairs, texts, matrix, name, steps=args.steps, prevalence=args.prevalence)
         results.append((sweep, decide(sweep, budget=args.budget, min_hit_rate=args.min_hit_rate)))
