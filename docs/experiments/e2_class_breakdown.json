@@ -1,7 +1,9 @@
 {
   "by_embedder": {
     "st:sentence-transformers/all-MiniLM-L6-v2": {
+      "lowest_min_score_class": "entity_swap",
       "positive_controls": 120,
+      "probes_per_class": 40,
       "ranked": [
         {
           "class": "direction_reversal",
@@ -10,6 +12,7 @@
           "false_hits": 40,
           "hits": 40,
           "median_score": 0.9964362382888794,
+          "min_score": 0.98957359790802,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.0
@@ -21,6 +24,7 @@
           "false_hits": 37,
           "hits": 37,
           "median_score": 0.9442496299743652,
+          "min_score": 0.7626975774765015,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.07604166666666666
@@ -32,6 +36,7 @@
           "false_hits": 34,
           "hits": 34,
           "median_score": 0.8952429890632629,
+          "min_score": 0.7215971350669861,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.20541666666666666
@@ -43,6 +48,7 @@
           "false_hits": 34,
           "hits": 34,
           "median_score": 0.8858051300048828,
+          "min_score": 0.7406155467033386,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.21083333333333334
@@ -54,6 +60,7 @@
           "false_hits": 6,
           "hits": 6,
           "median_score": 0.7025237679481506,
+          "min_score": 0.5436850786209106,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.6979166666666666
@@ -63,7 +70,9 @@
       "reference_threshold": 0.8118228912353516
     },
     "synthetic@2.6": {
+      "lowest_min_score_class": "scope_change",
       "positive_controls": 120,
+      "probes_per_class": 40,
       "ranked": [
         {
           "class": "numeric_change",
@@ -72,6 +81,7 @@
           "false_hits": 4,
           "hits": 4,
           "median_score": 0.33912143111228943,
+          "min_score": 0.22267381846904755,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.8364583333333333
@@ -83,6 +93,7 @@
           "false_hits": 3,
           "hits": 3,
           "median_score": 0.34090185165405273,
+          "min_score": 0.27137094736099243,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.864375
@@ -94,6 +105,7 @@
           "false_hits": 3,
           "hits": 3,
           "median_score": 0.33888405561447144,
+          "min_score": 0.26251381635665894,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.90375
@@ -105,6 +117,7 @@
           "false_hits": 2,
           "hits": 2,
           "median_score": 0.3369712829589844,
+          "min_score": 0.21174289286136627,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.884375
@@ -116,6 +129,7 @@
           "false_hits": 2,
           "hits": 2,
           "median_score": 0.3437643051147461,
+          "min_score": 0.22988982498645782,
           "probes": 40,
           "resolution_floor": 0.025,
           "separation_auc": 0.89625
@@ -128,9 +142,11 @@
   "classes_at_total_failure": 1,
   "classes_below_chance_separation": 4,
   "headline_embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
+  "probes_per_class": 40,
   "question": "Which near miss class is most dangerous?",
   "safest_class_false_hit_pct": 0.15,
   "safest_class_name": "entity_swap",
   "worst_class_false_hit_pct": 1.0,
+  "worst_class_min_similarity": 0.98957359790802,
   "worst_class_name": "direction_reversal"
 }

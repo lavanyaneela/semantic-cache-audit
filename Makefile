@@ -84,3 +84,14 @@ evidence: diagrams report
 clean:
 	rm -rf reports .pytest_cache .ruff_cache .coverage coverage.json
 	find . -name __pycache__ -type d -prune -exec rm -rf {} +
+
+# The candidate's GitHub handle is a placeholder until they supply it. Badges and
+# clone URLs read from it, and a placeholder left in a badge renders as "unknown",
+# which is the first thing a reviewer notices.
+HANDLE ?=
+set-handle:
+	@test -n "$(HANDLE)" || (echo "usage: make set-handle HANDLE=yourname" && exit 1)
+	@grep -rl GITHUB_USERNAME README.md docs 2>/dev/null | xargs -r sed -i.bak "s/GITHUB_USERNAME/$(HANDLE)/g"
+	@find . -name "*.bak" -delete
+	@echo "set the handle to $(HANDLE) in README.md and docs/"
+.PHONY: set-handle

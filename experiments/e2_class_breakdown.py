@@ -50,12 +50,18 @@ def analyse(pairs, scores: np.ndarray) -> dict:
                 "false_hit_rate_upper": upper_bound(hits, int(member.size)),
                 "resolution_floor": resolution_floor(int(member.size)),
                 "median_score": float(np.median(member)),
+                "min_score": float(np.min(member)) if member.size else 0.0,
                 "separation_auc": separation_auc(positives, member),
             }
         )
     rows.sort(key=lambda r: (-r["false_hit_rate"], r["separation_auc"], r["class"]))
+    worst_class_min = min(
+        (r for r in rows), key=lambda r: r["min_score"]
+    )
     return {
         "reference_threshold": reference,
+        "probes_per_class": rows[0]["probes"] if rows else 0,
+        "lowest_min_score_class": worst_class_min["class"],
         "reference_definition": "median positive control score, so half of true paraphrases hit",
         "positive_controls": int(positives.size),
         "ranked": rows,
@@ -85,6 +91,13 @@ def main() -> int:
         ),
         "classes_below_chance_separation": sum(
             1 for r in headline["ranked"] if r["separation_auc"] < 0.5
+        ),
+        "probes_per_class": headline["probes_per_class"],
+        # The floor of the worst class: not its average, its weakest member. A mean
+        # could hide an easy pair dragging it down, and the claim being made is that
+        # the whole class sits above the threshold.
+        "worst_class_min_similarity": next(
+            r["min_score"] for r in headline["ranked"] if r["class"] == worst["class"]
         ),
     }
     path = write("e2_class_breakdown", payload)

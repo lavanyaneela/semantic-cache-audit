@@ -36,7 +36,6 @@ from metrics_spec import by_name  # noqa: E402
 #: Numbers in prose that are genuinely not measurements. Each needs a reason, and a
 #: test asserts that no entry here hides a value a metric actually produces.
 EXEMPT_NUMBERS: dict[str, str] = {
-    "0": "the exit code, and the identity element in several sentences",
     "1": "an exit code, and an ordinal in ADR numbering",
     "2": "an exit code",
     "3": "an exit code",
@@ -44,7 +43,6 @@ EXEMPT_NUMBERS: dict[str, str] = {
     "95": "the confidence level, declared in statistics.py rather than measured",
     "100": "a percentage ceiling used in definitions",
     "2026": "a copyright year",
-    "5": "the count of ADRs and of experiments, fixed by the charter",
     "384": "the published dimension of the encoder, a property of the model",
     "3.11": "the minimum supported Python version",
     "3.12": "a supported Python version",
@@ -53,12 +51,15 @@ EXEMPT_NUMBERS: dict[str, str] = {
 }
 
 NUMBER = r"(-?\d[\d,]*(?:\.\d+)?)"
-WORD = r"([A-Za-z_][A-Za-z_ ]*?)"
+WORD = r"\b([A-Za-z_][A-Za-z0-9_]*)\b"
 
 FENCE = re.compile(r"^```.*?^```", re.MULTILINE | re.DOTALL)
 CODE_SPAN = re.compile(r"`[^`\n]+`")
 HTML_ATTR = re.compile(r'\w+="[^"]*"')
 URL = re.compile(r"https?://\S+")
+#: `ADR-004` and `e3_eviction_sweep` are identifiers, not measurements. Stripping
+#: them keeps the reverse pass about numbers a reader would read as a figure.
+IDENTIFIER = re.compile(r"\bADR-\d+|\be\d_[a-z_]+|\b[A-Za-z_]+-\d+(?:\.\d+)*\b")
 PARAGRAPH_SPLIT = re.compile(r"\n\s*\n")
 
 
@@ -92,7 +93,7 @@ def anchor_pattern(anchor: str, textual: bool) -> re.Pattern[str]:
 
 
 def strip_for_reverse(text: str) -> str:
-    for pattern in (FENCE, CODE_SPAN, HTML_ATTR, URL):
+    for pattern in (FENCE, CODE_SPAN, HTML_ATTR, URL, IDENTIFIER):
         text = pattern.sub(" ", text)
     return text
 
@@ -105,7 +106,6 @@ def check_document(path: Path, payload: dict) -> list[Finding]:
     text = path.read_text(encoding="utf-8")
     findings = _forward(name, text, payload)
     findings += _reverse(name, text, payload)
-    findings += _unused_anchors(name, text, payload)
     return findings
 
 
@@ -150,18 +150,27 @@ def _reverse(name: str, text: str, payload: dict) -> list[Finding]:
     return findings
 
 
-def _unused_anchors(name: str, text: str, payload: dict) -> list[Finding]:
-    """Report metrics the README never quotes, so the spec cannot rot unnoticed."""
-    if not name.endswith("README.md"):
-        return []
+def _unquoted_metrics(payload: dict) -> list[Finding]:
+    """Report metrics no checked document quotes, so the spec cannot rot unnoticed.
+
+    Run once over all the documents together rather than per document, because a
+    figure belongs wherever it reads best and requiring every document to carry
+    every metric would turn each one into the same table.
+    """
     textual = set(payload["textual"])
+    corpus = "\n".join(
+        (ROOT / relative).read_text(encoding="utf-8")
+        for relative in payload["checked_documents"]
+        if (ROOT / relative).exists()
+    )
     unused = [
         metric
         for metric, anchors in payload["anchors"].items()
-        if not any(anchor_pattern(a, metric in textual).search(text) for a in anchors)
+        if not any(anchor_pattern(a, metric in textual).search(corpus) for a in anchors)
     ]
     return [
-        Finding(name, "unquoted metric", f"{m} is measured but no document anchors it")
+        Finding("(all documents)", "unquoted metric",
+                f"{m} is measured but no document anchors it")
         for m in sorted(unused)
     ]
 
@@ -191,6 +200,7 @@ def run(payload: dict) -> list[Finding]:
     findings = check_exemptions_hide_nothing(payload)
     for relative in payload["checked_documents"]:
         findings += check_document(ROOT / relative, payload)
+    findings += _unquoted_metrics(payload)
     return findings
 
 

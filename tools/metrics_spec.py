@@ -110,6 +110,10 @@ METRICS: tuple[Metric, ...] = (
            as_pct1, ("{}% on the safest",)),
     Metric("classes_below_chance", "e2_class_breakdown", ("classes_below_chance_separation",),
            as_int, ("{} of the five classes", "{} classes separate below")),
+    Metric("probes_per_class", "e2_class_breakdown", ("probes_per_class",), as_int,
+           ("{} probes per class",)),
+    Metric("worst_class_min_similarity", "e2_class_breakdown", ("worst_class_min_similarity",),
+           as_auc, ("above {} on this", "never below {}")),
     # ------------------------------------------------------- E3, the two levers
     Metric("policy_false_hit_spread_pp", "e3_eviction_sweep",
            ("false_hit_spread_across_policies_pp",), as_points2,

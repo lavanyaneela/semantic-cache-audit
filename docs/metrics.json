@@ -52,6 +52,9 @@
       "{} true paraphrases",
       "{} of them share"
     ],
+    "probes_per_class": [
+      "{} probes per class"
+    ],
     "real_embedders_ever_ok": [
       "{} of the four real"
     ],
@@ -105,6 +108,10 @@
       "{}% of that class",
       "{}% on that class"
     ],
+    "worst_class_min_similarity": [
+      "above {} on this",
+      "never below {}"
+    ],
     "worst_class_name": [
       "worst class is {}",
       "worst is {}"
@@ -124,7 +131,7 @@
     "docs/adr/ADR-004-what-counts-as-a-wrong-hit.md",
     "docs/adr/ADR-005-what-this-repository-cannot-measure.md"
   ],
-  "generated_utc": "2026-10-27T14:22:17Z",
+  "generated_utc": "2026-10-27T14:30:08Z",
   "metrics": {
     "bounded_false_hit_pct": 0.029038112522686024,
     "classes_below_chance": 4,
@@ -141,6 +148,7 @@
     "policy_false_hit_spread_pp": 0.12942419728097404,
     "policy_stale_spread_pp": 16.761646814534334,
     "positive_controls": 120,
+    "probes_per_class": 40,
     "real_embedders_ever_ok": 0,
     "safest_class_false_hit_pct": 0.15,
     "safest_class_name": "entity_swap",
@@ -156,6 +164,7 @@
     "unbounded_false_hit_pct": 0.05709534368070954,
     "unbounded_false_hit_ratio": 1.9662208980044347,
     "worst_class_false_hit_pct": 1.0,
+    "worst_class_min_similarity": 0.98957359790802,
     "worst_class_name": "direction_reversal",
     "wrong_prefix_hits": 77
   },
@@ -176,6 +185,7 @@
     "policy_false_hit_spread_pp": "0.13",
     "policy_stale_spread_pp": "16.8",
     "positive_controls": "120",
+    "probes_per_class": "40",
     "real_embedders_ever_ok": "0",
     "safest_class_false_hit_pct": "15.0",
     "safest_class_name": "entity_swap",
@@ -191,6 +201,7 @@
     "unbounded_false_hit_pct": "5.7",
     "unbounded_false_hit_ratio": "2.0",
     "worst_class_false_hit_pct": "100.0",
+    "worst_class_min_similarity": "0.990",
     "worst_class_name": "direction_reversal",
     "wrong_prefix_hits": "77"
   },
