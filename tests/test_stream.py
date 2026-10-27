@@ -91,8 +91,8 @@ def test_a_replay_accounts_for_every_request(pairs, shaped_fixture, stream):
 def test_a_replay_is_reproducible(pairs, shaped_fixture, stream):
     texts, matrix = shaped_fixture
     schedule = change_schedule(pairs, horizon=stream[-1].at)
-    kwargs = dict(threshold=0.5, policy="lru", capacity=50, ttl_seconds=3600.0,
-                  schedule=schedule)
+    kwargs = {"threshold": 0.5, "policy": "lru", "capacity": 50, "ttl_seconds": 3600.0,
+              "schedule": schedule}
     assert replay(stream, texts, matrix, **kwargs).to_dict() == replay(
         stream, texts, matrix, **kwargs
     ).to_dict()

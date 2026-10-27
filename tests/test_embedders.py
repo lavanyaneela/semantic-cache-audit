@@ -16,7 +16,6 @@ from semantic_cache_audit.embed.lexical import (
     _char_ngrams,
     _uni_and_bigrams,
 )
-from semantic_cache_audit.embed.live import LiveEmbedderUnavailable, SentenceTransformerEmbedder
 from semantic_cache_audit.embed.registry import (
     LEXICAL_NAMES,
     CorpusInconsistent,
@@ -25,9 +24,12 @@ from semantic_cache_audit.embed.registry import (
     corpus_documents,
     fixture_names,
     intent_labels,
+    offline_fixture_names,
     parse_noise,
     shared_queries,
+    validate_name,
 )
+from semantic_cache_audit.embed.sentence_encoder import EncoderUnavailable, OnnxSentenceEncoder
 from semantic_cache_audit.embed.synthetic import NOISE_GRID, SeparationFamily
 
 DOCS = [
@@ -280,14 +282,13 @@ def test_the_fixture_name_list_covers_the_whole_noise_grid():
     assert all(f"synthetic@{n:g}" in names for n in NOISE_GRID)
 
 
-def test_the_live_adapter_is_the_only_route_that_can_touch_the_network(pairs, monkeypatch):
-    """Requesting a live model without the optional extra fails loudly, not silently."""
-    monkeypatch.setitem(sys.modules, "sentence_transformers", None)
-    with pytest.raises((LiveEmbedderUnavailable, TypeError, AttributeError)):
-        SentenceTransformerEmbedder("some-model")
+def test_a_pretrained_encoder_with_no_weights_present_fails_loudly(tmp_path):
+    """Missing weights must raise, never fall back to something that looks like a model."""
+    with pytest.raises(EncoderUnavailable, match="missing"):
+        OnnxSentenceEncoder("some-model", local_dir=tmp_path)
 
 
-def test_building_a_live_embedder_goes_through_the_adapter(pairs, monkeypatch):
+def test_building_a_pretrained_encoder_goes_through_the_onnx_adapter(pairs, monkeypatch):
     seen = {}
 
     class Fake:
@@ -295,7 +296,26 @@ def test_building_a_live_embedder_goes_through_the_adapter(pairs, monkeypatch):
             seen["name"] = name
 
     monkeypatch.setattr(
-        "semantic_cache_audit.embed.live.SentenceTransformerEmbedder", Fake, raising=True
+        "semantic_cache_audit.embed.sentence_encoder.OnnxSentenceEncoder", Fake, raising=True
     )
     build("st:some-model", pairs)
     assert seen["name"] == "some-model"
+
+
+def test_validating_a_name_never_loads_weights_or_touches_the_network():
+    """`make verify` must stay offline, so name checking cannot construct an encoder."""
+    assert validate_name("st:sentence-transformers/all-MiniLM-L6-v2").startswith("st:")
+
+
+def test_validating_rejects_a_name_that_is_not_an_embedder():
+    with pytest.raises(UnknownEmbedder, match="unknown embedder"):
+        validate_name("nonsense")
+
+
+def test_validating_rejects_a_malformed_synthetic_name():
+    with pytest.raises(UnknownEmbedder):
+        validate_name("synthetic")
+
+
+def test_validating_accepts_every_offline_fixture_name():
+    assert all(validate_name(n) == n for n in offline_fixture_names())
