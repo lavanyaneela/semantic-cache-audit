@@ -109,6 +109,50 @@ class FaissFlatStore(VectorStore):
                 break
         return out
 
+    def query_many(
+        self,
+        vectors: np.ndarray,
+        top_k: int = 1,
+        namespace: str = DEFAULT_NAMESPACE,
+        metadata_filter: dict | None = None,
+    ) -> list[list[Match]]:
+        """One FAISS search over the whole batch, then filter each row.
+
+        This is the batch inference path the REST surface exposes. It exists because a
+        per row loop pays the index setup cost once per query, and because the batch
+        endpoint should be a different code path from the single endpoint rather than
+        a loop over it wearing a different name. A test asserts the two agree row for
+        row, which is the only thing that makes the claim worth making.
+        """
+        probes = np.ascontiguousarray(np.atleast_2d(vectors), dtype=np.float32)
+        if namespace not in self._indexes or not self._live[namespace]:
+            return [[] for _ in range(probes.shape[0])]
+        index = self._index_for(namespace)
+        total = index.ntotal  # type: ignore[attr-defined]
+        want = min(total, max(top_k * 8, top_k + 32))
+        scores, rows = index.search(probes, want)  # type: ignore[attr-defined]
+        out: list[list[Match]] = []
+        for row_scores, row_ids in zip(scores, rows, strict=True):
+            matches: list[Match] = []
+            seen: set[str] = set()
+            for score, row in zip(row_scores, row_ids, strict=True):
+                if row < 0:
+                    continue
+                vector_id = self._ids[namespace][row]
+                if vector_id in seen or vector_id not in self._live[namespace]:
+                    continue
+                if self._row_of[namespace][vector_id] != row:
+                    continue
+                meta = self._meta[namespace][vector_id]
+                if not matches_filter(meta, metadata_filter):
+                    continue
+                seen.add(vector_id)
+                matches.append(Match(vector_id=vector_id, score=float(score), metadata=dict(meta)))
+                if len(matches) == top_k:
+                    break
+            out.append(matches)
+        return out
+
     def delete(self, ids: list[str], namespace: str = DEFAULT_NAMESPACE) -> int:
         if namespace not in self._live:
             return 0

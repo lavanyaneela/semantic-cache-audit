@@ -47,6 +47,19 @@ class VectorStore(ABC):
         metadata_filter: dict | None = None,
     ) -> list[Match]: ...
 
+    def query_many(
+        self,
+        vectors: np.ndarray,
+        top_k: int = 1,
+        namespace: str = DEFAULT_NAMESPACE,
+        metadata_filter: dict | None = None,
+    ) -> list[list[Match]]:
+        """Default: one query per row. Backends that can batch should override it."""
+        return [
+            self.query(row, top_k=top_k, namespace=namespace, metadata_filter=metadata_filter)
+            for row in np.atleast_2d(vectors)
+        ]
+
     @abstractmethod
     def delete(self, ids: list[str], namespace: str = DEFAULT_NAMESPACE) -> int: ...
 
