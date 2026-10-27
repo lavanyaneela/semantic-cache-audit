@@ -1,24 +1,26 @@
-"""Three deterministic embedders, implemented here because no model host is reachable.
+"""Three lexical embedders, implemented here as the comparison the headline needs.
 
-ADR-002 records the boundary in full. The short version: the sandbox this repository
-was built in cannot reach a model host, so there are no pretrained sentence transformer
-weights to precompute a fixture from. Rather than ship a manifest naming a model that
-was never run, the repository implements its own embedders, states plainly that they
-are lexical, and publishes every threshold as a fact about a named embedder. A live
-adapter in `live.py` accepts real weights for anyone who has them.
+The embedder every published figure is about is the pretrained encoder in
+`sentence_encoder.py`. These three exist beside it so that "a threshold is a fact
+about one embedding space" can be measured rather than asserted: E5 carries a tuned
+threshold between real embedders and reports what the cache does afterwards, and that
+experiment needs more than one real embedding space to carry it between.
 
-The three are chosen to differ in exactly the property that matters here, which is how
-much word order survives into the vector:
+The three are chosen to differ in exactly the property that matters here, which is
+how much word order survives into the vector:
 
-``bow``       unigram TF-IDF. Order blind by construction. Included as the naive
-              baseline, and because it demonstrates the sharpest form of the
-              impossibility: a class it scores at 1.00 cannot be separated by any
-              threshold at all.
+``bow``       unigram TF-IDF. Order blind by construction, which makes it the clearest
+              demonstration of the mechanism behind the headline: a class an embedder
+              scores identically cannot be separated by any threshold at all.
 ``lsa``       unigram and bigram TF-IDF reduced by truncated SVD. Locally order
-              sensitive, which is the behaviour most lexical retrievers actually have.
+              sensitive, which is the behaviour most lexical retrievers have.
 ``charngram`` hashed character 3 to 5 grams reduced by a seeded signed random
               projection. Order sensitive across word boundaries, and robust to the
               spelling variation that defeats word level models.
+
+All three fit their vocabulary and inverse document frequencies on the corpus they are
+then measured over. ADR-002 records what that costs: their numbers are an upper bound
+on what a cold vocabulary would manage, not a lower bound.
 """
 
 from __future__ import annotations

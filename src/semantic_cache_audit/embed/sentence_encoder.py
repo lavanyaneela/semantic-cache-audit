@@ -47,6 +47,13 @@ class OnnxSentenceEncoder(Embedder):
     """
 
     def __init__(self, model_name: str = DEFAULT_MODEL, local_dir: str | Path | None = None):
+        # The weights are checked before the runtime import, so "these files are
+        # missing" is reported the same way on a machine with the extra and on one
+        # without it. The other order made two tests pass locally and fail on the CI
+        # runner that deliberately installs without the extra, which is exactly the
+        # class of failure that order is supposed to prevent.
+        if local_dir is not None:
+            self._check_local(Path(local_dir))
         try:
             import onnxruntime as ort
             from tokenizers import Tokenizer
@@ -69,14 +76,17 @@ class OnnxSentenceEncoder(Embedder):
         self._dim = int(self._session.get_outputs()[0].shape[-1])
 
     @staticmethod
-    def _resolve(model_name: str, local_dir: str | Path | None) -> dict[str, Path]:
+    def _check_local(root: Path) -> dict[str, Path]:
+        paths = {f: root / f for f in REQUIRED_FILES}
+        missing = [f for f, p in paths.items() if not p.exists()]
+        if missing:
+            raise EncoderUnavailable(f"{root} is missing {missing}")
+        return paths
+
+    @classmethod
+    def _resolve(cls, model_name: str, local_dir: str | Path | None) -> dict[str, Path]:
         if local_dir is not None:
-            root = Path(local_dir)
-            paths = {f: root / f for f in REQUIRED_FILES}
-            missing = [f for f, p in paths.items() if not p.exists()]
-            if missing:
-                raise EncoderUnavailable(f"{root} is missing {missing}")
-            return paths
+            return cls._check_local(Path(local_dir))
         try:
             from huggingface_hub import hf_hub_download
         except ImportError as exc:

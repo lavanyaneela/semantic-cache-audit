@@ -74,6 +74,12 @@ def manifest_for(pairs: list[Pair], jsonl_text: str) -> dict:
         "by_class": {c: by_class.get(c, 0) for c in ALL_CLASSES},
         "by_domain": dict(sorted(by_domain.items())),
         "by_difficulty": dict(sorted(by_difficulty.items())),
+        # The positive control mix on its own. The claim that the controls are not
+        # mostly easy is the one a reviewer should attack first, so the counts behind
+        # it are published rather than described.
+        "positive_by_difficulty": dict(
+            sorted(Counter(p.difficulty for p in pairs if p.same_answer).items())
+        ),
         "sha256": hashlib.sha256(jsonl_text.encode()).hexdigest(),
         "generated_by": "python -m semantic_cache_audit.corpus.builder",
         "authored": (
@@ -94,7 +100,15 @@ def write(root: Path) -> dict:
     text = to_jsonl(pairs)
     (root / "pairs.jsonl").write_text(text, encoding="utf-8")
     manifest = manifest_for(pairs, text)
-    manifest["captured_utc"] = datetime.now(UTC).strftime("%Y-%m-%d")
+    # Keep the recorded date when the corpus itself has not changed, so rebuilding
+    # on a later day does not dirty the manifest and break the byte identical check.
+    previous = root / "manifest.json"
+    existing = json.loads(previous.read_text(encoding="utf-8")) if previous.exists() else {}
+    manifest["captured_utc"] = (
+        existing.get("captured_utc")
+        if existing.get("sha256") == manifest["sha256"]
+        else datetime.now(UTC).strftime("%Y-%m-%d")
+    )
     (root / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return manifest
 

@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from functools import lru_cache
 from pathlib import Path
 
 from .schema import Pair
@@ -47,9 +46,3 @@ def load_manifest(root: Path | None = None) -> dict:
     if not path.exists():
         raise CorpusError(f"no manifest at {path}")
     return json.loads(path.read_text(encoding="utf-8"))
-
-
-@lru_cache(maxsize=4)
-def cached_pairs(root_str: str | None = None) -> tuple[Pair, ...]:
-    """Load once per process. Experiments load the corpus repeatedly and it does not change."""
-    return tuple(load_pairs(Path(root_str) if root_str else None))

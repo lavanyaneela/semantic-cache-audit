@@ -1121,52 +1121,52 @@
       "operating_point": {
         "by_class": {
           "direction_reversal": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "entity_swap": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "negation": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "numeric_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "scope_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "true_paraphrase": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 0.024655401055656376,
             "false_hits": 0,
             "hit_rate": 1.0,
             "hits": 120,
-            "probes": 120
+            "probes": 120,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.024655401055656376
           }
         },
         "false_hit_rate": 0.625,
@@ -2304,52 +2304,52 @@
       "operating_point": {
         "by_class": {
           "direction_reversal": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "entity_swap": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "negation": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "numeric_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "scope_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "true_paraphrase": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 0.024655401055656376,
             "false_hits": 0,
             "hit_rate": 1.0,
             "hits": 120,
-            "probes": 120
+            "probes": 120,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.024655401055656376
           }
         },
         "false_hit_rate": 0.625,
@@ -3487,52 +3487,52 @@
       "operating_point": {
         "by_class": {
           "direction_reversal": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "entity_swap": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "negation": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "numeric_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "scope_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "true_paraphrase": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 0.024655401055656376,
             "false_hits": 0,
             "hit_rate": 1.0,
             "hits": 120,
-            "probes": 120
+            "probes": 120,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.024655401055656376
           }
         },
         "false_hit_rate": 0.625,
@@ -4670,52 +4670,52 @@
       "operating_point": {
         "by_class": {
           "direction_reversal": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "entity_swap": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "negation": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "numeric_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "scope_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 40,
             "hit_rate": 1.0,
             "hits": 40,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 1.0,
+            "wrongly_served_upper": 1.0
           },
           "true_paraphrase": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 0.024655401055656376,
             "false_hits": 0,
             "hit_rate": 1.0,
             "hits": 120,
-            "probes": 120
+            "probes": 120,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.024655401055656376
           }
         },
         "false_hit_rate": 0.625,
@@ -5853,52 +5853,52 @@
       "operating_point": {
         "by_class": {
           "direction_reversal": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 0,
             "hit_rate": 0.0,
             "hits": 0,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.07215752450551455
           },
           "entity_swap": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 2,
             "hit_rate": 0.05,
             "hits": 2,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 0.05,
+            "wrongly_served_upper": 0.14915196127321298
           },
           "negation": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 0,
             "hit_rate": 0.0,
             "hits": 0,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.07215752450551455
           },
           "numeric_change": {
-            "false_hit_rate": 1.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 2,
             "hit_rate": 0.05,
             "hits": 2,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 0.05,
+            "wrongly_served_upper": 0.14915196127321298
           },
           "scope_change": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 1.0,
             "false_hits": 0,
             "hit_rate": 0.0,
             "hits": 0,
-            "probes": 40
+            "probes": 40,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.07215752450551455
           },
           "true_paraphrase": {
-            "false_hit_rate": 0.0,
-            "false_hit_rate_upper": 0.07580765168296455,
             "false_hits": 0,
             "hit_rate": 0.31666666666666665,
             "hits": 38,
-            "probes": 120
+            "probes": 120,
+            "wrongly_served_rate": 0.0,
+            "wrongly_served_upper": 0.024655401055656376
           }
         },
         "false_hit_rate": 0.09523809523809523,
@@ -5929,52 +5929,52 @@
   "shaped_operating_point": {
     "by_class": {
       "direction_reversal": {
-        "false_hit_rate": 0.0,
-        "false_hit_rate_upper": 1.0,
         "false_hits": 0,
         "hit_rate": 0.0,
         "hits": 0,
-        "probes": 40
+        "probes": 40,
+        "wrongly_served_rate": 0.0,
+        "wrongly_served_upper": 0.07215752450551455
       },
       "entity_swap": {
-        "false_hit_rate": 1.0,
-        "false_hit_rate_upper": 1.0,
         "false_hits": 2,
         "hit_rate": 0.05,
         "hits": 2,
-        "probes": 40
+        "probes": 40,
+        "wrongly_served_rate": 0.05,
+        "wrongly_served_upper": 0.14915196127321298
       },
       "negation": {
-        "false_hit_rate": 0.0,
-        "false_hit_rate_upper": 1.0,
         "false_hits": 0,
         "hit_rate": 0.0,
         "hits": 0,
-        "probes": 40
+        "probes": 40,
+        "wrongly_served_rate": 0.0,
+        "wrongly_served_upper": 0.07215752450551455
       },
       "numeric_change": {
-        "false_hit_rate": 1.0,
-        "false_hit_rate_upper": 1.0,
         "false_hits": 2,
         "hit_rate": 0.05,
         "hits": 2,
-        "probes": 40
+        "probes": 40,
+        "wrongly_served_rate": 0.05,
+        "wrongly_served_upper": 0.14915196127321298
       },
       "scope_change": {
-        "false_hit_rate": 0.0,
-        "false_hit_rate_upper": 1.0,
         "false_hits": 0,
         "hit_rate": 0.0,
         "hits": 0,
-        "probes": 40
+        "probes": 40,
+        "wrongly_served_rate": 0.0,
+        "wrongly_served_upper": 0.07215752450551455
       },
       "true_paraphrase": {
-        "false_hit_rate": 0.0,
-        "false_hit_rate_upper": 0.07580765168296455,
         "false_hits": 0,
         "hit_rate": 0.31666666666666665,
         "hits": 38,
-        "probes": 120
+        "probes": 120,
+        "wrongly_served_rate": 0.0,
+        "wrongly_served_upper": 0.024655401055656376
       }
     },
     "false_hit_rate": 0.09523809523809523,

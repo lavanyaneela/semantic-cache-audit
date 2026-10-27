@@ -33,8 +33,10 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 from metrics_spec import by_name  # noqa: E402
 
-#: Numbers in prose that are genuinely not measurements. Each needs a reason, and a
-#: test asserts that no entry here hides a value a metric actually produces.
+#: Numbers in prose that are genuinely not measurements. Each needs a reason, and two
+#: tests hold the list honest: no entry may equal a value a metric produces, and no
+#: entry may be unused. An unused exemption is a hole waiting for a number to fall
+#: into it, and four of these were unused until an audit counted them.
 EXEMPT_NUMBERS: dict[str, str] = {
     "1": "an exit code, and an ordinal in ADR numbering",
     "2": "an exit code",
@@ -42,11 +44,7 @@ EXEMPT_NUMBERS: dict[str, str] = {
     "95": "the confidence level, declared in statistics.py rather than measured",
     "100": "a percentage ceiling used in definitions",
     "2026": "a copyright year",
-    "384": "the published dimension of the encoder, a property of the model",
     "3.11": "the minimum supported Python version",
-    "3.12": "a supported Python version",
-    "3.13": "a supported Python version",
-    "10": "the minimum hit rate expressed as a percentage, a configured input",
 }
 
 NUMBER = r"(-?\d[\d,]*(?:\.\d+)?)"
@@ -179,6 +177,17 @@ def _paragraph_around(text: str, index: int) -> str:
     end = text.find("\n\n", index)
     end = len(text) if end == -1 else end
     return " ".join(text[start:end].split())[:200]
+
+
+def unused_exemptions(payload: dict) -> list[str]:
+    """Exemptions no checked document actually needs."""
+    corpus = " ".join(
+        strip_for_reverse((ROOT / relative).read_text(encoding="utf-8"))
+        for relative in payload["checked_documents"]
+        if (ROOT / relative).exists()
+    )
+    present = {normalise(raw) for raw in re.findall(NUMBER, corpus)}
+    return sorted(k for k in EXEMPT_NUMBERS if normalise(k) not in present)
 
 
 def check_exemptions_hide_nothing(payload: dict) -> list[Finding]:

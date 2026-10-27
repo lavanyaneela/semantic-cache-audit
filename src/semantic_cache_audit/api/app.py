@@ -90,19 +90,53 @@ def build_app(embedder: str = "charngram", *, threshold: float = 0.9) -> FastAPI
 
     @app.post("/v1/lookup/batch")
     def lookup_batch(body: BatchLookupRequest) -> BatchLookupResponse:
+        """One encode pass and one index search, with the same accounting as the
+        single endpoint.
+
+        The first version skipped the hot layer entirely, so an exact repeat came
+        back as an approximate hit and `/v1/stats` reported zero exact hits for any
+        batch traffic. The two "they agree" tests compared only the hit flag and the
+        answer, so neither could see it. The batch path is still a genuinely
+        different code path, which is the point of having it, but it now goes through
+        the same exact match shortcut and the same counters.
+        """
         vectors = np.stack([vector_for(q) for q in body.queries])
         batched = store.query_many(vectors, top_k=1, namespace=cache.namespace)
         results: list[LookupResponse] = []
         now = clock.now()
         for query, matches in zip(body.queries, batched, strict=True):
             cache.stats["lookups"] += 1
+
+            exact_key = cache.hot.exact_lookup(query)
+            if exact_key is not None and not cache.hot.is_expired(exact_key, now):
+                payload = cache.payloads.get(exact_key)
+                if payload is not None:
+                    cache.eviction.record_hit(exact_key, now)
+                    cache.stats["exact_hits"] += 1
+                    results.append(
+                        LookupResponse(
+                            hit=True,
+                            answer_id=payload["answer_id"],
+                            answer_version=payload["answer_version"],
+                            score=1.0,
+                            exact=True,
+                        )
+                    )
+                    continue
+
             best = matches[0] if matches else None
             if best is None or best.score < cache.threshold:
                 cache.stats["misses"] += 1
                 results.append(LookupResponse(hit=False, score=best.score if best else None))
                 continue
+            if cache.hot.is_expired(best.vector_id, now):
+                cache.evict(best.vector_id)
+                cache.stats["misses"] += 1
+                cache.stats["expired"] += 1
+                results.append(LookupResponse(hit=False, score=best.score))
+                continue
             payload = cache.payloads.get(best.vector_id)
-            if payload is None or cache.hot.is_expired(best.vector_id, now):
+            if payload is None:
                 cache.stats["misses"] += 1
                 results.append(LookupResponse(hit=False, score=best.score))
                 continue
@@ -114,7 +148,7 @@ def build_app(embedder: str = "charngram", *, threshold: float = 0.9) -> FastAPI
                     answer_id=payload["answer_id"],
                     answer_version=payload["answer_version"],
                     score=best.score,
-                    exact=payload["query"] == query,
+                    exact=False,
                 )
             )
         hits = sum(1 for r in results if r.hit)

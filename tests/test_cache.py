@@ -188,8 +188,40 @@ def test_the_manual_clock_refuses_to_run_backwards():
         ManualClock().advance(-1.0)
 
 
-def test_the_hot_layer_treats_an_unknown_key_as_expired():
-    assert HotLayer().is_expired("never-written", 0.0) is True
+def test_the_hot_layer_does_not_treat_an_unknown_key_as_expired():
+    """A missing record used to count as an expiry, and the caller evicts on expiry,
+    so any read of an entry whose record was absent destroyed a live entry."""
+    assert HotLayer().is_expired("never-written", 0.0) is False
+
+
+def test_a_read_cannot_destroy_a_live_entry_whose_record_is_missing(unit_vectors):
+    """The torn write window, reconstructed. The vector and the payload are intact
+    and only the hot layer record is gone; a read must not delete the entry."""
+    cache = SemanticCache(
+        FaissFlatStore(unit_vectors.shape[1]), threshold=0.5, hot=HotLayer(),
+        payloads=PayloadStore(), clock=ManualClock(),
+    )
+    cache.put("k", "q", unit_vectors[0], "a")
+    cache.hot._r.delete(cache.hot._entry("k"))
+    cache.lookup("q", unit_vectors[0])
+    assert cache.store.count(cache.namespace) == 1
+
+
+def test_the_hot_layer_writes_both_of_its_keys_or_neither(unit_vectors):
+    hot = HotLayer()
+    hot.put("k", "q", 0.0, None)
+    assert hot.exact_lookup("q") == "k" and hot.entry("k") is not None
+
+
+def test_two_caches_in_different_namespaces_do_not_see_each_other(unit_vectors):
+    """The hot layer and the payload store were global while the vector store was
+    namespaced, so against a shared server two caches became one."""
+    store = FaissFlatStore(unit_vectors.shape[1])
+    first = SemanticCache(store, threshold=0.5, clock=ManualClock(), namespace="one")
+    second = SemanticCache(store, threshold=0.5, clock=ManualClock(), namespace="two")
+    first.put("k", "shared query text", unit_vectors[0], "answer-one")
+    assert second.hot.exact_lookup("shared query text") is None
+    assert second.payloads.get("k") is None
 
 
 def test_the_hot_layer_can_be_flushed():

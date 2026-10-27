@@ -120,6 +120,41 @@ def test_the_batch_endpoint_agrees_on_answers(pairs, reversal):
     assert [r["answer_id"] for r in batched] == [r["answer_id"] for r in singles]
 
 
+def test_the_batch_endpoint_accounts_for_an_exact_repeat_as_an_exact_hit(client, reversal):
+    """It skipped the hot layer once, so /v1/stats reported no exact hits for any
+    batch traffic and the two agreement tests could not see it."""
+    client.post("/v1/entries", json={"query": reversal.query_a, "answer_id": "A"})
+    body = client.post("/v1/lookup/batch", json={"queries": [reversal.query_a]}).json()
+    assert body["results"][0]["exact"] is True
+    assert client.get("/v1/stats").json()["exact_hits"] == 1
+
+
+def test_the_batch_and_single_endpoints_leave_identical_statistics(pairs, reversal):
+    queries = [reversal.query_a, reversal.query_b, pairs[5].query_a]
+    batch_app = TestClient(build_app(PRETRAINED_NAME, threshold=0.9))
+    single_app = TestClient(build_app(PRETRAINED_NAME, threshold=0.9))
+    for app in (batch_app, single_app):
+        app.post("/v1/entries", json={"query": reversal.query_a, "answer_id": "A"})
+    batch_app.post("/v1/lookup/batch", json={"queries": queries})
+    for query in queries:
+        single_app.post("/v1/lookup", json={"query": query})
+    keys = ("lookups", "exact_hits", "approx_hits", "misses")
+    batched = {k: batch_app.get("/v1/stats").json()[k] for k in keys}
+    singles = {k: single_app.get("/v1/stats").json()[k] for k in keys}
+    assert batched == singles
+
+
+def test_the_batch_endpoint_agrees_on_the_exact_flag(pairs, reversal):
+    queries = [reversal.query_a, reversal.query_b]
+    batch_app = TestClient(build_app(PRETRAINED_NAME, threshold=0.9))
+    single_app = TestClient(build_app(PRETRAINED_NAME, threshold=0.9))
+    for app in (batch_app, single_app):
+        app.post("/v1/entries", json={"query": reversal.query_a, "answer_id": "A"})
+    batched = batch_app.post("/v1/lookup/batch", json={"queries": queries}).json()["results"]
+    singles = [single_app.post("/v1/lookup", json={"query": q}).json() for q in queries]
+    assert [r["exact"] for r in batched] == [r["exact"] for r in singles]
+
+
 def test_the_batch_endpoint_rejects_an_empty_list(client):
     assert client.post("/v1/lookup/batch", json={"queries": []}).status_code == 422
 

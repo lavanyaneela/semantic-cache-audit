@@ -23,11 +23,21 @@ ROWS = (
     ("Tightest budget this corpus can certify", "tightest_budget_pct", "percent"),
     ("Clean hits a one percent budget needs", "hits_required_one_pct", ""),
     ("Real embedders that ever meet a budget", "real_embedders_ever_ok", "out of four"),
-    ("Threshold transfers that collapse the cache", "transfers_collapsed",
-     "out of those measured"),
+    ("Threshold transfers where every hit is wrong", "real_transfers_all_wrong",
+     "out of those between real embedders"),
     ("Tests", "tests_total", ""),
     ("Line coverage", "coverage_line_pct", "percent"),
 )
+
+
+def check_rows_resolve(rendered: dict) -> list[str]:
+    """Every row must name a metric that exists.
+
+    One did not, and the job summary printed "n/a" for it in every CI run since it
+    was written. Nothing noticed, because the summary is the one output no test
+    reads, so the check lives here and a test calls it.
+    """
+    return [metric for _, metric, _ in ROWS if metric not in rendered]
 
 
 def main() -> int:
@@ -37,6 +47,9 @@ def main() -> int:
         return 0
     payload = json.loads(path.read_text())
     rendered = payload["rendered"]
+    missing = check_rows_resolve(rendered)
+    if missing:
+        raise SystemExit(f"the job summary names metrics that do not exist: {missing}")
     print("### The numbers this build re-measured\n")
     print("| Figure | Value | |")
     print("| --- | ---: | --- |")

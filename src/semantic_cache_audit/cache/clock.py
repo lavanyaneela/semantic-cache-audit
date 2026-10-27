@@ -32,10 +32,6 @@ class ManualClock:
         return self.t
 
 
-class SystemClock:
-    """Real time. Used by the API process only, never by anything that is measured."""
-
-    def now(self) -> float:  # pragma: no cover - not exercised by the offline suite
-        import time
-
-        return time.time()
+# There is deliberately no wall clock implementation here. Every path in this
+# repository, the API included, runs on an injected clock, so a published number can
+# never depend on how long something took. A real deployment would supply its own.

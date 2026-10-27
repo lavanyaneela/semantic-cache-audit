@@ -199,7 +199,7 @@ def test_a_tie_for_worst_class_is_reported_as_a_tie_not_broken_alphabetically(he
     name, rate = headline.worst_class(headline.points[0])
     tied = [
         cls for cls, stats in headline.points[0].by_class.items()
-        if cls in NEAR_MISS_CLASSES and stats["hits"] > 0 and stats["false_hit_rate"] == rate
+        if cls in NEAR_MISS_CLASSES and stats["hits"] > 0 and stats["wrongly_served_rate"] == rate
     ]
     assert (len(tied) > 1) == name.endswith("classes tied")
 

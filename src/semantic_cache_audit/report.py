@@ -85,16 +85,15 @@ def class_table(point: Point) -> str:
             str(stats["probes"]),
             str(stats["hits"]),
             str(stats["false_hits"]),
-            pct(stats["hit_rate"]),
-            pct(stats["false_hit_rate"]),
-            pct(stats["false_hit_rate_upper"]),
+            pct(stats["wrongly_served_rate"]),
+            pct(stats["wrongly_served_upper"]),
         ]
         for cls, stats in sorted(
-            point.by_class.items(), key=lambda kv: (-kv[1]["false_hit_rate"], kv[0])
+            point.by_class.items(), key=lambda kv: (-kv[1]["wrongly_served_rate"], kv[0])
         )
     ]
     return table(
-        ["class", "probes", "hits", "wrong", "hit rate", "wrong share", "upper bound"], rows
+        ["class", "probes", "hits", "wrong", "wrongly served", "upper bound"], rows
     )
 
 
@@ -232,19 +231,20 @@ def html_report(sweep: Sweep, decision: Decision, metrics: dict | None = None) -
             ),
             "<h2 id='by-class'>Where it goes wrong</h2>",
             _rows_html(
-                ["class", "probes", "hits", "wrong", "wrong share", ""],
+                ["class", "probes", "hits", "wrong", "wrongly served", ""],
                 [
                     [
                         cls,
                         str(s["probes"]),
                         str(s["hits"]),
                         str(s["false_hits"]),
-                        pct(s["false_hit_rate"]),
+                        pct(s["wrongly_served_rate"]),
                         f"<div class='bar'><span style='width:"
-                        f"{min(s['false_hit_rate'] * 100, 100):.0f}%'></span></div>",
+                        f"{min(s['wrongly_served_rate'] * 100, 100):.0f}%'></span></div>",
                     ]
                     for cls, s in sorted(
-                        point.by_class.items(), key=lambda kv: (-kv[1]["false_hit_rate"], kv[0])
+                        point.by_class.items(),
+                        key=lambda kv: (-kv[1]["wrongly_served_rate"], kv[0]),
                     )
                 ],
             ),

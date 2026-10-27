@@ -88,13 +88,18 @@ def summarise(
     for cls, members in sorted(grouped.items()):
         cls_hits = [m for m in members if m.hit]
         cls_false = [m for m in cls_hits if not m.correct]
+        # The share reported per class is of **probes**, not of hits. Of hits is
+        # identically one for every near miss class, because a near miss that hits is
+        # a wrong answer by definition, so it carried no information and made the CLI
+        # print a five way tie at one hundred percent at every threshold. Of probes is
+        # the quantity E2 measures and the README quotes.
         by_class[cls] = {
             "probes": len(members),
             "hits": len(cls_hits),
             "false_hits": len(cls_false),
             "hit_rate": len(cls_hits) / len(members) if members else 0.0,
-            "false_hit_rate": len(cls_false) / len(cls_hits) if cls_hits else 0.0,
-            "false_hit_rate_upper": upper_bound(len(cls_false), len(cls_hits)),
+            "wrongly_served_rate": len(cls_false) / len(members) if members else 0.0,
+            "wrongly_served_upper": upper_bound(len(cls_false), len(members)),
         }
 
     return Point(
@@ -134,9 +139,12 @@ class Sweep:
         wrong answers in confidence order, so it is zero for an embedder that ranks any
         true paraphrase first and large only for one that is actively inverted.
         """
+        # Ties are broken towards the correct pair, so a tie at the boundary can
+        # only shorten the published run and never inflate it. Sorting by score alone
+        # left the answer depending on the order of pairs.jsonl.
         order = sorted(
             zip(self.scores, [p.same_answer for p in self.pairs], strict=True),
-            key=lambda kv: -kv[0],
+            key=lambda kv: (-kv[0], not kv[1]),
         )
         run = 0
         for _, correct in order:
@@ -184,7 +192,7 @@ class Sweep:
         as a finding and is an artefact of sort order.
         """
         candidates = [
-            (cls, stats["false_hit_rate"])
+            (cls, stats["wrongly_served_rate"])
             for cls, stats in point.by_class.items()
             if cls in NEAR_MISS_CLASSES and stats["hits"] > 0
         ]

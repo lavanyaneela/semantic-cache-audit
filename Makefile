@@ -68,8 +68,12 @@ embeddings:
 embeddings-live:
 	$(PY) tools/build_fixtures.py --pretrained
 
+# make returns 2 for any failed recipe, which would collapse the tool's exit 1 and
+# exit 2 into one number and destroy the distinction this repository is about. The
+# recipe therefore reports the tool's own code and always succeeds itself. Branch on
+# the console script, never on make.
 audit:
-	$(PY) -m $(PKG).cli audit --embedder "$(EMBEDDER)" --budget $(BUDGET)
+	@$(PY) -m $(PKG).cli audit --embedder "$(EMBEDDER)" --budget $(BUDGET); 		code=$$?; echo; echo "semantic-cache-audit exited $$code"; exit 0
 
 report:
 	$(PY) -m $(PKG).cli report --embedder "$(EMBEDDER)" --budget $(BUDGET) \

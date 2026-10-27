@@ -21,6 +21,7 @@ Anchor rules, each learned by getting it wrong on an earlier build:
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -55,6 +56,16 @@ def as_auc(value: Any) -> str:
     return f"{float(value):.3f}"
 
 
+def as_floor3(value: Any) -> str:
+    """Round a minimum down, never to nearest.
+
+    A floor rendered to nearest is false half the time: the smallest similarity in
+    the direction reversal class is 0.98957, and `:.3f` published it as 0.990 under
+    the sentence "never below", which the data does not support.
+    """
+    return f"{math.floor(float(value) * 1000) / 1000:.3f}"
+
+
 def as_text(value: Any) -> str:
     return str(value)
 
@@ -84,6 +95,12 @@ METRICS: tuple[Metric, ...] = (
            ("{} near miss pairs",)),
     Metric("positive_controls", "corpus", ("positive_control_pairs",), as_int,
            ("{} positive controls", "{} true paraphrases", "{} of them share")),
+    Metric("positive_controls_hard", "corpus", ("positive_by_difficulty", "hard"), as_int,
+           ("{} of them against",)),
+    Metric("positive_controls_medium", "corpus", ("positive_by_difficulty", "medium"), as_int,
+           ("{} medium and",)),
+    Metric("positive_controls_easy", "corpus", ("positive_by_difficulty", "easy"), as_int,
+           ("{} easy",)),
     Metric("templates_total", "corpus", ("templates_total",), as_int,
            ("{} template families",)),
     Metric("corpus_domains", "corpus", ("__domains__",), as_int,
@@ -125,8 +142,12 @@ METRICS: tuple[Metric, ...] = (
     Metric("scope_change_upper_pct", "e2_class_breakdown", ("upper_by_class", "scope_change"),
            as_pct1, ("{}% on scope",)),
     Metric("worst_class_min_similarity", "e2_class_breakdown", ("worst_class_min_similarity",),
-           as_auc, ("above {} on this", "never below {}")),
+           as_floor3, ("above {} on this", "never below {}")),
     # ------------------------------------------------------- E3, the two levers
+    Metric("e3_capacity", "e3_eviction_sweep", ("published_capacity",), as_int,
+           ("capacity of {} entries", "cache at {} entries")),
+    Metric("e3_capacities_swept", "e3_eviction_sweep", ("capacities_swept",), as_int,
+           ("grid over {} capacities",)),
     Metric("policy_false_hit_spread_pp", "e3_eviction_sweep",
            ("false_hit_spread_across_policies_pp",), as_points2,
            ("{} points of wrong", "by {} points of false")),
@@ -169,7 +190,7 @@ METRICS: tuple[Metric, ...] = (
            ("real_transfers_that_saturate_the_cache",), as_int, ("{} stop rejecting",)),
     Metric("real_transfers_all_wrong", "e5_threshold_transfer",
            ("real_transfers_where_every_hit_is_wrong",), as_int,
-           ("{} of them every hit",)),
+           ("different {} fail",)),
     Metric("instrument_transfers", "e5_threshold_transfer",
            ("transfers_involving_instrument",), as_int, ("{} further transfers",)),
     # --------------------------------------------------------------- the suite

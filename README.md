@@ -36,14 +36,14 @@ pairs:
   outscores every genuine paraphrase in the corpus.
 - **One whole class fails completely.** The worst class is direction_reversal, at
   100.0% of that class wrongly served at a threshold that serves half the paraphrases. Asking
-  for a fare from Austin to Boston and from Boston to Austin scores above 0.990 on this
-  model, and across the whole class the similarity is never below 0.990.
+  for a fare from Austin to Boston and from Boston to Austin scores above 0.989 on this
+  model, and across the whole class the similarity is never below 0.989.
 - **And the corpus says so too.** No run on this corpus can certify a wrong answer
   budget tighter than 2.47%, so the tool refuses rather than reporting a flattering
   rate. That would take 299 clean hits, and about 798 pairs would be needed to get
   them.
 
-467 tests, 98.0% line coverage, every figure above re-measured by CI and checked
+480 tests, 97.5% line coverage, every figure above re-measured by CI and checked
 against this document by `tools/check_numbers.py`.
 
 ## Quickstart
@@ -74,7 +74,7 @@ this repository exists to argue against.
 | --- | --- |
 | Raising the threshold rejects true paraphrases, so the latency saving shrinks | Fewer wrong answers reach the caller |
 | Lowering it serves more traffic from cache | On this encoder, almost every new hit is wrong |
-| Bounding the cache size cuts the wrong answer rate to 2.9% when bounded, from 5.7% when unbounded | Unbounded growth buys hit rate and pays 2.0 times the wrong answers |
+| Bounding the cache at 20 entries cuts the wrong answer rate to 2.9% when bounded, from 5.7% when unbounded | Unbounded growth buys hit rate and pays 2.0 times the wrong answers |
 | Evicting by insertion order drops the stale share several fold | It costs hit rate, and barely touches correctness |
 
 ## Where it goes wrong, by class
@@ -102,10 +102,15 @@ word order, which mean pooled embeddings largely discard.
 
 E3 separates two levers a team usually treats as one.
 
-Choosing between LRU, LFU and FIFO at a fixed capacity moves the wrong answer rate by
-0.13 points of wrong answers and staleness by 16.8 points of staleness. The policy
-fifo cuts staleness most, a 13.1 fold reduction against LRU, and pays for it in hit
-rate.
+At a capacity of 20 entries, choosing between LRU, LFU and FIFO moves the wrong
+answer rate by 0.13 points of wrong answers and staleness by 16.8 points of
+staleness. The policy fifo cuts staleness most, a 13.1 fold reduction against LRU,
+and pays for it in hit rate.
+
+The capacity is named because it was chosen, and it is the tightest arm of the sweep.
+Every figure in this section is weaker at a larger cache: the full grid over 4
+capacities is in `docs/experiments/e3_eviction_sweep.json`, and the shape of the
+finding holds across it while the sizes do not.
 
 Whether the cache is bounded at all is the correctness lever, and it is the one teams
 do not think of as one: a wrong answer needs a wrong neighbour to still be resident,
@@ -117,10 +122,10 @@ Take the threshold tuned on one embedder and apply it unchanged to another, whic
 what a team does when it copies a number from a blog post or a previous project.
 
 Across the 12 transfers between the four real embedders, the threshold shifts by 32.2
-cosine points at the median. 5 stop rejecting anything, and in 3 of them every hit the
-cache serves is wrong: carrying the pretrained encoder's threshold onto any of the
-lexical embedders produces a cache whose every answer is an answer to a different
-question.
+cosine points at the median. 5 stop rejecting anything. A different 3 fail the other
+way: carrying the pretrained encoder's threshold onto any of the three lexical
+embedders produces a cache where every hit it serves is wrong, an answer to a
+different question every time.
 
 The same sweep covers the separation family, which adds 144 further transfers. Those
 are reported in `docs/experiments/e5_threshold_transfer.json` under their own keys and
@@ -207,6 +212,11 @@ if it has rendered invisible, which is a collision no test can see.
 
 <img src="docs/evidence/verdict.png" alt="The verdict panel of the generated report, showing a refusal" width="860">
 
+The same report priced across the whole threshold grid, which is the trade this
+repository exists to make visible:
+
+<img src="docs/evidence/curve.png" alt="Hit rate against wrong share at every threshold, from the generated report" width="860">
+
 A replay of captured stdout, paced by each command's measured wall time, with every
 command and its exit code recorded in [the manifest](docs/video/manifest.json):
 
@@ -221,10 +231,11 @@ Every pair records the template and substitution it came from.
 The awkward cases are the point, so here is what is deliberately in it. Direction
 reversals share an identical token multiset, so only order distinguishes them.
 Negations differ by a single inserted token. The positive controls are mostly hard
-ones with low lexical overlap, pairs like asking how to claim back a train fare
-against asking for the reimbursement procedure for one, because those are exactly the
-paraphrases a semantic cache is bought to catch. A corpus of near misses plus obvious
-repeats would make any embedder look separable.
+ones with low lexical overlap, 54 of them against 48 medium and 18 easy, pairs like
+asking how to claim back a train fare against asking for the reimbursement procedure
+for one, because those are exactly the paraphrases a semantic cache is bought to
+catch. A corpus of near misses plus obvious repeats would make any embedder look
+separable.
 
 The loader refuses a corpus whose hash does not match its manifest, and refuses one
 that contradicts itself by joining both sides of a near miss through a chain of
@@ -241,9 +252,11 @@ paraphrase pairs.
 - **What an approximate index would do.** The index here is exact so that a false hit
   is attributable to the threshold alone. These figures are a lower bound on an
   approximate index rather than an estimate of one.
-- **Redis and MongoDB under load.** The code paths run against real servers in an
-  optional CI job. That supports "the path is exercised against a real server", not
-  "built on Redis".
+- **Redis and MongoDB under load.** A non blocking CI job runs the cache tests
+  against real service containers. It is marked `continue-on-error`, so it cannot
+  fail the build and its result has to be read rather than assumed. That supports
+  "there is a job that exercises these paths against real servers", not "built on
+  Redis", and certainly nothing about either system under load.
 - **Anything about the separation family.** It is an instrument that spans a range of
   answer separation, not a model, and every figure from it is printed with its noise
   level.

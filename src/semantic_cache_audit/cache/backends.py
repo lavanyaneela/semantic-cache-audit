@@ -52,9 +52,17 @@ class HotLayer:
     zero and flatter the cache.
     """
 
-    def __init__(self, client: Any | None = None, prefix: str = "sca") -> None:
+    def __init__(
+        self, client: Any | None = None, prefix: str = "sca", namespace: str = "default"
+    ) -> None:
         self._r = client if client is not None else redis_client()
-        self._prefix = prefix
+        # The namespace is part of the key rather than a property of the caller. It
+        # was not, and the omission was invisible against the in process doubles and
+        # wrong against a real server: the vector store was namespaced while these
+        # two were global, so two caches sharing a Redis would answer each other's
+        # exact match lookups and the per pair isolation the audit relies on held
+        # only by accident of using a fresh double each time.
+        self._prefix = f"{prefix}:{namespace}"
 
     def _exact(self, query: str) -> str:
         return f"{self._prefix}:exact:{query}"
@@ -63,11 +71,20 @@ class HotLayer:
         return f"{self._prefix}:entry:{key}"
 
     def put(self, key: str, query: str, inserted_at: float, ttl_seconds: float | None) -> None:
-        self._r.set(self._exact(query), key)
-        self._r.set(
-            self._entry(key),
-            json.dumps({"inserted_at": inserted_at, "ttl_seconds": ttl_seconds, "query": query}),
+        """Write both keys in one round trip.
+
+        Written separately once, and a read landing between the two saw the pointer,
+        found no record, concluded the entry had expired, and deleted a live entry.
+        A pipeline makes the pair atomic; `is_expired` no longer treats a missing
+        record as an expiry either, so neither half of that failure survives.
+        """
+        record = json.dumps(
+            {"inserted_at": inserted_at, "ttl_seconds": ttl_seconds, "query": query}
         )
+        pipeline = self._r.pipeline()
+        pipeline.set(self._exact(query), key)
+        pipeline.set(self._entry(key), record)
+        pipeline.execute()
 
     def exact_lookup(self, query: str) -> str | None:
         return self._r.get(self._exact(query))
@@ -88,10 +105,15 @@ class HotLayer:
         Redis would expire on wall time, which would make a simulated day take a day.
         The real Redis path is still exercised: the record round trips through the
         server, only the comparison happens here.
+
+        A missing record is **not** an expiry. It used to be, and since the caller
+        evicts on expiry, any entry whose record went missing was destroyed by the
+        next read of it. That is reachable on a real Redis, where the record can be
+        dropped by a memory limit independently of the pointer.
         """
         record = self.entry(key)
         if record is None:
-            return True
+            return False
         ttl = record.get("ttl_seconds")
         if ttl is None:
             return False
@@ -108,18 +130,25 @@ class PayloadStore:
     Provenance is not decoration. When the audit reports a wrong hit it names the
     cached query that produced it, and that attribution is only possible because the
     payload records which query the answer was stored against.
+
+    Documents are namespaced for the same reason the hot layer is: against a shared
+    server an unnamespaced `_id` makes two caches one cache.
     """
 
-    def __init__(self, collection: Any | None = None) -> None:
+    def __init__(self, collection: Any | None = None, namespace: str = "default") -> None:
         self._c = collection if collection is not None else mongo_collection()
+        self._namespace = namespace
+
+    def _id(self, key: str) -> str:
+        return f"{self._namespace}/{key}"
 
     def put(
         self, key: str, query: str, answer_id: str, answer_version: int, stored_at: float
     ) -> None:
         self._c.replace_one(
-            {"_id": key},
+            {"_id": self._id(key)},
             {
-                "_id": key,
+                "_id": self._id(key),
                 "query": query,
                 "answer_id": answer_id,
                 "answer_version": answer_version,
@@ -129,13 +158,13 @@ class PayloadStore:
         )
 
     def get(self, key: str) -> dict | None:
-        return self._c.find_one({"_id": key})
+        return self._c.find_one({"_id": self._id(key)})
 
     def drop(self, key: str) -> None:
-        self._c.delete_one({"_id": key})
+        self._c.delete_one({"_id": self._id(key)})
 
     def count(self) -> int:
-        return int(self._c.count_documents({}))
+        return int(self._c.count_documents({"_id": {"$regex": f"^{self._namespace}/"}}))
 
     def flush(self) -> None:
-        self._c.delete_many({})
+        self._c.delete_many({"_id": {"$regex": f"^{self._namespace}/"}})

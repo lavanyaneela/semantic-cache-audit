@@ -68,6 +68,52 @@ def test_no_exemption_hides_a_measured_value(payload):
     assert check_exemptions_hide_nothing(payload) == []
 
 
+def test_no_exemption_is_unused(payload):
+    """An unused exemption is a hole waiting for a number to fall into it."""
+    from check_numbers import unused_exemptions
+
+    assert unused_exemptions(payload) == []
+
+
+def test_every_job_summary_row_names_a_metric_that_exists(payload):
+    """One did not, so the CI job summary printed n/a for it in every run."""
+    from job_summary import check_rows_resolve
+
+    assert check_rows_resolve(payload["rendered"]) == []
+
+
+def test_the_duration_pattern_catches_a_duration_without_a_separator():
+    """Narrowing the leading run to three digits exempted everything over 999."""
+    assert DURATION.search("1200 ms") and DURATION.search("12345 ms")
+
+
+def test_the_duration_pattern_catches_a_bare_second_suffix():
+    assert DURATION.search("ran in 0.088s")
+
+
+def test_the_duration_pattern_ignores_a_python_format_specifier():
+    assert not DURATION.search("print(f'{name:44s}')")
+
+
+def test_the_corpus_manifest_is_stable_across_days(tmp_path):
+    """Stamping today's date unconditionally made the repository byte reproducible
+    for exactly one day."""
+    from semantic_cache_audit.corpus import builder
+
+    root = tmp_path / "corpus"
+    first = builder.write(root)
+    second = builder.write(root)
+    assert first["captured_utc"] == second["captured_utc"]
+
+
+def test_an_embedding_manifest_keeps_its_capture_date_when_nothing_changed(tmp_path):
+    from semantic_cache_audit.embed.fixtures import write_fixture
+
+    first = write_fixture("charngram", None, tmp_path)
+    second = write_fixture("charngram", None, tmp_path)
+    assert first["captured_utc"] == second["captured_utc"]
+
+
 def test_every_exemption_carries_a_reason():
     assert all(len(reason) > 10 for reason in EXEMPT_NUMBERS.values())
 

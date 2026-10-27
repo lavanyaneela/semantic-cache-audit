@@ -41,11 +41,16 @@ bound on an approximate index rather than an estimate of one. See ADR-003.
 
 ## Four: real Redis and MongoDB behaviour
 
-The code paths run against real servers in an optional CI job. Nothing here says
-anything about either system under load, about eviction interacting with a real
-memory limit, or about replication lag. Saying "built on Redis" would be an overclaim;
-"the Redis path is exercised against a real server in CI" is what the evidence
-supports.
+A non blocking CI job runs these code paths against real servers. Because it is non
+blocking its failure is invisible in the badge, so the honest form is "a job exists
+that exercises these paths" rather than "the paths pass". Nothing here says anything
+about either system under load, about eviction interacting with a real memory limit,
+or about replication lag.
+
+One defect found by audit and worth recording: the hot layer and the payload store
+were global while the vector store was namespaced, so against a shared server two
+caches would have become one. That was invisible against the in process doubles, and
+it is the kind of thing only a real server finds.
 
 ## Five: whether the separation family resembles any real model
 

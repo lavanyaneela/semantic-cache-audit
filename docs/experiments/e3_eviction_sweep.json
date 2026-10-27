@@ -1,6 +1,7 @@
 {
   "answer": "there are two levers here and they do different jobs. Choosing between LRU, LFU and FIFO at a fixed capacity barely moves correctness and moves staleness several fold, so policy is a staleness lever. Whether the cache is bounded at all is a correctness lever: letting it grow without limit roughly doubles the false hit rate, because a wrong answer needs a wrong neighbour to still be resident. Reporting one eviction number would hide both.",
   "bounded_false_hit_rate_lru": 0.029038112522686024,
+  "capacities_swept": 4,
   "embedder": "st:sentence-transformers/all-MiniLM-L6-v2",
   "false_hit_ratio_unbounded_over_bounded": 1.9662208980044347,
   "false_hit_spread_across_policies_pp": 0.12942419728097404,
@@ -12,6 +13,7 @@
   "lowest_stale_policy": "fifo",
   "lowest_stale_rate": 0.00986971969996052,
   "nuance_the_brief_missed": "the brief framed eviction as a single question. Capacity and policy pull on different failure modes and have to be priced separately.",
+  "published_capacity": 20,
   "question": "Does eviction policy change correctness or only cost?",
   "records": [
     {

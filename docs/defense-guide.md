@@ -46,7 +46,7 @@ not the near misses, it is whether the paraphrases are real. Read
 
 **The numbers:** 0 of the 120 true paraphrases sit above the highest scoring near
 miss. The worst class is direction_reversal at 100.0% of that class wrongly served,
-and across that class the similarity is never below 0.990.
+and across that class the similarity is never below 0.989.
 
 **If pushed, "so raise the threshold":** that is the move the measurement rules out.
 The highest scoring near miss outscores every genuine paraphrase, so any threshold
@@ -72,8 +72,10 @@ them to the corpus. A tool that collapses those tells people to do the wrong wor
 **Prove it:** `python experiments/e5_threshold_transfer.py`
 
 **The numbers:** across the 12 transfers between the four real embedders, the
-threshold shifts by 32.2 cosine points at the median. 5 stop rejecting anything, and
-in 3 of them every hit the cache serves is wrong. The same sweep covers the
+threshold shifts by 32.2 cosine points at the median. 5 stop rejecting anything.
+Separately, and these are a different three, in 3 transfers every hit the cache serves
+is wrong: those are the pretrained encoder's threshold carried onto each of the three
+lexical embedders. The same sweep covers the
 separation family, which adds 144 further transfers; those are reported separately
 and are not part of this claim.
 
@@ -104,9 +106,16 @@ levers instead.
 The FAISS call is one line and it is deliberately the boring part: a flat index, exact
 search, chosen so that a measured false hit is attributable to the threshold rather
 than to an approximation. What is built here is the referee. The corpus with its
-labels, the definition of a wrong hit in ADR-004, the Clopper-Pearson bound that stops
-a measured zero reading as zero, the refusal logic, and the receipts mechanism that
-re-measures every published figure. None of that comes from a library.
+labels, the definition of a wrong hit in ADR-004, the decision to qualify a threshold
+on an upper confidence bound rather than on the point estimate, the refusal logic and
+the ceiling it rests on, and the receipts mechanism that re-measures every published
+figure.
+
+To be precise about the split, because it matters: the Clopper-Pearson bound itself is
+one call to `scipy.stats.beta.ppf` and the separation statistic is one call to
+`scipy.stats.mannwhitneyu`. SciPy does the arithmetic. What is mine is choosing to
+bound rather than to estimate, working out that the ceiling on clean hits is the
+positive control count, and wiring the consequence into an exit code.
 
 **"The corpus is synthetic. Does any of this transfer?"**
 
@@ -186,9 +195,9 @@ saving is worth it, and the second half needs their traffic.
   Say "on this adversarial corpus, at the threshold that serves half the paraphrases".
 - Do not say "zero false hits" about anything. Say zero observed, over N hits, bounded
   at the Clopper-Pearson upper limit.
-- Do not say "built on Redis and MongoDB". Say the code paths are exercised against
-  real servers in an optional CI job, and that `make verify` runs against in process
-  doubles so it works offline.
+- Do not say "built on Redis and MongoDB". Say there is a non blocking CI job that
+  runs the cache tests against real service containers, that it cannot fail the
+  build, and that `make verify` runs against in process doubles so it works offline.
 - Do not present any `synthetic@` figure as a measurement of a model. It is an
   instrument that spans a range of answer separation.
 - Do not claim the cache is slow or fast. No duration is published anywhere.

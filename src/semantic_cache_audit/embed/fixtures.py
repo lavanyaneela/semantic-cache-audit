@@ -54,12 +54,36 @@ def write_fixture(name: str, pairs: list[Pair] | None = None, root: Path | None 
         "rows": int(matrix.shape[0]),
         "zero_rows_before_normalisation": zero_rows(matrix),
         "corpus_sha256": load_manifest()["sha256"],
-        "captured_utc": datetime.now(UTC).strftime("%Y-%m-%d"),
+        # Today's date, unless an identical fixture was already captured. Stamping
+        # the current date unconditionally made `make embeddings` dirty the manifest
+        # on any day but the one it was built on, so the repository was byte
+        # reproducible for exactly twenty four hours.
+        "captured_utc": _previous_capture_date(root, name, matrix)
+        or datetime.now(UTC).strftime("%Y-%m-%d"),
         "describes": embedder.describe(),
         "file": path.name,
     }
     _update_manifest(root, record)
     return record
+
+
+def _previous_capture_date(root: Path, name: str, matrix: np.ndarray) -> str | None:
+    """The date already on record, when the matrix being written is unchanged."""
+    path = root / "manifest.json"
+    if not path.exists():
+        return None
+    record = json.loads(path.read_text(encoding="utf-8"))["fixtures"].get(name)
+    if record is None:
+        return None
+    existing = root / record["file"]
+    if not existing.exists():
+        return None
+    with np.load(existing, allow_pickle=True) as data:
+        if data["matrix"].shape != matrix.shape:
+            return None
+        if not np.array_equal(data["matrix"], matrix.astype(np.float32)):
+            return None
+    return str(record["captured_utc"])
 
 
 def _update_manifest(root: Path, record: dict) -> None:

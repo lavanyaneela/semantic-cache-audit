@@ -51,9 +51,12 @@ a wrong hit. By default both run as in process doubles, `fakeredis` and `mongomo
 so `make verify` passes offline. An optional, non blocking CI job sets `REDIS_URL` and
 `MONGO_URL` to real service containers and runs the same tests against them.
 
-**What this entitles the repository to claim.** That these code paths run against real
-servers in CI. Not that the project is built on Redis, and not that anything here says
-something about Redis under load. A service container can never be on the critical
+**What this entitles the repository to claim.** That there is a CI job which runs
+these code paths against real servers. The job is non blocking, so its failure would
+not turn the badge red and its result has to be read rather than assumed; that is a
+deliberate trade, because `make verify` must never depend on a service container.
+Not that the project is built on Redis, and not that anything here says something
+about Redis under load. A service container can never be on the critical
 path, because `make verify` has to work on a laptop with the network off.
 
 One deliberate deviation. TTL is evaluated against an injected clock rather than

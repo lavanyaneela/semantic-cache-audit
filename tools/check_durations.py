@@ -21,14 +21,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-#: A number immediately followed by a time unit. Thousands separators must be real
-#: groups of three: the first version allowed any run of digits and commas, so the
-#: expression `Math.min(110, ms * 1000)` in a pacing script read as "110 ms" and
-#: failed the build. Broad otherwise, because the allow list below should carry the
-#: exceptions with their reasons rather than the pattern carrying them silently.
+#: A number immediately followed by a time unit.
+#:
+#: Two corrections, both from getting it wrong. Allowing any run of digits and commas
+#: made `Math.min(110, ms * 1000)` in a pacing script read as "110 ms", so a comma
+#: must now begin a real group of three. But narrowing to three leading digits then
+#: silently exempted every duration of 1000 or more written without a separator, so
+#: the leading run is unbounded and only the grouping is constrained. A bare `s`
+#: suffix attached to the digits is included as well, because `ran in 0.088s` is a
+#: published millisecond wearing a shorter unit. That form requires a decimal point:
+#: without one it fires on Python format specifiers such as `{name:44s}` and on
+#: service container health intervals, and a check that cries wolf gets deleted.
 DURATION = re.compile(
-    r"\b\d{1,3}(?:,\d{3})*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|us|seconds?|"
-    r"secs?|minutes?|mins?|hours?|hrs?)\b",
+    r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|us|seconds?|"
+    r"secs?|minutes?|mins?|hours?|hrs?)\b"
+    r"|\b\d+\.\d+s\b",
     re.IGNORECASE,
 )
 
@@ -44,11 +51,16 @@ ALLOWED_PATHS: dict[str, str] = {
     "src/semantic_cache_audit/audit/stream.py": "simulated arrival spacing and delays",
     "src/semantic_cache_audit/embed/sentence_encoder.py": "a token limit, not a duration",
     "tools/check_durations.py": "this file, which contains the pattern itself",
+    ".github/workflows/ci.yml": "service container health check intervals, configuration",
     "tests/test_cache.py": "simulated ttl values in an injected clock",
     "tests/test_stream.py": "simulated ttl values in an injected clock",
     "tests/test_receipts.py": "holds the example strings this pattern is tested against",
     "experiments/e3_eviction_sweep.py": "the ttl grid, a configured input",
     "docs/experiments/e3_eviction_sweep.json": "the ttl grid, recorded as an input",
+    "docs/video/manifest.json": (
+        "per command wall times, recorded so the replay can be paced and labelled in "
+        "the file itself as published nowhere"
+    ),
     "docs/metrics.json": "no duration is a metric; the file is checked by the test below",
 }
 

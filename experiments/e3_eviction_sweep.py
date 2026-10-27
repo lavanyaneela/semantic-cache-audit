@@ -89,6 +89,12 @@ def main() -> int:
         "embedder": HEADLINE_EMBEDDER,
         "threshold": threshold,
         "requests": N_REQUESTS,
+        # Named because it was chosen. Capacity 20 is the tightest arm of the sweep
+        # and every figure below is weaker at a larger cache, so publishing the
+        # number without the capacity beside it would be selection without
+        # disclosure. The full grid is in `records`.
+        "published_capacity": 20,
+        "capacities_swept": len(CAPACITIES),
         "records": records,
         "false_hit_spread_across_policies_pp": false_spread * 100,
         "stale_hit_spread_across_policies_pp": stale_spread * 100,

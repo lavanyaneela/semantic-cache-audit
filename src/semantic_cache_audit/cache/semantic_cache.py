@@ -55,8 +55,12 @@ class SemanticCache:
     ) -> None:
         self.store = store
         self.threshold = float(threshold)
-        self.hot = hot if hot is not None else HotLayer()
-        self.payloads = payloads if payloads is not None else PayloadStore()
+        # The namespace reaches the hot layer and the payload store, not only the
+        # vector store. Against the in process doubles it makes no difference; against
+        # a shared Redis or MongoDB it is the difference between isolated caches and
+        # one cache wearing several names.
+        self.hot = hot if hot is not None else HotLayer(namespace=namespace)
+        self.payloads = payloads if payloads is not None else PayloadStore(namespace=namespace)
         self.clock = clock if clock is not None else ManualClock()
         self.eviction = eviction if eviction is not None else EvictionState()
         self.ttl_seconds = ttl_seconds
@@ -139,6 +143,13 @@ class SemanticCache:
         )
 
     def _retire_if_expired(self, key: str, now: float) -> bool:
+        """Evict only on a real expiry.
+
+        A missing hot layer record used to count as an expiry, which meant a read
+        could destroy a live entry whenever the record was absent for any reason. It
+        now reports as not expired, and the caller's payload lookup turns an entry
+        with no payload into a miss rather than a deletion.
+        """
         if not self.hot.is_expired(key, now):
             return False
         self.evict(key)

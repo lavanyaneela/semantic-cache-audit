@@ -22,6 +22,13 @@
     "coverage_line_pct": [
       "{}% line coverage"
     ],
+    "e3_capacities_swept": [
+      "grid over {} capacities"
+    ],
+    "e3_capacity": [
+      "capacity of {} entries",
+      "cache at {} entries"
+    ],
     "hits_required_one_pct": [
       "{} clean hits"
     ],
@@ -64,6 +71,15 @@
       "{} true paraphrases",
       "{} of them share"
     ],
+    "positive_controls_easy": [
+      "{} easy"
+    ],
+    "positive_controls_hard": [
+      "{} of them against"
+    ],
+    "positive_controls_medium": [
+      "{} medium and"
+    ],
     "probes_per_class": [
       "{} probes per class"
     ],
@@ -75,7 +91,7 @@
       "median shift of {}"
     ],
     "real_transfers_all_wrong": [
-      "{} of them every hit"
+      "different {} fail"
     ],
     "real_transfers_saturated": [
       "{} stop rejecting"
@@ -151,14 +167,16 @@
     "docs/adr/ADR-004-what-counts-as-a-wrong-hit.md",
     "docs/adr/ADR-005-what-this-repository-cannot-measure.md"
   ],
-  "generated_utc": "2026-10-27T15:08:19Z",
+  "generated_utc": "2026-10-27T15:50:55Z",
   "metrics": {
     "bounded_false_hit_pct": 0.029038112522686024,
     "classes_below_chance": 4,
     "clean_ceiling_hits": 0,
     "corpus_domains": 6,
     "corpus_pairs_total": 320,
-    "coverage_line_pct": 98.01369863013699,
+    "coverage_line_pct": 97.51209398756048,
+    "e3_capacities_swept": 4,
+    "e3_capacity": 20,
     "hits_required_one_pct": 299,
     "instrument_transfers": 144,
     "lowest_stale_policy": "fifo",
@@ -172,6 +190,9 @@
     "policy_false_hit_spread_pp": 0.12942419728097404,
     "policy_stale_spread_pp": 16.761646814534334,
     "positive_controls": 120,
+    "positive_controls_easy": 18,
+    "positive_controls_hard": 54,
+    "positive_controls_medium": 48,
     "probes_per_class": 40,
     "real_embedders_ever_ok": 0,
     "real_threshold_shift_points": 32.15385377407074,
@@ -185,7 +206,7 @@
     "separation_auc": 0.23804166666666668,
     "stale_reduction_ratio": 13.055753176043558,
     "templates_total": 60,
-    "tests_total": 467,
+    "tests_total": 480,
     "tightest_budget_pct": 0.024655401055656376,
     "transfers_real_only": 12,
     "unbounded_false_hit_pct": 0.05709534368070954,
@@ -202,7 +223,9 @@
     "clean_ceiling_hits": "0",
     "corpus_domains": "6",
     "corpus_pairs_total": "320",
-    "coverage_line_pct": "98.0",
+    "coverage_line_pct": "97.5",
+    "e3_capacities_swept": "4",
+    "e3_capacity": "20",
     "hits_required_one_pct": "299",
     "instrument_transfers": "144",
     "lowest_stale_policy": "fifo",
@@ -216,6 +239,9 @@
     "policy_false_hit_spread_pp": "0.13",
     "policy_stale_spread_pp": "16.8",
     "positive_controls": "120",
+    "positive_controls_easy": "18",
+    "positive_controls_hard": "54",
+    "positive_controls_medium": "48",
     "probes_per_class": "40",
     "real_embedders_ever_ok": "0",
     "real_threshold_shift_points": "32.2",
@@ -229,13 +255,13 @@
     "separation_auc": "0.238",
     "stale_reduction_ratio": "13.1",
     "templates_total": "60",
-    "tests_total": "467",
+    "tests_total": "480",
     "tightest_budget_pct": "2.47",
     "transfers_real_only": "12",
     "unbounded_false_hit_pct": "5.7",
     "unbounded_false_hit_ratio": "2.0",
     "worst_class_false_hit_pct": "100.0",
-    "worst_class_min_similarity": "0.990",
+    "worst_class_min_similarity": "0.989",
     "worst_class_name": "direction_reversal",
     "wrong_prefix_hits": "77"
   },

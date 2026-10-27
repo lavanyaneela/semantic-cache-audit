@@ -70,3 +70,16 @@ filterwarnings = ["ignore::DeprecationWarning"]
 [tool.ruff.lint.isort]
 known-first-party = ["semantic_cache_audit"]
 known-local-folder = ["_harness"]
+
+[tool.coverage.run]
+branch = false
+# The pretrained encoder is deliberately off the default path: `make verify` reads a
+# committed matrix and never constructs it. Its tests skip when the optional weights
+# are not cached, so leaving it in the denominator made the published coverage figure
+# depend on what happened to be in a developer's cache, and the number checker then
+# failed on whichever machine ran second. It is excluded here and covered by the
+# tests in tests/test_encoder.py when the weights are present.
+omit = ["*/semantic_cache_audit/embed/sentence_encoder.py"]
+
+[tool.coverage.report]
+exclude_also = ["if TYPE_CHECKING:", "raise NotImplementedError"]

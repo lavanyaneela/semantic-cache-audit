@@ -210,13 +210,37 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        _validate(args)
         return int(args.func(args))
     except (CorpusError, FixtureError, UnknownEmbedder) as exc:
-        # These are the three ways the tool can be unable to start. They exit 3,
-        # because the tool failed rather than answered, and a pipeline must be able to
-        # tell that apart from a cache that should not ship.
+        # The three ways the tool can be unable to start. Exit 3, because the tool
+        # failed rather than answered, and a pipeline must be able to tell that apart
+        # from a cache that should not ship.
         print(f"error: {exc}", file=sys.stderr)
         return int(Exit.ERROR)
+    except Exception as exc:  # noqa: BLE001
+        # Everything else also exits 3. It used to escape as a traceback, which the
+        # shell reports as 1, so a crash was indistinguishable from "this cache
+        # should not ship" to anything branching on the code.
+        print(f"error: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return int(Exit.ERROR)
+
+
+def _validate(args) -> None:
+    """Refuse nonsense at the boundary rather than producing a nonsense number.
+
+    `--budget` was validated and `--prevalence` was not, so a prevalence of 5 printed
+    a weighted rate of 500 percent and a negative one printed a negative hit rate.
+    """
+    steps = getattr(args, "steps", None)
+    if steps is not None and steps < 1:
+        raise ValueError(f"--steps must be at least 1, got {steps}")
+    prevalence = getattr(args, "prevalence", None)
+    if prevalence is not None and not 0.0 <= prevalence <= 1.0:
+        raise ValueError(f"--prevalence is a share and must be in [0, 1], got {prevalence}")
+    min_hit_rate = getattr(args, "min_hit_rate", None)
+    if min_hit_rate is not None and not 0.0 <= min_hit_rate <= 1.0:
+        raise ValueError(f"--min-hit-rate is a share and must be in [0, 1], got {min_hit_rate}")
 
 
 if __name__ == "__main__":  # pragma: no cover - thin entry point
