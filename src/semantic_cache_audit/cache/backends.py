@@ -14,6 +14,15 @@ import os
 from typing import Any
 
 
+def _glob_escape(value: str) -> str:
+    """Escape the characters Redis treats as pattern syntax in a KEYS glob.
+
+    A namespace is caller supplied. Interpolated raw, a namespace containing `[`,
+    `*` or `?` made `flush` silently match nothing, which is worse than raising.
+    """
+    return "".join("\\" + c if c in "*?[]\\" else c for c in value)
+
+
 def redis_client(url: str | None = None) -> Any:
     """A real client when a URL is given or `REDIS_URL` is set, otherwise fakeredis."""
     url = url or os.environ.get("REDIS_URL")
@@ -94,10 +103,13 @@ class HotLayer:
         return json.loads(raw) if raw else None
 
     def drop(self, key: str) -> None:
-        record = self.entry(key)
-        if record:
-            self._r.delete(self._exact(record["query"]))
+        """Remove both keys. The reverse pointer is stored so that a dropped record
+        cannot orphan the exact match entry: looking the query up through the record
+        failed exactly when the record was the thing that had gone missing."""
         self._r.delete(self._entry(key))
+        for pointer in self._r.keys(f"{_glob_escape(self._prefix)}:exact:*"):
+            if self._r.get(pointer) == key:
+                self._r.delete(pointer)
 
     def is_expired(self, key: str, now: float) -> bool:
         """TTL is evaluated against the injected clock, not against Redis expiry.
@@ -106,10 +118,10 @@ class HotLayer:
         The real Redis path is still exercised: the record round trips through the
         server, only the comparison happens here.
 
-        A missing record is **not** an expiry. It used to be, and since the caller
-        evicts on expiry, any entry whose record went missing was destroyed by the
-        next read of it. That is reachable on a real Redis, where the record can be
-        dropped by a memory limit independently of the pointer.
+        A missing record is neither expired nor live: see `is_known`. Treating it as
+        expired destroyed live entries, because the caller evicts on expiry;
+        treating it as live served an answer that could never expire. It is a third
+        state, and the caller turns it into a miss.
         """
         record = self.entry(key)
         if record is None:
@@ -119,8 +131,17 @@ class HotLayer:
             return False
         return now - float(record["inserted_at"]) >= float(ttl)
 
+    def is_known(self, key: str) -> bool:
+        """Whether this entry has bookkeeping at all.
+
+        An entry with no record cannot be reasoned about: its age is unknown, so it
+        can neither be expired nor served. The caller treats it as a miss and lets
+        the next write repopulate it.
+        """
+        return self.entry(key) is not None
+
     def flush(self) -> None:
-        for key in self._r.keys(f"{self._prefix}:*"):
+        for key in self._r.keys(f"{_glob_escape(self._prefix)}:*"):
             self._r.delete(key)
 
 
@@ -140,7 +161,7 @@ class PayloadStore:
         self._namespace = namespace
 
     def _id(self, key: str) -> str:
-        return f"{self._namespace}/{key}"
+        return f"{self._namespace}\u0000{key}"
 
     def put(
         self, key: str, query: str, answer_id: str, answer_version: int, stored_at: float
@@ -149,6 +170,7 @@ class PayloadStore:
             {"_id": self._id(key)},
             {
                 "_id": self._id(key),
+                "namespace": self._namespace,
                 "query": query,
                 "answer_id": answer_id,
                 "answer_version": answer_version,
@@ -164,7 +186,10 @@ class PayloadStore:
         self._c.delete_one({"_id": self._id(key)})
 
     def count(self) -> int:
-        return int(self._c.count_documents({"_id": {"$regex": f"^{self._namespace}/"}}))
+        # Matched on a stored field, not on a regex over the id. A namespace is
+        # caller supplied, and interpolating one containing `(`, `[` or `+` into a
+        # pattern either raised or silently matched nothing.
+        return int(self._c.count_documents({"namespace": self._namespace}))
 
     def flush(self) -> None:
-        self._c.delete_many({"_id": {"$regex": f"^{self._namespace}/"}})
+        self._c.delete_many({"namespace": self._namespace})

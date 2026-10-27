@@ -71,7 +71,7 @@ def decision_text(decision: Decision, sweep: Sweep) -> str:
             f"resolution floor          below one in {point.hits}" if point.hits else "",
             f"missed paraphrases        {point.missed_opportunities}",
             f"worst near miss class     {decision.worst_class} at "
-            f"{pct(decision.worst_class_false_hit_rate)}",
+            f"{pct(decision.worst_class_wrongly_served_rate)}",
         ]
     for note in decision.notes:
         lines.append(f"note                      {note}")

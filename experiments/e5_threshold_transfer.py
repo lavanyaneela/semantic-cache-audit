@@ -69,7 +69,20 @@ def main() -> int:
     real = [r for r in records if r["real_only"]]
     instrument = [r for r in records if not r["real_only"]]
     shifts = [r["threshold_shift_points"] for r in records]
-    real_shifts = [r["threshold_shift_points"] for r in real]
+    # One magnitude per embedder pair. The shift is symmetric, so taking the median
+    # over the directed transfers counted every magnitude twice and landed the
+    # median in a gap between two clusters that no pair occupies.
+    real_shifts = sorted(
+        {
+            (
+                min(r["source"], r["target"]),
+                max(r["source"], r["target"]),
+                round(r["threshold_shift_points"], 6),
+            )
+            for r in real
+        }
+    )
+    real_shifts = [shift for _, _, shift in real_shifts]
     worst = max(real, key=lambda r: abs(r["false_hit_change_pp"]))
     real_collapsed = [r for r in real if r["away_hit_rate"] < 0.01]
     real_saturated = [r for r in real if r["away_hit_rate"] > 0.99]
@@ -82,6 +95,7 @@ def main() -> int:
         "real_embedders": list(REAL_EMBEDDERS),
         # The published figures. Real embedders only.
         "transfers_real_only": len(real),
+        "real_embedder_pairs": len(real_shifts),
         "real_threshold_shift_median_points": float(np.median(real_shifts)),
         "real_threshold_shift_max_points": float(np.max(real_shifts)),
         "real_transfers_that_collapse_the_cache": len(real_collapsed),
@@ -112,8 +126,9 @@ def main() -> int:
           f"{r['threshold_shift_points']:.1f}", report.pct(r["away_hit_rate"], 1),
           report.pct(r["away_false_hit_rate"], 1)] for r in headline],
     ))
-    print(f"\nreal embedders only: {len(real)} transfers, median shift "
-          f"{np.median(real_shifts):.1f} cosine points, max {np.max(real_shifts):.1f}")
+    print(f"\nreal embedders only: {len(real)} transfers over {len(real_shifts)} "
+          f"embedder pairs, median shift {np.median(real_shifts):.1f} cosine points, "
+          f"max {np.max(real_shifts):.1f}")
     print(f"  {len(real_collapsed)} drop the hit rate below 1 percent, "
           f"{len(real_saturated)} push it above 99 percent")
     print(f"instrument sweep, reported separately: {len(instrument)} further transfers, "

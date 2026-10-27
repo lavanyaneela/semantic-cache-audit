@@ -143,5 +143,15 @@ def test_the_exit_codes_are_the_documented_integers():
     )
 
 
-def test_each_exit_code_documents_what_it_means():
-    assert all(Exit.__doc__ is not None for _ in Exit)
+def test_each_exit_code_is_documented_in_the_readme(repo_root):
+    """The previous version of this asserted `Exit.__doc__ is not None` inside a
+    loop over the members, which re-checked the class docstring four times and
+    could not fail. The contract that matters is the one a reader sees."""
+    readme = (repo_root / "README.md").read_text(encoding="utf-8")
+    table = readme[readme.index("## Exit codes") :]
+    for code in Exit:
+        assert f"| {int(code)} |" in table, code.name
+
+
+def test_the_exit_codes_are_distinct():
+    assert len({int(c) for c in Exit}) == len(list(Exit))

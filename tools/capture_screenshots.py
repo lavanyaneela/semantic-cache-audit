@@ -31,7 +31,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs" / "evidence"
-REPORT = OUT / "report.html"
 EMBEDDER = "st:sentence-transformers/all-MiniLM-L6-v2"
 
 #: name -> (budget, heading to start at, heading to stop before). The second heading
@@ -71,8 +70,6 @@ def capture() -> dict:
         path = OUT / f"report-budget-{budget.replace('.', '')}.html"
         build_report(budget, path)
         reports[budget] = path
-    REPORT.write_text(reports[budgets[0]].read_text(encoding="utf-8"), encoding="utf-8")
-
     with sync_playwright() as play:
         browser = play.chromium.launch()
         page = browser.new_page(viewport={"width": 1100, "height": 900},

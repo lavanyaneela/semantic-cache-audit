@@ -46,15 +46,15 @@ def analyse(pairs, scores: np.ndarray) -> dict:
                 "probes": int(member.size),
                 "hits": hits,
                 "false_hits": hits,
-                "false_hit_rate": hits / member.size if member.size else 0.0,
-                "false_hit_rate_upper": upper_bound(hits, int(member.size)),
+                "wrongly_served_rate": hits / member.size if member.size else 0.0,
+                "wrongly_served_upper": upper_bound(hits, int(member.size)),
                 "resolution_floor": resolution_floor(int(member.size)),
                 "median_score": float(np.median(member)),
                 "min_score": float(np.min(member)) if member.size else 0.0,
                 "separation_auc": separation_auc(positives, member),
             }
         )
-    rows.sort(key=lambda r: (-r["false_hit_rate"], r["separation_auc"], r["class"]))
+    rows.sort(key=lambda r: (-r["wrongly_served_rate"], r["separation_auc"], r["class"]))
     worst_class_min = min(
         (r for r in rows), key=lambda r: r["min_score"]
     )
@@ -83,20 +83,20 @@ def main() -> int:
         "headline_embedder": HEADLINE_EMBEDDER,
         "by_embedder": out,
         "worst_class_name": worst["class"],
-        "worst_class_false_hit_pct": worst["false_hit_rate"],
+        "worst_class_false_hit_pct": worst["wrongly_served_rate"],
         "safest_class_name": safest["class"],
-        "safest_class_false_hit_pct": safest["false_hit_rate"],
+        "safest_class_false_hit_pct": safest["wrongly_served_rate"],
         "classes_at_total_failure": sum(
-            1 for r in headline["ranked"] if r["false_hit_rate"] >= 1.0
+            1 for r in headline["ranked"] if r["wrongly_served_rate"] >= 1.0
         ),
         "classes_below_chance_separation": sum(
             1 for r in headline["ranked"] if r["separation_auc"] < 0.5
         ),
         "probes_per_class": headline["probes_per_class"],
-        "rate_by_class": {r["class"]: r["false_hit_rate"] for r in headline["ranked"]},
-        "upper_by_class": {r["class"]: r["false_hit_rate_upper"] for r in headline["ranked"]},
+        "rate_by_class": {r["class"]: r["wrongly_served_rate"] for r in headline["ranked"]},
+        "upper_by_class": {r["class"]: r["wrongly_served_upper"] for r in headline["ranked"]},
         "safest_class_upper": next(
-            r["false_hit_rate_upper"] for r in headline["ranked"] if r["class"] == safest["class"]
+            r["wrongly_served_upper"] for r in headline["ranked"] if r["class"] == safest["class"]
         ),
         # The floor of the worst class: not its average, its weakest member. A mean
         # could hide an easy pair dragging it down, and the claim being made is that
@@ -114,7 +114,7 @@ def main() -> int:
             ["class", "probes", "wrong hits", "wrong share", "upper bound", "separation"],
             [
                 [r["class"], str(r["probes"]), str(r["hits"]),
-                 report.pct(r["false_hit_rate"]), report.pct(r["false_hit_rate_upper"]),
+                 report.pct(r["wrongly_served_rate"]), report.pct(r["wrongly_served_upper"]),
                  f"{r['separation_auc']:.3f}"]
                 for r in data["ranked"]
             ],

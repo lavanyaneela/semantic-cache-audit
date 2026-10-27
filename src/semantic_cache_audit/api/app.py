@@ -104,11 +104,21 @@ def build_app(embedder: str = "charngram", *, threshold: float = 0.9) -> FastAPI
         batched = store.query_many(vectors, top_k=1, namespace=cache.namespace)
         results: list[LookupResponse] = []
         now = clock.now()
+        evicted_at_start = cache.eviction.evicted_total
         for query, matches in zip(body.queries, batched, strict=True):
             cache.stats["lookups"] += 1
 
             exact_key = cache.hot.exact_lookup(query)
-            if exact_key is not None and not cache.hot.is_expired(exact_key, now):
+            if exact_key is not None and cache.hot.is_known(exact_key):
+                if cache.hot.is_expired(exact_key, now):
+                    # Retire it, exactly as the single path does. Checking expiry
+                    # without retiring left the two endpoints disagreeing on the
+                    # expired counter and on the score they report for a miss.
+                    cache.evict(exact_key)
+                    cache.stats["misses"] += 1
+                    cache.stats["expired"] += 1
+                    results.append(LookupResponse(hit=False, score=None))
+                    continue
                 payload = cache.payloads.get(exact_key)
                 if payload is not None:
                     cache.eviction.record_hit(exact_key, now)
@@ -124,10 +134,22 @@ def build_app(embedder: str = "charngram", *, threshold: float = 0.9) -> FastAPI
                     )
                     continue
 
+            # Re-query rather than trust the pre-loop candidates: an eviction
+            # performed earlier in this batch has to be visible to later queries in
+            # it, or the batch answers from a cache that no longer exists.
+            if cache.eviction.evicted_total != evicted_at_start:
+                matches = store.query_many(
+                    vectors[len(results) : len(results) + 1], top_k=1,
+                    namespace=cache.namespace,
+                )[0]
             best = matches[0] if matches else None
             if best is None or best.score < cache.threshold:
                 cache.stats["misses"] += 1
                 results.append(LookupResponse(hit=False, score=best.score if best else None))
+                continue
+            if not cache.hot.is_known(best.vector_id):
+                cache.stats["misses"] += 1
+                results.append(LookupResponse(hit=False, score=best.score))
                 continue
             if cache.hot.is_expired(best.vector_id, now):
                 cache.evict(best.vector_id)

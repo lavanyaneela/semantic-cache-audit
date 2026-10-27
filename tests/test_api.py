@@ -155,6 +155,46 @@ def test_the_batch_endpoint_agrees_on_the_exact_flag(pairs, reversal):
     assert [r["exact"] for r in batched] == [r["exact"] for r in singles]
 
 
+def _stats_after(batch: bool, pairs, ttl: float | None):
+    app = build_app(PRETRAINED_NAME, threshold=0.9)
+    client = TestClient(app)
+    app.state.cache.ttl_seconds = ttl
+    query = pairs[0].query_a
+    client.post("/v1/entries", json={"query": query, "answer_id": "A"})
+    app.state.clock.advance(100.0)
+    body = (
+        client.post("/v1/lookup/batch", json={"queries": [query]}).json()["results"][0]
+        if batch
+        else client.post("/v1/lookup", json={"query": query}).json()
+    )
+    keys = ("lookups", "exact_hits", "approx_hits", "misses", "expired")
+    return body, {k: app.state.cache.stats[k] for k in keys}
+
+
+def test_the_two_endpoints_agree_on_an_expired_entry(pairs):
+    """They did not: one reported an expiry and the other a plain miss, and one
+    returned a score for an entry it had just decided was gone."""
+    assert _stats_after(False, pairs, 10.0) == _stats_after(True, pairs, 10.0)
+
+
+def test_an_expired_entry_is_counted_as_an_expiry_on_both_paths(pairs):
+    _, stats = _stats_after(True, pairs, 10.0)
+    assert stats["expired"] == 1 and stats["misses"] == 1
+
+
+def test_an_eviction_inside_a_batch_is_visible_to_later_queries_in_it(pairs):
+    """The batch computed its candidates once, before the loop, so a later query
+    could be answered from an entry an earlier one had already evicted."""
+    app = build_app(PRETRAINED_NAME, threshold=0.9)
+    client = TestClient(app)
+    app.state.cache.ttl_seconds = 10.0
+    first, second = pairs[0].query_a, pairs[0].query_b
+    client.post("/v1/entries", json={"query": first, "answer_id": "A"})
+    app.state.clock.advance(100.0)
+    body = client.post("/v1/lookup/batch", json={"queries": [first, second]}).json()
+    assert body["hits"] == 0
+
+
 def test_the_batch_endpoint_rejects_an_empty_list(client):
     assert client.post("/v1/lookup/batch", json={"queries": []}).status_code == 422
 

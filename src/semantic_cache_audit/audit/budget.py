@@ -48,7 +48,7 @@ class Decision:
     best_achievable_hits: int = 0
     feasible_thresholds: int = 0
     worst_class: str = ""
-    worst_class_false_hit_rate: float = 0.0
+    worst_class_wrongly_served_rate: float = 0.0
     wrong_prefix_hits: int = 0
     clean_ceiling_hits: int = 0
     clean_ceiling_hit_rate: float = 0.0
@@ -70,7 +70,7 @@ class Decision:
             "best_achievable_hits": self.best_achievable_hits,
             "feasible_thresholds": self.feasible_thresholds,
             "worst_class": self.worst_class,
-            "worst_class_false_hit_rate": self.worst_class_false_hit_rate,
+            "worst_class_wrongly_served_rate": self.worst_class_wrongly_served_rate,
             "wrong_prefix_hits": self.wrong_prefix_hits,
             "clean_ceiling_hits": self.clean_ceiling_hits,
             "clean_ceiling_hit_rate": self.clean_ceiling_hit_rate,
@@ -169,7 +169,7 @@ def decide(sweep: Sweep, *, budget: float, min_hit_rate: float = 0.10) -> Decisi
             best_achievable_hits=best_hits,
             hits_required=hits_required,
             worst_class=worst_cls,
-            worst_class_false_hit_rate=worst_rate,
+            worst_class_wrongly_served_rate=worst_rate,
             reason=(
                 f"no threshold meets a {budget:.2%} budget at a {min_hit_rate:.0%} hit "
                 "rate. The tool worked; the answer is that this cache should not ship."
@@ -197,7 +197,7 @@ def decide(sweep: Sweep, *, budget: float, min_hit_rate: float = 0.10) -> Decisi
         hits_required=hits_required,
         feasible_thresholds=len(feasible),
         worst_class=worst_cls,
-        worst_class_false_hit_rate=worst_rate,
+        worst_class_wrongly_served_rate=worst_rate,
         reason=(
             f"threshold {chosen.threshold:.4f} serves {chosen.hit_rate:.1%} of probes "
             f"with a false hit rate bounded at {chosen.false_hit_rate_upper:.2%}."

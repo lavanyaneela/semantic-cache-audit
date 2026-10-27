@@ -63,10 +63,16 @@ refused by the CLI.
 ## Six: latency
 
 The cache's entire value is a latency saving, and this repository publishes no
-duration at all. A millisecond is a fact about the runner that measured it, so the
-claim lives in a test that asserts an inequality rather than in prose that quotes a
-figure. `tools/check_durations.py` sweeps every tracked file rather than the checked
-documents, because the promise is about the repository.
+duration as a result. A millisecond is a fact about the runner that measured it, so
+rather than quote one the repository makes no speed claim at all.
+`tools/check_durations.py` sweeps every tracked file rather than the checked
+documents, because the promise is about the repository, and its allow list carries a
+written reason per entry. The one recorded duration is the per command wall time in
+the demo manifest, which paces the replay and is quoted nowhere.
+
+Worth being precise, because an earlier version of this paragraph was not: there is
+no timing test here either. A claim about speed belongs in a test that asserts an
+inequality, and this repository makes no such claim, so it has no such test.
 
 The consequence is honest and worth stating: this repository can tell a team how wrong
 their cache is, and cannot tell them whether the saving is worth it. That second half

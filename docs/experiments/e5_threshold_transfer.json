@@ -20,18 +20,19 @@
   "pooled_transfers_that_collapse_the_cache": 47,
   "pooled_transfers_that_saturate_the_cache": 54,
   "question": "Does the threshold transfer to another embedder?",
+  "real_embedder_pairs": 6,
   "real_embedders": [
     "st:sentence-transformers/all-MiniLM-L6-v2",
     "bow",
     "lsa",
     "charngram"
   ],
-  "real_threshold_shift_max_points": 64.30770754814148,
-  "real_threshold_shift_median_points": 32.15385377407074,
+  "real_threshold_shift_max_points": 64.307708,
+  "real_threshold_shift_median_points": 32.153853500000004,
   "real_transfers_that_collapse_the_cache": 0,
   "real_transfers_that_saturate_the_cache": 5,
   "real_transfers_where_every_hit_is_wrong": 3,
-  "real_transfers_within_five_points": 2,
+  "real_transfers_within_five_points": 1,
   "real_worst_false_hit_change_pp": 28.436018957345976,
   "real_worst_transfer": "st:sentence-transformers/all-MiniLM-L6-v2 to bow",
   "records": [

@@ -194,6 +194,41 @@ def test_the_hot_layer_does_not_treat_an_unknown_key_as_expired():
     assert HotLayer().is_expired("never-written", 0.0) is False
 
 
+def test_an_entry_with_no_bookkeeping_is_a_miss_rather_than_an_immortal_hit(unit_vectors):
+    """The third state. Treating a missing record as expired destroyed live entries;
+    treating it as live served an answer that could never go stale."""
+    cache = SemanticCache(
+        FaissFlatStore(unit_vectors.shape[1]), threshold=0.5, hot=HotLayer(),
+        payloads=PayloadStore(), clock=ManualClock(), ttl_seconds=10.0,
+    )
+    cache.put("k", "q", unit_vectors[0], "a")
+    cache.hot._r.delete(cache.hot._entry("k"))
+    cache.clock.advance(1e9)
+    assert cache.lookup("q", unit_vectors[0]).hit is False
+
+
+def test_dropping_an_entry_whose_record_is_gone_leaves_no_orphan_pointer(unit_vectors):
+    hot = HotLayer()
+    hot.put("k", "q", 0.0, None)
+    hot._r.delete(hot._entry("k"))
+    hot.drop("k")
+    assert hot.exact_lookup("q") is None
+
+
+@pytest.mark.parametrize("namespace", ["plain", "a[0", "team(1)", "a+b", "ns*", "n?s"])
+def test_a_namespace_containing_pattern_characters_still_isolates(namespace, unit_vectors):
+    """Namespaces were interpolated into a Redis glob and a Mongo regex, so one with
+    a metacharacter either raised or silently matched nothing."""
+    hot = HotLayer(namespace=namespace)
+    payloads = PayloadStore(namespace=namespace)
+    hot.put("k", "q", 0.0, None)
+    payloads.put("k", "q", "a", 1, 0.0)
+    assert payloads.count() == 1
+    hot.flush()
+    payloads.flush()
+    assert hot.exact_lookup("q") is None and payloads.count() == 0
+
+
 def test_a_read_cannot_destroy_a_live_entry_whose_record_is_missing(unit_vectors):
     """The torn write window, reconstructed. The vector and the payload are intact
     and only the hot layer record is gone; a read must not delete the entry."""

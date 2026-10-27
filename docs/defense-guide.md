@@ -59,8 +59,9 @@ does not trade correctness against coverage here; it just turns the cache off.
 
 **The numbers:** with 120 positive controls, no run can certify a budget tighter than
 2.47% at 95% confidence, because that is the Clopper-Pearson bound on a flawless run
-of that size. A 1% budget needs 299 clean hits, and about 798 pairs would be needed.
-The tool prints that rather than reporting the measured rate.
+of that size. Below that the tool refuses. A 1% budget, the kind a team would ask
+for, needs 299 clean hits, which is about 798 pairs. The tool prints that rather
+than reporting the measured rate.
 
 **If pushed, "isn't exit 2 just a failure":** no, and the distinction is the most
 useful thing in the repository. Exit 1 says the cache is not good enough and sends a
@@ -88,9 +89,9 @@ post. The contribution is the size of the failure, not the direction.
 **Prove it:** `python experiments/e3_eviction_sweep.py`
 
 **The numbers:** choosing between LRU, LFU and FIFO at a fixed capacity moves the
-wrong answer rate by 0.13 points of wrong answers while moving staleness by 16.8
+wrong answer rate by 0.16 points of wrong answers while moving staleness by 16.8
 points of staleness. Bounding the cache at all cuts the false hit rate to 2.9% when
-bounded from 5.7% when unbounded, which is 2.0 times the wrong answers for an
+bounded from 5.7% when unbounded, which is 1.9 times the wrong answers for an
 unbounded cache.
 
 **If pushed, "why would size change correctness":** a wrong answer needs a wrong
@@ -174,15 +175,17 @@ answers. If someone names a sixth, the corpus should grow.
 
 Because a millisecond is a fact about the machine that measured it, and this
 repository's entire claim is that its numbers are checkable on someone else's machine.
-`tools/check_durations.py` sweeps every tracked file to enforce that. The honest
-consequence is a limit: I can tell a team how wrong their cache is and not whether the
+`tools/check_durations.py` sweeps every tracked file to enforce that, with an
+allow list whose entries each say why they are exempt. The one place a duration is
+recorded is the demo manifest, where it exists to pace the replay and is quoted in no
+document. The honest consequence is a limit: I can tell a team how wrong their cache is and not whether the
 saving is worth it, and the second half needs their traffic.
 
 ## Things to say
 
 - "Separation of 0.238, where 0.5 is chance, so the ranking is inverted."
-- "Twelve transfers between real embedders, not the pooled count that includes the
-  instrument."
+- "12 transfers between real embedders, over 6 embedder pairs, not the pooled count
+  that includes the instrument."
 - "No safe threshold, because the best near miss outscores every true paraphrase."
 - "The tool has three answers, not two: yes, no, and your evidence cannot tell."
 - "Every number in the README is re-measured by CI and fails the build if the prose
@@ -204,8 +207,12 @@ saving is worth it, and the second half needs their traffic.
 
 ## The live demo, five commands
 
+Run the console script, not make: make returns 2 for any failed recipe, which would
+collide with the tool's own exit 2, so `make audit` deliberately prints the code and
+returns 0.
+
 ```bash
-make audit                                        # exit 1, with the separation and the class table
+semantic-cache-audit audit --budget 0.05          # exit 1, the separation and the class table
 semantic-cache-audit audit --budget 0.001         # exit 2, the refusal and the corpus size it needs
 semantic-cache-audit classes                      # where it goes wrong, by class
 semantic-cache-audit compare                      # every embedder side by side

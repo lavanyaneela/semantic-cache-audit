@@ -39,12 +39,13 @@ pairs:
   for a fare from Austin to Boston and from Boston to Austin scores above 0.989 on this
   model, and across the whole class the similarity is never below 0.989.
 - **And the corpus says so too.** No run on this corpus can certify a wrong answer
-  budget tighter than 2.47%, so the tool refuses rather than reporting a flattering
-  rate. That would take 299 clean hits, and about 798 pairs would be needed to get
-  them.
+  budget tighter than 2.47%, so below that the tool refuses rather than reporting a
+  flattering rate. A 1% budget, the kind a team would actually ask for, would take
+  299 clean hits, and about 798 pairs would be needed to get them.
 
-480 tests, 97.5% line coverage, every figure above re-measured by CI and checked
-against this document by `tools/check_numbers.py`.
+494 tests, 97.2% line coverage over the offline path, which excludes the ONNX encoder
+that is only run to regenerate the fixture. Every figure above is re-measured by CI
+and checked against this document by `tools/check_numbers.py`.
 
 ## Quickstart
 
@@ -62,19 +63,22 @@ make audit
 make verify
 ```
 
-`make audit` exits 1 here, which is the tool working: no threshold meets the default
-budget. `make audit BUDGET=0.001` exits 2, which is the tool declining.
+`semantic-cache-audit audit --budget 0.05` exits 1 here, which is the tool working:
+no threshold meets the budget. `--budget 0.001` exits 2, which is the tool declining.
+`make audit` prints the tool's code and then returns 0 on purpose, because make
+returns 2 for any failed recipe and that would collide with the tool's own 2. Branch
+on the console script, never on make.
 
 ## What the threshold buys and what it costs
 
 Every setting is priced in both columns at once. A hit rate on its own is the metric
 this repository exists to argue against.
 
-| What it costs | What it buys |
+| The lever | What it does |
 | --- | --- |
 | Raising the threshold rejects true paraphrases, so the latency saving shrinks | Fewer wrong answers reach the caller |
-| Lowering it serves more traffic from cache | On this encoder, almost every new hit is wrong |
-| Bounding the cache at 20 entries cuts the wrong answer rate to 2.9% when bounded, from 5.7% when unbounded | Unbounded growth buys hit rate and pays 2.0 times the wrong answers |
+| Lowering it serves more traffic from cache | Fewer than half the hits it adds are correct, and the rate never improves |
+| Bounding the cache at 20 entries cuts the wrong answer rate to 2.9% when bounded, from 5.7% when unbounded | Unbounded growth buys hit rate and pays 1.9 times the wrong answers |
 | Evicting by insertion order drops the stale share several fold | It costs hit rate, and barely touches correctness |
 
 ## Where it goes wrong, by class
@@ -103,14 +107,15 @@ word order, which mean pooled embeddings largely discard.
 E3 separates two levers a team usually treats as one.
 
 At a capacity of 20 entries, choosing between LRU, LFU and FIFO moves the wrong
-answer rate by 0.13 points of wrong answers and staleness by 16.8 points of
+answer rate by 0.16 points of wrong answers and staleness by 16.8 points of
 staleness. The policy fifo cuts staleness most, a 13.1 fold reduction against LRU,
 and pays for it in hit rate.
 
 The capacity is named because it was chosen, and it is the tightest arm of the sweep.
-Every figure in this section is weaker at a larger cache: the full grid over 4
-capacities is in `docs/experiments/e3_eviction_sweep.json`, and the shape of the
-finding holds across it while the sizes do not.
+Every effect this section reports is smaller at a larger cache, though not every
+figure moves the same way: the policy spread grows while the staleness ratio and the
+bounded-to-unbounded ratio shrink. The full grid over 4 capacities is in
+`docs/experiments/e3_eviction_sweep.json`.
 
 Whether the cache is bounded at all is the correctness lever, and it is the one teams
 do not think of as one: a wrong answer needs a wrong neighbour to still be resident,
@@ -121,8 +126,9 @@ so letting the cache grow without limit roughly doubles the false hit rate.
 Take the threshold tuned on one embedder and apply it unchanged to another, which is
 what a team does when it copies a number from a blog post or a previous project.
 
-Across the 12 transfers between the four real embedders, the threshold shifts by 32.2
-cosine points at the median. 5 stop rejecting anything. A different 3 fail the other
+Across the 12 transfers between the four real embedders, which are 6 embedder pairs
+measured in both directions, the threshold shifts by 32.2 cosine points at the
+median of the pairs. 5 stop rejecting anything. A different 3 fail the other
 way: carrying the pretrained encoder's threshold onto any of the three lexical
 embedders produces a cache where every hit it serves is wrong, an answer to a
 different question every time.
@@ -171,7 +177,7 @@ four happening to the author rather than to someone else. E2 now measures at a
 reference threshold with 40 probes per class and publishes an upper bound beside
 every rate.
 
-**Intent labelling could not express its own invariant.** Fourteen of the distinct
+**Intent labelling could not express its own invariant.** 14 of the 626 distinct
 corpus queries appear in two pairs, and the first implementation silently kept one
 label for them. Investigating it was more interesting than the overwrite: on this
 corpus nothing measured was wrong, but the per pair form cannot represent the fact
@@ -217,8 +223,15 @@ repository exists to make visible:
 
 <img src="docs/evidence/curve.png" alt="Hit rate against wrong share at every threshold, from the generated report" width="860">
 
+Both shots are framed by heading rather than by pixel offset, and
+[the screenshot manifest](docs/evidence/screenshot-manifest.json) records which
+headings framed each one and what the verdict badge rendered as. The diagram has
+[its own manifest](docs/evidence/diagram-manifest.json) recording how it was
+rendered and the size the browser gave it.
+
 A replay of captured stdout, paced by each command's measured wall time, with every
-command and its exit code recorded in [the manifest](docs/video/manifest.json):
+command and its exit code recorded in [the manifest](docs/video/manifest.json), and
+[an MP4](docs/video/demo.mp4) for a sharper version:
 
 <img src="docs/video/demo.gif" alt="A replay of the command line session producing the headline numbers" width="860">
 
@@ -230,7 +243,7 @@ Every pair records the template and substitution it came from.
 
 The awkward cases are the point, so here is what is deliberately in it. Direction
 reversals share an identical token multiset, so only order distinguishes them.
-Negations differ by a single inserted token. The positive controls are mostly hard
+Negations differ by a single inserted token. The largest group of positive controls is the hard
 ones with low lexical overlap, 54 of them against 48 medium and 18 easy, pairs like
 asking how to claim back a train fare against asking for the reimbursement procedure
 for one, because those are exactly the paraphrases a semantic cache is bought to
@@ -239,13 +252,18 @@ separable.
 
 The loader refuses a corpus whose hash does not match its manifest, and refuses one
 that contradicts itself by joining both sides of a near miss through a chain of
-paraphrase pairs.
+paraphrase pairs. The second check used to live inside one embedder's constructor,
+so it ran for the instrument and not for the encoder every headline is about; a
+forged corpus with a contradiction loaded without complaint and published a
+separation figure. It is on the read path now.
 
 ## What this cannot measure
 
-- **Whether the latency saving is worth it.** This repository publishes no duration at
-  all, because a millisecond is a fact about the runner. It can say how wrong a cache
-  is and not whether the trade is worth making.
+- **Whether the latency saving is worth it.** No duration is published as a result
+  anywhere, because a millisecond is a fact about the runner. The one place durations
+  are recorded is `docs/video/manifest.json`, where they exist to pace the replay and
+  are quoted in no document. This repository can say how wrong a cache is and not
+  whether the trade is worth making.
 - **What a real cache sees.** The corpus is adversarial by construction. Rates are
   reported both raw and reweighted to a near miss prevalence that is declared rather
   than observed.
@@ -281,12 +299,17 @@ fixtures/     the committed corpus and the committed embedding matrices
 
 ## Exit codes
 
+These are the contract of `audit`, `sweep`, `classes` and `report`. The two
+informational subcommands, `compare` and `corpus`, always exit 0 when they ran:
+"which of these is worst" is not a pass or fail question and a pipeline branching on
+it would be branching on the wrong thing.
+
 | Code | Meaning |
 | --- | --- |
 | 0 | A threshold meets the stated error budget. It is printed with its hit rate. |
 | 1 | No threshold meets it. The tool worked; the answer is that this cache should not ship. |
 | 2 | Refused. The corpus cannot resolve the requested budget. Prints the corpus size it would need. |
-| 3 | Tool error: an unknown embedder, a missing fixture, a corpus that fails its hash. |
+| 3 | Tool error. An unknown embedder, a missing fixture, a corpus that fails its hash or contradicts itself, an out of range option, or any unexpected failure. |
 
 The distinction between 1 and 2 is the repository in miniature. One says the cache is
 not good enough; the other says the evidence cannot settle it. They send a team to

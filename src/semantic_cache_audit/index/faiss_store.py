@@ -81,18 +81,64 @@ class FaissFlatStore(VectorStore):
     ) -> list[Match]:
         if namespace not in self._indexes or not self._live[namespace]:
             return []
-        index = self._index_for(namespace)
         probe = np.ascontiguousarray(np.atleast_2d(vector), dtype=np.float32)
-        # Over-fetch so that soft deleted rows, stale rows from an overwrite, and
-        # filtered out rows cannot starve the result. Without this the store silently
-        # returns fewer than top_k live neighbours once anything has been evicted,
-        # which reads as a cache miss and would understate the hit rate.
+        return self.query_many(probe, top_k, namespace, metadata_filter)[0]
+
+    def query_many(
+        self,
+        vectors: np.ndarray,
+        top_k: int = 1,
+        namespace: str = DEFAULT_NAMESPACE,
+        metadata_filter: dict | None = None,
+    ) -> list[list[Match]]:
+        """One FAISS search over the whole batch, widened until the live neighbours
+        are actually found.
+
+        The single query path delegates here, so the batch and single endpoints
+        cannot drift: they are the same search with a different number of rows.
+
+        The widening is the part that matters. A fixed over-fetch was the first fix
+        for soft deleted rows starving the result, and it only moved the threshold:
+        with a budget of thirty three rows, thirty three dead rows ahead of the live
+        one still returned nothing, which reads as a cache miss. That regime is
+        reached in the eviction experiment, where it happened on 702 of 4000 requests
+        in the tightest arm and moved a published figure. The search now doubles its
+        fetch until it has `top_k` live matches or has exhausted the index, so the
+        answer is the true nearest live neighbour regardless of how much is dead.
+        """
+        probes = np.ascontiguousarray(np.atleast_2d(vectors), dtype=np.float32)
+        if namespace not in self._indexes or not self._live[namespace]:
+            return [[] for _ in range(probes.shape[0])]
+        index = self._index_for(namespace)
         total = index.ntotal  # type: ignore[attr-defined]
+        out: list[list[Match]] = [[] for _ in range(probes.shape[0])]
+        pending = list(range(probes.shape[0]))
         want = min(total, max(top_k * 8, top_k + 32))
-        scores, rows = index.search(probe, want)  # type: ignore[attr-defined]
-        out: list[Match] = []
+        while pending:
+            scores, rows = index.search(probes[pending], want)  # type: ignore[attr-defined]
+            still_short: list[int] = []
+            for position, row_scores, row_ids in zip(pending, scores, rows, strict=True):
+                matches = self._collect(row_scores, row_ids, top_k, namespace, metadata_filter)
+                out[position] = matches
+                if len(matches) < top_k and want < total:
+                    still_short.append(position)
+            if want >= total:
+                break
+            pending = still_short
+            want = min(total, want * 2)
+        return out
+
+    def _collect(
+        self,
+        row_scores,
+        row_ids,
+        top_k: int,
+        namespace: str,
+        metadata_filter: dict | None,
+    ) -> list[Match]:
+        matches: list[Match] = []
         seen: set[str] = set()
-        for score, row in zip(scores[0], rows[0], strict=True):
+        for score, row in zip(row_scores, row_ids, strict=True):
             if row < 0:
                 continue
             vector_id = self._ids[namespace][row]
@@ -104,54 +150,10 @@ class FaissFlatStore(VectorStore):
             if not matches_filter(meta, metadata_filter):
                 continue
             seen.add(vector_id)
-            out.append(Match(vector_id=vector_id, score=float(score), metadata=dict(meta)))
-            if len(out) == top_k:
+            matches.append(Match(vector_id=vector_id, score=float(score), metadata=dict(meta)))
+            if len(matches) == top_k:
                 break
-        return out
-
-    def query_many(
-        self,
-        vectors: np.ndarray,
-        top_k: int = 1,
-        namespace: str = DEFAULT_NAMESPACE,
-        metadata_filter: dict | None = None,
-    ) -> list[list[Match]]:
-        """One FAISS search over the whole batch, then filter each row.
-
-        This is the batch inference path the REST surface exposes. It exists because a
-        per row loop pays the index setup cost once per query, and because the batch
-        endpoint should be a different code path from the single endpoint rather than
-        a loop over it wearing a different name. A test asserts the two agree row for
-        row, which is the only thing that makes the claim worth making.
-        """
-        probes = np.ascontiguousarray(np.atleast_2d(vectors), dtype=np.float32)
-        if namespace not in self._indexes or not self._live[namespace]:
-            return [[] for _ in range(probes.shape[0])]
-        index = self._index_for(namespace)
-        total = index.ntotal  # type: ignore[attr-defined]
-        want = min(total, max(top_k * 8, top_k + 32))
-        scores, rows = index.search(probes, want)  # type: ignore[attr-defined]
-        out: list[list[Match]] = []
-        for row_scores, row_ids in zip(scores, rows, strict=True):
-            matches: list[Match] = []
-            seen: set[str] = set()
-            for score, row in zip(row_scores, row_ids, strict=True):
-                if row < 0:
-                    continue
-                vector_id = self._ids[namespace][row]
-                if vector_id in seen or vector_id not in self._live[namespace]:
-                    continue
-                if self._row_of[namespace][vector_id] != row:
-                    continue
-                meta = self._meta[namespace][vector_id]
-                if not matches_filter(meta, metadata_filter):
-                    continue
-                seen.add(vector_id)
-                matches.append(Match(vector_id=vector_id, score=float(score), metadata=dict(meta)))
-                if len(matches) == top_k:
-                    break
-            out.append(matches)
-        return out
+        return matches
 
     def delete(self, ids: list[str], namespace: str = DEFAULT_NAMESPACE) -> int:
         if namespace not in self._live:

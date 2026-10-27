@@ -105,6 +105,10 @@ METRICS: tuple[Metric, ...] = (
            ("{} template families",)),
     Metric("corpus_domains", "corpus", ("__domains__",), as_int,
            ("{} domains",)),
+    Metric("distinct_queries", "corpus", ("distinct_queries",), as_int,
+           ("of the {} distinct",)),
+    Metric("queries_in_two_pairs", "corpus", ("queries_in_two_pairs",), as_int,
+           ("{} of the 626",)),
     Metric("near_miss_classes", "corpus", ("__classes__",), as_int,
            ("{} near miss classes",)),
     # ------------------------------------------------- E1, the headline encoder
@@ -183,6 +187,8 @@ METRICS: tuple[Metric, ...] = (
     # count is published beside them so the split is visible rather than implied.
     Metric("transfers_real_only", "e5_threshold_transfer", ("transfers_real_only",), as_int,
            ("{} transfers between",)),
+    Metric("real_embedder_pairs", "e5_threshold_transfer", ("real_embedder_pairs",), as_int,
+           ("{} embedder pairs",)),
     Metric("real_threshold_shift_points", "e5_threshold_transfer",
            ("real_threshold_shift_median_points",), as_points1,
            ("shifts by {} cosine", "median shift of {}")),

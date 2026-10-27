@@ -97,7 +97,15 @@ class SemanticCache:
         self.stats["lookups"] += 1
 
         exact_key = self.hot.exact_lookup(query)
-        if exact_key is not None and not self._retire_if_expired(exact_key, now):
+        if exact_key is not None and self.hot.is_known(exact_key):
+            if self._retire_if_expired(exact_key, now):
+                # Counted here as well as on the approximate branch. It was not, so
+                # an expired exact match was a plain miss in the statistics while an
+                # expired approximate match was an expiry, and the batch endpoint
+                # and the single endpoint disagreed about which had happened.
+                self.stats["misses"] += 1
+                self.stats["expired"] += 1
+                return Lookup(hit=False, expired_candidate=True)
             payload = self.payloads.get(exact_key)
             if payload is not None:
                 self.eviction.record_hit(exact_key, now)
@@ -118,6 +126,12 @@ class SemanticCache:
             return Lookup(hit=False)
         best = matches[0]
         if best.score < self.threshold:
+            self.stats["misses"] += 1
+            return Lookup(hit=False, score=best.score)
+        if not self.hot.is_known(best.vector_id):
+            # No bookkeeping, so the entry's age is unknown. Neither expire it, which
+            # would destroy a live entry, nor serve it, which would serve an answer
+            # that can never go stale. Report a miss and let the caller repopulate.
             self.stats["misses"] += 1
             return Lookup(hit=False, score=best.score)
         if self._retire_if_expired(best.vector_id, now):

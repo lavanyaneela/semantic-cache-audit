@@ -75,12 +75,15 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install --upgrade pip
       - run: pip install -e ".[dev]"
+      - run: python -m playwright install --with-deps chromium
       - name: Regenerate the corpus and check it is unchanged
         run: |
           python -m semantic_cache_audit.corpus.builder > /dev/null
-          git diff --exit-code fixtures/corpus/pairs.jsonl
-      - name: Regenerate the offline embedding fixtures
-        run: python tools/build_fixtures.py
+          git diff --exit-code fixtures/corpus/pairs.jsonl fixtures/corpus/manifest.json
+      - name: Regenerate the offline embedding fixtures and check they are unchanged
+        run: |
+          python tools/build_fixtures.py
+          git diff --exit-code fixtures/embeddings/
       - name: Tests, as their own step so a red test reads as a red test
         run: |
           mkdir -p reports
@@ -94,6 +97,10 @@ jobs:
         run: python tools/check_numbers.py
       - name: Check that no duration is published as a result
         run: python tools/check_durations.py
+      - name: Check every local README image resolves
+        run: python tools/check_readme_render.py
+      - name: Check the committed metrics are the ones just measured
+        run: git diff --exit-code docs/metrics.json
       - name: Prove the checker catches a stale figure
         run: python tools/check_numbers.py --prove
       - name: Publish the uncomfortable table to the job summary

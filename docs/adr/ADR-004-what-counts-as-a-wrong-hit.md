@@ -48,7 +48,7 @@ A **stale hit** returned the right question's answer from before it changed. The
 is the time to live.
 
 E3 measures them separately and the separation earns its keep: across the bounding
-eviction policies the wrong share moves by 0.13 points of wrong answers while
+eviction policies the wrong share moves by 0.16 points of wrong answers while
 staleness moves by 16.8 points of staleness. Reported as one figure, that would read
 as "eviction matters" and send a team to the wrong knob.
 

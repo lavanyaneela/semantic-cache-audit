@@ -37,7 +37,28 @@ def load_pairs(root: Path | None = None, *, verify: bool = True) -> list[Pair]:
                 "corpus does not match its manifest: "
                 f"file sha256 {actual[:12]} vs manifest {manifest['sha256'][:12]}"
             )
-    return [Pair.from_dict(json.loads(line)) for line in text.splitlines() if line.strip()]
+    pairs = [Pair.from_dict(json.loads(line)) for line in text.splitlines() if line.strip()]
+    if verify:
+        _assert_consistent(pairs)
+    return pairs
+
+
+def _assert_consistent(pairs: list[Pair]) -> None:
+    """Refuse a corpus that contradicts itself.
+
+    "One answer serves both" is an equivalence relation, so a chain of paraphrase
+    pairs joining the two sides of a near miss is an authoring error rather than
+    something to average over. The check lived only inside the separation family's
+    constructor, which meant it ran for one embedder and not for the one every
+    headline is about: a forged corpus with a contradiction loaded without complaint
+    and published a separation figure. It belongs on the read path.
+    """
+    from ..embed.registry import CorpusInconsistent, intent_labels
+
+    try:
+        intent_labels(pairs)
+    except CorpusInconsistent as exc:
+        raise CorpusError(f"the corpus contradicts itself: {exc}") from exc
 
 
 def load_manifest(root: Path | None = None) -> dict:

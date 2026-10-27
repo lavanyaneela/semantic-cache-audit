@@ -182,6 +182,35 @@ def test_a_batch_query_on_an_empty_namespace_returns_one_empty_row_per_input(sto
     assert rows == [[], [], [], []]
 
 
+def test_a_query_finds_the_live_neighbour_behind_many_dead_rows(unit_vectors):
+    """The first fix for starvation was a fixed over-fetch, which only moved the
+    threshold: with a budget of thirty three rows, thirty three dead rows ahead of
+    the live one still returned nothing. That regime is reached in the eviction
+    experiment and it moved a published figure."""
+    rng = np.random.default_rng(3)
+    raw = rng.standard_normal((80, 8)).astype(np.float32)
+    vectors = raw / np.linalg.norm(raw, axis=1, keepdims=True)
+    store = FaissFlatStore(8)
+    store.upsert([f"v{i}" for i in range(len(vectors))], vectors)
+    probe = vectors[0]
+    nearest_first = np.argsort(-(vectors @ probe))
+    store.delete([f"v{int(i)}" for i in nearest_first[:50]])
+    matches = store.query(probe, top_k=1)
+    assert matches and matches[0].vector_id == f"v{int(nearest_first[50])}"
+
+
+def test_a_batch_query_also_finds_live_neighbours_behind_many_dead_rows(unit_vectors):
+    rng = np.random.default_rng(4)
+    raw = rng.standard_normal((80, 8)).astype(np.float32)
+    vectors = raw / np.linalg.norm(raw, axis=1, keepdims=True)
+    store = FaissFlatStore(8)
+    store.upsert([f"v{i}" for i in range(len(vectors))], vectors)
+    nearest_first = np.argsort(-(vectors @ vectors[0]))
+    store.delete([f"v{int(i)}" for i in nearest_first[:50]])
+    rows = store.query_many(vectors[:3], top_k=1)
+    assert all(len(r) == 1 for r in rows)
+
+
 def test_the_store_describes_itself_as_exact(store):
     described = store.describe()
     assert described["exact"] is True and described["index"] == "IndexFlatIP"

@@ -75,9 +75,13 @@ embeddings-live:
 audit:
 	@$(PY) -m $(PKG).cli audit --embedder "$(EMBEDDER)" --budget $(BUDGET); 		code=$$?; echo; echo "semantic-cache-audit exited $$code"; exit 0
 
+# Named after the budget, because the report has two shapes and a single
+# report.html meant the documented way to regenerate it replaced a refusal with a
+# no-threshold report under the same name.
 report:
-	$(PY) -m $(PKG).cli report --embedder "$(EMBEDDER)" --budget $(BUDGET) \
-		--out docs/evidence/report.html
+	@$(PY) -m $(PKG).cli report --embedder "$(EMBEDDER)" --budget $(BUDGET) \
+		--out docs/evidence/report-budget-$(subst .,,$(BUDGET)).html; \
+		code=$$?; echo "semantic-cache-audit exited $$code"; exit 0
 
 diagrams:
 	$(PY) tools/render_diagrams.py

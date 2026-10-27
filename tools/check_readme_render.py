@@ -26,8 +26,15 @@ def main() -> int:
         from cmarkgfm.cmark import Options
         from playwright.sync_api import sync_playwright
     except ImportError as exc:
-        print(f"skipping: {exc}. Install the dev extra to run this check.")
-        return 0
+        # Fails closed. Returning zero here meant a broken README image passed on
+        # any machine without the dev extra, which is every machine the check was
+        # most needed on.
+        print(
+            f"cannot run the README render check: {exc}. Install the dev extra: "
+            "pip install -e '.[dev]'",
+            file=sys.stderr,
+        )
+        return 1
 
     html = cmarkgfm.markdown_to_html_with_extensions(
         (ROOT / "README.md").read_text(encoding="utf-8"),

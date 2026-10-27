@@ -148,7 +148,10 @@ def collect(skip_tests: bool) -> dict:
         "anchors": anchors,
         "textual": sorted(m.name for m in METRICS if m.textual),
         "checked_documents": list(CHECKED_DOCUMENTS),
-        "generated_utc": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        # Carried forward when nothing measured has changed. Stamping it on every
+        # run meant `make verify` left the tree dirty, which trains a reader to
+        # ignore `git status` in the one repository that asks them to trust it.
+        "generated_utc": "",
         "note": (
             "every value here was produced by running the suite and the experiments. "
             "`rendered` is the exact string a document must use; the checker compares "
@@ -156,6 +159,18 @@ def collect(skip_tests: bool) -> dict:
             "string."
         ),
     }
+
+
+def _timestamp_for(out: Path, payload: dict) -> str:
+    """Today's stamp, or the previous one when nothing measured has moved."""
+    now = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if not out.exists():
+        return now
+    previous = json.loads(out.read_text())
+    comparable = {k: v for k, v in payload.items() if k != "generated_utc"}
+    if all(previous.get(k) == v for k, v in comparable.items()):
+        return str(previous.get("generated_utc", now))
+    return now
 
 
 def _assert_anchors_are_distinct(anchors: dict[str, list[str]]) -> None:
@@ -190,6 +205,7 @@ def main(argv: list[str] | None = None) -> int:
     payload = collect(args.skip_tests)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
+    payload["generated_utc"] = _timestamp_for(out, payload)
     out.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     counts = Counter(m.source for m in METRICS)
     print(f"wrote {out} with {len(payload['metrics'])} metrics from {len(counts)} sources")

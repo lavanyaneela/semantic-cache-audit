@@ -24,6 +24,8 @@
     "hard": 199,
     "medium": 103
   },
+  "distinct_queries": 626,
+  "queries_in_two_pairs": 14,
   "positive_by_difficulty": {
     "easy": 18,
     "hard": 54,

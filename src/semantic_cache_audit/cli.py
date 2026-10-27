@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -194,7 +195,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_corpus)
 
     r = shared(sub.add_parser("report", help="write the HTML report"))
-    r.add_argument("--out", default="docs/evidence/report.html")
+    r.add_argument("--out", default="docs/evidence/report-budget-005.html")
     r.set_defaults(func=cmd_report)
 
     v = sub.add_parser("serve", help="run the REST surface (not part of make verify)")
@@ -221,8 +222,16 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:  # noqa: BLE001
         # Everything else also exits 3. It used to escape as a traceback, which the
         # shell reports as 1, so a crash was indistinguishable from "this cache
-        # should not ship" to anything branching on the code.
-        print(f"error: {type(exc).__name__}: {exc}", file=sys.stderr)
+        # should not ship" to anything branching on the code. The cost of catching
+        # broadly is that a genuine bug now looks like a user error, so SCA_DEBUG=1
+        # re-raises and gives back the traceback.
+        if os.environ.get("SCA_DEBUG"):
+            raise
+        print(
+            f"error: {type(exc).__name__}: {exc}\n"
+            "set SCA_DEBUG=1 to see the traceback if this looks like a bug",
+            file=sys.stderr,
+        )
         return int(Exit.ERROR)
 
 

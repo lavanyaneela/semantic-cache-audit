@@ -77,6 +77,16 @@ def manifest_for(pairs: list[Pair], jsonl_text: str) -> dict:
         # The positive control mix on its own. The claim that the controls are not
         # mostly easy is the one a reviewer should attack first, so the counts behind
         # it are published rather than described.
+        "distinct_queries": len({p.query_a for p in pairs} | {p.query_b for p in pairs}),
+        # Queries appearing in more than one pair. The number behind the war story
+        # about intent labelling, measured rather than typed into the README.
+        "queries_in_two_pairs": sum(
+            1
+            for _, n in Counter(
+                [p.query_a for p in pairs] + [p.query_b for p in pairs]
+            ).items()
+            if n > 1
+        ),
         "positive_by_difficulty": dict(
             sorted(Counter(p.difficulty for p in pairs if p.same_answer).items())
         ),

@@ -33,11 +33,15 @@ ROOT = Path(__file__).resolve().parents[1]
 #: without one it fires on Python format specifiers such as `{name:44s}` and on
 #: service container health intervals, and a check that cries wolf gets deleted.
 DURATION = re.compile(
-    r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|us|seconds?|"
+    r"\b\d+(?:,\d{3})*(?:\.\d+)?\s*(ms|milliseconds?|microseconds?|seconds?|"
     r"secs?|minutes?|mins?|hours?|hrs?)\b"
-    r"|\b\d+\.\d+s\b",
+    r"|\b\d+\.\d+\s*(?:s|m|h)\b"
+    r"|\b\d+\s*(?:ms|µs)\b",
     re.IGNORECASE,
 )
+
+#: `us` as a unit is deliberately absent from the case insensitive branch above,
+#: because it matches the word US. Microseconds are caught by the `µs` branch.
 
 TEXT_SUFFIXES = {".md", ".py", ".toml", ".yml", ".yaml", ".cfg", ".txt", ".json"}
 
@@ -61,7 +65,10 @@ ALLOWED_PATHS: dict[str, str] = {
         "per command wall times, recorded so the replay can be paced and labelled in "
         "the file itself as published nowhere"
     ),
-    "docs/metrics.json": "no duration is a metric; the file is checked by the test below",
+    "docs/metrics.json": (
+        "no metric is derived from a duration, which tests/test_receipts.py asserts "
+        "by checking the metric specification rather than this file"
+    ),
 }
 
 #: Phrases that make a duration a stated input rather than a measurement. A line
