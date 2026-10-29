@@ -88,6 +88,32 @@ def test_a_replay_accounts_for_every_request(pairs, shaped_fixture, stream):
     assert result.hits + result.misses == result.requests == len(stream)
 
 
+def test_a_replay_does_not_inherit_the_previous_replay_s_cache(
+    pairs, shaped_fixture, stream
+):
+    """E3 calls replay nineteen times in a row. Against a shared Redis and MongoDB
+    the second call used to start warm, because the hot layer and the payload store
+    outlive the cache object: measured hit rates of 0.895 then 0.978 for identical
+    inputs. Each run now takes a namespace of its own and clears it afterwards."""
+    texts, matrix = shaped_fixture
+    schedule = change_schedule(pairs, horizon=stream[-1].at)
+    kwargs = {"threshold": 0.5, "policy": "lru", "capacity": 50, "ttl_seconds": 3600.0,
+              "schedule": schedule}
+    first = replay(stream, texts, matrix, **kwargs)
+    second = replay(stream, texts, matrix, **kwargs)
+    assert first.hit_rate == second.hit_rate
+    assert first.to_dict() == second.to_dict()
+
+
+def test_a_replay_leaves_no_state_behind(pairs, shaped_fixture, stream):
+    from semantic_cache_audit.cache.backends import PayloadStore
+
+    texts, matrix = shaped_fixture
+    replay(stream, texts, matrix, threshold=0.5, policy="lru", capacity=50,
+           ttl_seconds=3600.0, schedule=change_schedule(pairs, horizon=stream[-1].at))
+    assert PayloadStore().count() == 0
+
+
 def test_a_replay_is_reproducible(pairs, shaped_fixture, stream):
     texts, matrix = shaped_fixture
     schedule = change_schedule(pairs, horizon=stream[-1].at)

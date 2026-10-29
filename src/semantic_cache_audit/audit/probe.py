@@ -15,7 +15,7 @@ import numpy as np
 
 from ..cache.clock import ManualClock
 from ..cache.eviction import EvictionState
-from ..cache.semantic_cache import SemanticCache
+from ..cache.semantic_cache import SemanticCache, fresh_namespace
 from ..corpus.schema import Pair
 from ..index.faiss_store import FaissFlatStore
 
@@ -94,10 +94,17 @@ def probe_through_cache(
     namespace so one pair's stored entry cannot be returned for another pair's query,
     which would turn the measurement into a retrieval benchmark over the whole corpus
     rather than a cache correctness trial.
+
+    The namespaces are scoped to the call, not just to the pair. Numbering them
+    `pair-0` upward meant a second call reused the first call's namespaces, so
+    against a shared Redis every pair started with the previous run's entry already
+    stored and the referee silently stopped being a referee.
     """
     index = {t: i for i, t in enumerate(texts)}
     store = FaissFlatStore(matrix.shape[1])
     clock = ManualClock()
+    run = fresh_namespace("probe")
+    caches: list[SemanticCache] = []
     out: list[Probe] = []
     for i, pair in enumerate(pairs):
         cache = SemanticCache(
@@ -105,8 +112,9 @@ def probe_through_cache(
             threshold=threshold,
             clock=clock,
             eviction=EvictionState(),
-            namespace=f"pair-{i}",
+            namespace=f"{run}-pair-{i}",
         )
+        caches.append(cache)
         cache.put(
             key=f"{pair.pair_id}:a",
             query=pair.query_a,
@@ -126,4 +134,6 @@ def probe_through_cache(
                 asked_query=pair.query_b,
             )
         )
+    for cache in caches:
+        cache.reset()
     return out

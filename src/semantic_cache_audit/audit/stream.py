@@ -16,7 +16,7 @@ import numpy as np
 
 from ..cache.clock import ManualClock
 from ..cache.eviction import EvictionState
-from ..cache.semantic_cache import SemanticCache
+from ..cache.semantic_cache import SemanticCache, fresh_namespace
 from ..corpus.schema import Pair
 from ..index.faiss_store import FaissFlatStore
 
@@ -156,6 +156,11 @@ def replay(
     threshold change addresses. A stale hit returned the right question's answer from
     before it changed, which only a TTL addresses. Reporting one number for both would
     hide which lever to pull.
+
+    The run takes a namespace of its own and clears it when it finishes. Without that
+    the hot layer and the payload store carry over between calls, and E3 makes
+    nineteen of them in a row: against a real Redis and MongoDB the second replay
+    starts warm and the published figures become order dependent.
     """
     row_of = {text: i for i, text in enumerate(texts)}
     store = FaissFlatStore(matrix.shape[1])
@@ -166,7 +171,23 @@ def replay(
         clock=clock,
         eviction=EvictionState(policy=policy, capacity=capacity),
         ttl_seconds=ttl_seconds,
+        namespace=fresh_namespace("replay"),
     )
+    try:
+        return _replay_into(cache, clock, requests, row_of, matrix, schedule)
+    finally:
+        cache.reset()
+
+
+def _replay_into(
+    cache: SemanticCache,
+    clock: ManualClock,
+    requests: list[Request],
+    row_of: dict[str, int],
+    matrix: np.ndarray,
+    schedule: dict[str, list[float]],
+) -> StreamResult:
+    """The replay loop itself, so the caller can wrap it in setup and cleanup."""
     result = StreamResult()
     for request in requests:
         clock.t = request.at

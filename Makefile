@@ -8,7 +8,7 @@ EMBEDDER ?= st:sentence-transformers/all-MiniLM-L6-v2
 BUDGET ?= 0.05
 
 .PHONY: help install lint test coverage experiments receipts prove verify \
-        corpus embeddings embeddings-live audit report diagrams evidence demo clean
+        corpus embeddings embeddings-live reproduce audit report diagrams evidence demo clean
 
 help:
 	@echo "install           editable install with dev extras"
@@ -22,6 +22,7 @@ help:
 	@echo "report            write the HTML report to docs/evidence"
 	@echo "corpus            regenerate the adversarial corpus"
 	@echo "embeddings        regenerate every offline embedding fixture"
+	@echo "reproduce         check the fixtures reproduce the geometry they encode"
 	@echo "embeddings-live   regenerate the pretrained fixture. Needs weights and network."
 	@echo "evidence          diagrams, screenshots and the demo recording"
 
@@ -64,6 +65,12 @@ corpus:
 
 embeddings:
 	$(PY) tools/build_fixtures.py
+
+# Regenerates every offline fixture into a scratch directory and checks that the
+# geometry matches the committed one. See the tool's docstring for why this is not a
+# byte comparison.
+reproduce:
+	$(PY) tools/check_fixtures_reproduce.py
 
 embeddings-live:
 	$(PY) tools/build_fixtures.py --pretrained

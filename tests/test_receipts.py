@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -273,6 +274,54 @@ def test_no_published_transfer_figure_pools_the_instrument_with_real_embedders()
 def test_the_real_only_transfer_count_is_far_smaller_than_the_pooled_one():
     payload = json.loads((ROOT / "docs" / "experiments" / "e5_threshold_transfer.json").read_text())
     assert payload["transfers_real_only"] < payload["pooled_transfers_measured"] / 5
+
+
+def test_the_lsa_coordinates_are_not_reproducible_but_its_geometry_is():
+    """The finding behind the reproducibility check, pinned so the claim stays true.
+
+    A truncated SVD may return any orthonormal basis for a degenerate singular
+    subspace, and which one depends on the BLAS kernel. Varying only the thread count
+    moves a coordinate by about 1.0 and every pairwise cosine by about 2e-07. The
+    repository therefore checks geometry and says so, rather than checking bytes and
+    being wrong on any machine with a different core count.
+    """
+    import numpy as np
+
+    from semantic_cache_audit.corpus.loader import load_pairs
+    from semantic_cache_audit.embed.registry import build, corpus_documents
+
+    pairs = load_pairs()
+    docs = corpus_documents(pairs)
+    first = build("lsa", pairs).encode(docs)
+    second = build("lsa", pairs).encode(docs)
+    # Within one process the basis is stable, so this asserts the invariant that
+    # holds everywhere: the geometry is what the audit consumes.
+    assert np.abs(first @ first.T - second @ second.T).max() < 1e-5
+
+
+def test_every_offline_fixture_reproduces_its_geometry():
+    from check_fixtures_reproduce import COSINE_TOLERANCE, check
+    from semantic_cache_audit.corpus.loader import load_pairs
+
+    pairs = load_pairs()
+    with tempfile.TemporaryDirectory() as tmp:
+        for name in ("bow", "lsa", "charngram"):
+            ok, _, cosine_shift = check(name, pairs, Path(tmp))
+            assert ok, f"{name} moved {cosine_shift:g}, over {COSINE_TOLERANCE:g}"
+
+
+def test_the_reproducibility_check_would_catch_a_fixture_that_really_changed(tmp_path):
+    """The counter test. A tolerance nobody has watched reject something is not a
+    tolerance, it is a rubber stamp."""
+    import numpy as np
+
+    from semantic_cache_audit.embed.fixtures import load_fixture
+
+    _, committed = load_fixture("charngram")
+    tampered = committed.copy()
+    tampered[0] = -tampered[0]
+    moved = float(np.abs(committed @ committed.T - tampered @ tampered.T).max())
+    assert moved > 1e-5
 
 
 def test_the_readme_leads_with_an_unflattering_number():

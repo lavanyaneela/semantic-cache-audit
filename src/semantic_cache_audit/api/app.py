@@ -11,7 +11,7 @@ from fastapi import FastAPI, HTTPException
 
 from ..cache.clock import ManualClock
 from ..cache.eviction import EvictionState
-from ..cache.semantic_cache import SemanticCache
+from ..cache.semantic_cache import SemanticCache, fresh_namespace
 from ..corpus.loader import load_pairs
 from ..embed.fixtures import load_fixture
 from ..index.faiss_store import FaissFlatStore
@@ -37,8 +37,15 @@ def build_app(embedder: str = "charngram", *, threshold: float = 0.9) -> FastAPI
     lookup_row = {text: i for i, text in enumerate(texts)}
     store = FaissFlatStore(matrix.shape[1])
     clock = ManualClock()
+    # Each application gets its own namespace. Against the in process doubles two
+    # applications are isolated by accident; against a real server they would share
+    # every exact match pointer and every payload.
     cache = SemanticCache(
-        store, threshold=threshold, clock=clock, eviction=EvictionState(policy="lru")
+        store,
+        threshold=threshold,
+        clock=clock,
+        eviction=EvictionState(policy="lru"),
+        namespace=fresh_namespace("app"),
     )
     app = FastAPI(
         title="semantic-cache-audit",

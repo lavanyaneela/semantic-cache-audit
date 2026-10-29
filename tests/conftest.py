@@ -38,6 +38,27 @@ def oracle_fixture():
     return load_fixture("synthetic@0")
 
 
+@pytest.fixture(autouse=True)
+def isolate_shared_backends():
+    """Give every test a clean hot layer and payload store.
+
+    `fakeredis` and `mongomock` hand out fresh state per construction, so against the
+    in process doubles the suite is isolated by accident. Against the real servers
+    the optional CI job uses, one process shares one Redis and one MongoDB, and tests
+    that assert a count saw whatever earlier tests had left behind. Flushing the
+    default namespace before and after each test makes the suite say the same thing
+    in both configurations, which is the only reason the real backend job is worth
+    running at all.
+    """
+    from semantic_cache_audit.cache.backends import HotLayer, PayloadStore
+
+    HotLayer().flush()
+    PayloadStore().flush()
+    yield
+    HotLayer().flush()
+    PayloadStore().flush()
+
+
 @pytest.fixture
 def unit_vectors():
     rng = np.random.default_rng(7)

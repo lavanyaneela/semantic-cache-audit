@@ -80,10 +80,13 @@ jobs:
         run: |
           python -m semantic_cache_audit.corpus.builder > /dev/null
           git diff --exit-code fixtures/corpus/pairs.jsonl fixtures/corpus/manifest.json
-      - name: Regenerate the offline embedding fixtures and check they are unchanged
-        run: |
-          python tools/build_fixtures.py
-          git diff --exit-code fixtures/embeddings/
+      # Geometry, not bytes. A truncated SVD does not define its coordinates
+      # uniquely, so the committed lsa matrix differs between a single threaded BLAS
+      # and a multi threaded one while every pairwise cosine agrees to 2.4e-07. The
+      # byte gate that used to be here passed on the machine that built the fixtures
+      # and failed on a runner with a different core count.
+      - name: Check the embedding fixtures reproduce the geometry they encode
+        run: python tools/check_fixtures_reproduce.py
       - name: Tests, as their own step so a red test reads as a red test
         run: |
           mkdir -p reports

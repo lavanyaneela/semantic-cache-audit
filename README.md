@@ -4,7 +4,7 @@
 production sentence encoder, every threshold that serves a single cached answer also
 serves a wrong one.**
 
-[![verify](https://github.com/GITHUB_USERNAME/semantic-cache-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/GITHUB_USERNAME/semantic-cache-audit/actions/workflows/ci.yml)
+[![verify](https://github.com/lavanyaneela/semantic-cache-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/lavanyaneela/semantic-cache-audit/actions/workflows/ci.yml)
 ![python](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
@@ -43,7 +43,7 @@ pairs:
   flattering rate. A 1% budget, the kind a team would actually ask for, would take
   299 clean hits, and about 798 pairs would be needed to get them.
 
-499 tests, 97.6% line coverage over the offline path, which excludes the ONNX encoder
+505 tests, 97.7% line coverage over the offline path, which excludes the ONNX encoder
 that is only run to regenerate the fixture. Every figure above is re-measured by CI
 and checked against this document by `tools/check_numbers.py`.
 
@@ -52,7 +52,7 @@ and checked against this document by `tools/check_numbers.py`.
 Requires Python 3.11 or newer. No API key, no model download, no network.
 
 ```bash
-git clone https://github.com/GITHUB_USERNAME/semantic-cache-audit.git
+git clone https://github.com/lavanyaneela/semantic-cache-audit.git
 cd semantic-cache-audit
 make install
 
@@ -278,6 +278,12 @@ separation figure. It is on the read path now.
 - **Anything about the separation family.** It is an instrument that spans a range of
   answer separation, not a model, and every figure from it is printed with its noise
   level.
+- **Bit-identical embedding matrices on another machine.** A truncated SVD does not
+  define its coordinates uniquely, so the committed `lsa` matrix is one valid basis
+  out of many and a different BLAS thread count produces another. What does
+  reproduce, and what every published number is computed from, is the geometry:
+  `make reproduce` regenerates each fixture and checks that every pairwise cosine
+  agrees. The corpus itself does reproduce byte for byte.
 
 [ADR-005](docs/adr/ADR-005-what-this-repository-cannot-measure.md) states each
 boundary with what it would take to cross it.
@@ -323,6 +329,7 @@ make prove         # watch the number checker fail on a deliberately broken figu
 make experiments   # re-run E1 to E5
 make corpus        # regenerate the corpus; CI asserts it is byte identical
 make embeddings    # regenerate every offline embedding fixture
+make reproduce     # check the fixtures reproduce the geometry they encode
 ```
 
 `tools/check_numbers.py` matches anchor phrases rather than bare digits, because a

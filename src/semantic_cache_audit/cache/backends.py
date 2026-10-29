@@ -79,6 +79,15 @@ class HotLayer:
     def _entry(self, key: str) -> str:
         return f"{self._prefix}:entry:{key}"
 
+    def _reverse(self, key: str) -> str:
+        """Key to query. Lets `drop` find the exact match pointer in one read.
+
+        Without it `drop` had to scan the keyspace for the pointer whenever the entry
+        record was missing, which is a `KEYS` call in a hot path: linear in the cache
+        on every eviction, and against a real Redis a blocking full keyspace scan.
+        """
+        return f"{self._prefix}:rev:{key}"
+
     def put(self, key: str, query: str, inserted_at: float, ttl_seconds: float | None) -> None:
         """Write both keys in one round trip.
 
@@ -93,6 +102,7 @@ class HotLayer:
         pipeline = self._r.pipeline()
         pipeline.set(self._exact(query), key)
         pipeline.set(self._entry(key), record)
+        pipeline.set(self._reverse(key), query)
         pipeline.execute()
 
     def exact_lookup(self, query: str) -> str | None:
@@ -103,13 +113,20 @@ class HotLayer:
         return json.loads(raw) if raw else None
 
     def drop(self, key: str) -> None:
-        """Remove both keys. The reverse pointer is stored so that a dropped record
-        cannot orphan the exact match entry: looking the query up through the record
-        failed exactly when the record was the thing that had gone missing."""
-        self._r.delete(self._entry(key))
-        for pointer in self._r.keys(f"{_glob_escape(self._prefix)}:exact:*"):
-            if self._r.get(pointer) == key:
-                self._r.delete(pointer)
+        """Remove every key this entry owns, in one round trip.
+
+        The reverse pointer is what makes this possible without a scan. Reading the
+        query out of the entry record instead failed in exactly the case that matters,
+        when the record was the thing that had gone missing, and orphaned the exact
+        match pointer permanently.
+        """
+        query = self._r.get(self._reverse(key))
+        pipeline = self._r.pipeline()
+        pipeline.delete(self._entry(key))
+        pipeline.delete(self._reverse(key))
+        if query is not None:
+            pipeline.delete(self._exact(query))
+        pipeline.execute()
 
     def is_expired(self, key: str, now: float) -> bool:
         """TTL is evaluated against the injected clock, not against Redis expiry.

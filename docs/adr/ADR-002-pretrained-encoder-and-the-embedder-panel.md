@@ -66,6 +66,38 @@ real encoder happens to occupy. Every figure taken from it is printed with its n
 which carries its noise level, and `synthetic` on its own is refused precisely so a
 number cannot lose the parameter it depends on.
 
+## What "the fixtures reproduce" means, exactly
+
+The corpus reproduces byte for byte: it is built by pure Python from enumerated
+substitutions, and CI asserts the file and its manifest are unchanged.
+
+The embedding matrices do not, and the reason is worth stating rather than hiding.
+`lsa` is a truncated SVD, and a singular value decomposition does not define its
+coordinates uniquely: within a degenerate singular subspace any orthonormal basis is
+a correct answer, and which one LAPACK returns depends on the BLAS kernel, which
+depends on the core count. Varying only the thread count on one machine moves
+individual coordinates by about as much as the coordinates themselves, while moving
+every pairwise cosine by a few parts in ten million.
+
+Those two magnitudes are deliberately described rather than published. They are facts
+about the machine that measured them, in the same way a millisecond is, and the rule
+in ADR-005 applies to them: `tools/check_fixtures_reproduce.py` prints both for
+whatever machine runs it, and no document quotes a digit that would go stale on a
+runner with a different core count.
+
+So the committed fixture is one valid basis out of many, and a byte comparison
+asserts something the mathematics does not support. CI once contained that
+comparison. It passed on the machine that built the fixtures and failed on a runner
+with a different core count, which is the worst kind of check: it does not hold, and
+when it fires it points at nothing.
+
+`tools/check_fixtures_reproduce.py` checks the claim that is true and that the audit
+actually depends on. Every published number is a function of inner products between
+corpus vectors, so the tool regenerates each fixture and compares the full matrix of
+pairwise cosines, within a tolerance two orders of magnitude above the largest
+deviation observed and far below the precision of any published figure. The
+coordinates are free to move, because nothing in this repository reads one.
+
 ## What a different encoder would change, and what it would not
 
 It would change the threshold and every rate at that threshold. It would not change

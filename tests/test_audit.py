@@ -147,6 +147,17 @@ def test_the_fast_probe_path_agrees_with_the_real_cache_on_scores(pairs, charngr
             assert f.score == pytest.approx(s.score, abs=1e-5)
 
 
+def test_probing_through_the_cache_twice_gives_the_same_answer(pairs, charngram_fixture):
+    """The per pair namespaces were numbered from zero on every call, so a second
+    call reused the first call's namespaces and every pair started with the previous
+    run's entry already stored."""
+    texts, matrix = charngram_fixture
+    subset = pairs[:30]
+    first = probe_through_cache(subset, texts, matrix, 0.5)
+    second = probe_through_cache(subset, texts, matrix, 0.5)
+    assert [p.hit for p in first] == [p.hit for p in second]
+
+
 def test_a_probe_knows_whether_it_was_a_false_hit(pairs, charngram_fixture):
     texts, matrix = charngram_fixture
     probes = probe_at_threshold(pairs, pair_scores(pairs, texts, matrix), -1.0)
