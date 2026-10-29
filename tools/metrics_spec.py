@@ -70,6 +70,43 @@ def as_text(value: Any) -> str:
     return str(value)
 
 
+#: How many decimals of the raw value survive into the published string, per
+#: renderer. `docs/metrics.json` stores raw values rounded to this precision.
+#:
+#: Without it the file records noise nobody reads and then churns on it. Coverage
+#: came out as 97.69335142469471 on one machine and 97.72727272727273 on another,
+#: both rendering as 97.7, and the CI step that asserts the committed metrics are the
+#: ones just measured failed on a difference no document contains.
+RAW_DECIMALS: dict[str, int] = {
+    "as_int": 0,
+    "as_pct1": 3,
+    "as_pct2": 4,
+    "as_points1": 1,
+    "as_points2": 2,
+    "as_ratio1": 1,
+    "as_auc": 3,
+    "as_floor3": 4,
+}
+
+
+def quantize(value: Any, render: Callable[[Any], str]) -> Any:
+    """Round a raw value to the precision at which it is published.
+
+    A floor renderer is quantised by flooring rather than rounding, because rounding
+    to four decimals could carry the third decimal upward and turn a published floor
+    into a value the data does not support.
+    """
+    decimals = RAW_DECIMALS.get(getattr(render, "__name__", ""))
+    if decimals is None:
+        return value
+    number = float(value)
+    if getattr(render, "__name__", "") == "as_floor3":
+        scale = 10**decimals
+        return math.floor(number * scale) / scale
+    rounded = round(number, decimals)
+    return int(rounded) if decimals == 0 else rounded
+
+
 @dataclass(frozen=True)
 class Metric:
     """One published figure."""

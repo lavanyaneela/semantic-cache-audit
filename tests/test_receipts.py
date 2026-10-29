@@ -192,6 +192,32 @@ def test_the_forward_pass_sweeps_inside_fenced_blocks(payload):
     assert pattern.search(stale)
 
 
+def test_every_stored_metric_is_at_the_precision_it_is_published_at(payload):
+    """metrics.json must not carry digits below what any document quotes.
+
+    It did, and the committed file then differed between two machines by 0.034 of a
+    percentage point in a coverage figure both of them render as 97.7, which failed
+    the CI step that asserts the committed metrics are the ones just measured.
+    """
+    from metrics_spec import RAW_DECIMALS, by_name
+
+    spec = by_name()
+    for name, value in payload["metrics"].items():
+        decimals = RAW_DECIMALS.get(getattr(spec[name].render, "__name__", ""))
+        if decimals is None or isinstance(value, str):
+            continue
+        assert round(float(value), decimals) == float(value), (name, value)
+
+
+def test_quantising_never_changes_how_a_metric_renders(payload):
+    from metrics_spec import by_name, quantize
+
+    spec = by_name()
+    for name, value in payload["metrics"].items():
+        render = spec[name].render
+        assert render(quantize(value, render)) == payload["rendered"][name], name
+
+
 def test_rendering_a_metric_is_stable(payload):
     spec = by_name()
     for name, value in payload["metrics"].items():

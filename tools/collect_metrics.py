@@ -26,7 +26,7 @@ from xml.etree import ElementTree
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
-from metrics_spec import METRICS  # noqa: E402
+from metrics_spec import METRICS, quantize  # noqa: E402
 
 EXPERIMENTS = ROOT / "experiments"
 DOCS = ROOT / "docs"
@@ -137,8 +137,18 @@ def collect(skip_tests: bool) -> dict:
         if metric.source not in sources:
             sources[metric.source] = read_experiment(metric.source)
         raw = dig(sources[metric.source], metric.path)
-        values[metric.name] = raw
+        # Stored at the precision it is published at, not at full float precision.
+        # See RAW_DECIMALS: the extra digits are below anything a document quotes and
+        # they differ between machines, so keeping them makes the committed file
+        # churn on noise.
+        values[metric.name] = quantize(raw, metric.render)
         rendered[metric.name] = metric.render(raw)
+        if metric.render(values[metric.name]) != rendered[metric.name]:
+            raise SystemExit(
+                f"{metric.name}: quantising {raw!r} to {values[metric.name]!r} changes "
+                f"how it renders, from {rendered[metric.name]!r} to "
+                f"{metric.render(values[metric.name])!r}"
+            )
         anchors[metric.name] = list(metric.anchors)
     _assert_anchors_are_distinct(anchors)
     _assert_every_metric_is_anchored(anchors)
